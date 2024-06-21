@@ -25,6 +25,29 @@
 					/>
 				</v-col>
 			</v-row>
+			<v-row no-gutters v-if="inputDataLogIn.level === 3">
+				<v-col
+					cols="12"
+					md="4"
+					class="pt-2 d-flex align-center font-weight-bold"
+				>
+					Wilayah
+				</v-col>
+				<v-col
+					cols="12"
+					md="8"
+					class="pt-3"
+				>
+					<Autocomplete
+						v-model="inputDataLogIn.wilayah"
+						:data-a="wilayahpanjaitanOptions"
+						item-title="label"
+						item-value="kode"
+						label-a="Wilayah"
+						:clearable-a="true"
+					/>
+				</v-col>
+			</v-row>
 			<v-row no-gutters>
 				<v-col
 					cols="12"
@@ -61,28 +84,6 @@
 					<TextField
 						v-model="inputDataLogIn.username"
 						label-tf="Username"
-						:clearable-tf="true"
-					/>
-				</v-col>
-			</v-row>
-			<v-row no-gutters>
-				<v-col
-					cols="12"
-					md="4"
-					class="pt-2 d-flex align-center font-weight-bold"
-				>
-					Email
-				</v-col>
-				<v-col
-					cols="12"
-					md="8"
-					class="pt-3"
-				>
-					<TextField
-						v-model="inputDataLogIn.email"
-						label-tf="Email"
-						:rules-tf="inputDataLogIn.email != '' ? true : false"
-						hide-details="auto"
 						:clearable-tf="true"
 					/>
 				</v-col>
@@ -146,7 +147,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
 import PopUpNotifikasi from "../../../Layout/PopUpNotifikasi.vue";
 export default {
 	components: {
@@ -163,14 +164,15 @@ export default {
 		inputDataLogIn: {
       id_user: '',
       level: null,
+      wilayah: null,
       nama_lengkap: '',
       username: '',
-      email: '',
       password: '',
     },
     levelOptions: [
 			{ title: 'Super Administrator', value: 1 },
-			{ title: 'Administrator', value: 2 },
+			{ title: 'Administrator Pusat', value: 2 },
+			{ title: 'Administrator Wilayah', value: 3 },
 		],
     passType: '',
     endecryptType: '',
@@ -183,11 +185,16 @@ export default {
     notifikasiText: '',
     notifikasiButton: '',
 	}),
+	computed: {
+		...mapState({
+			wilayahpanjaitanOptions: store => store.setting.wilayahpanjaitanOptions,
+		}),
+  },
 	watch: {
 		inputDataLogIn: {
 			deep: true,
 			handler(value) {
-				if(value.nama_lengkap != '' && value.username != '' && value.email != '' && value.password != ''){
+				if(value.nama_lengkap != '' && value.username != '' && value.password != ''){
 					this.kondisiTombol = false
 				}else{
 					this.kondisiTombol = true
@@ -202,9 +209,9 @@ export default {
 				this.inputDataLogIn = {
 					id_user: value.id_user ? value.id_user : null,
 					level: value.level ? value.level : null,
+					wilayah: value.wilayah ? value.wilayah : null,
 					nama_lengkap: value.nama_lengkap ? value.nama_lengkap : null,
 					username: value.username ? value.username : null,
-					email: value.email ? value.email : null,
 					password: value.password ? value.password : null,
 				}
 				this.endecryptData()
@@ -214,15 +221,18 @@ export default {
 	mounted() {
 		this.inputDataLogIn.id_user = this.$route.params.uid;
 		this.kondisi = this.$route.params.kondisi;
+		this.getWilayahPanjaitan()
 	},
 	methods: {
 		...mapActions({
 			fetchData: 'fetchData',
+			getWilayahPanjaitan: 'setting/getWilayahPanjaitan',
     }),
 		wadahInput(){
 			let inputFormOne = {
 				idUser: this.inputDataLogIn.id_user,
 				consumerType: this.inputDataLogIn.level,
+				wilayah: this.inputDataLogIn.wilayah,
 				nama: this.inputDataLogIn.nama_lengkap,
 				username: this.inputDataLogIn.username,
 				email: this.inputDataLogIn.email,

@@ -29,10 +29,9 @@
 			<V_HakAkses v-if="settingPanel == 2" />
 			<V_Menu v-if="settingPanel == 3" />
 			<V_HakAksesMenu v-if="settingPanel == 4" />
-			<V_RFID v-if="settingPanel == 5" />
-			<V_Kelas v-if="settingPanel == 6" />
+			<V_KomisarisWilayah v-if="settingPanel == 5" />
 			<!-- <V_Wilayah v-if="settingPanel == 6" /> -->
-			<V_Wilayah2023 v-if="settingPanel == 7" />
+			<V_Wilayah2023 v-if="settingPanel == 6" />
 			<!-- <V_MapWilayah v-if="settingPanel == 8" /> -->
 		</v-card>
   </div>
@@ -44,15 +43,14 @@ import V_GeneralCMS from './page-content/Settings/V_GeneralCMS.vue'
 import V_HakAkses from './page-content/Settings/V_HakAkses.vue'
 import V_Menu from './page-content/Settings/V_Menu.vue'
 import V_HakAksesMenu from './page-content/Settings/V_HakAksesMenu.vue'
-import V_RFID from './page-content/Settings/V_RFID.vue'
-import V_Kelas from './page-content/Settings/V_Kelas.vue'
+import V_KomisarisWilayah from './page-content/Settings/V_KomisarisWilayah.vue'
 import V_Wilayah from './page-content/Settings/V_Wilayah.vue'
 import V_Wilayah2023 from './page-content/Settings/V_Wilayah2023.vue'
 import V_MapWilayah from './page-content/Settings/V_MapWilayah.vue'
 
 export default {
 	name: "Pengaturan",
-	components: { V_GeneralCMS, V_HakAkses, V_Menu, V_HakAksesMenu, V_RFID, V_Kelas, V_Wilayah, V_Wilayah2023, V_MapWilayah },
+	components: { V_GeneralCMS, V_HakAkses, V_Menu, V_HakAksesMenu, V_KomisarisWilayah, V_Wilayah, V_Wilayah2023, V_MapWilayah },
 	data: () => ({
 		settingPanel: 0,
     pengaturan: [
@@ -60,9 +58,8 @@ export default {
       { title: 'Hak Akses', icon: 'mdi mdi-shield-account-variant', link: 2 },
       { title: 'Menu', icon: 'mdi mdi-view-list', link: 3 },
       { title: 'Hak Akses Menu', icon: 'mdi mdi-shield-account-variant', link: 4 },
-      { title: 'RFID Card', icon: 'mdi mdi-id-card', link: 5 },
-      { title: 'Kelas', icon: 'mdi mdi-view-list', link: 6 },
-      { title: 'Wilayah', icon: 'mdi mdi-map', link: 7 },
+      { title: 'Komisaris Wilayah', icon: 'mdi mdi-account-group', link: 5 },
+      { title: 'Wilayah', icon: 'mdi mdi-map', link: 6 },
       // { title: 'Map Wilayah', icon: 'mdi mdi-map', link: 8 },
     ]
 	}),

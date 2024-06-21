@@ -2,8 +2,8 @@
   <div>
     <div class="nav-header">
 			<div class="nav-logo">
-				<v-img class="gambarLogo" :src="logoSekolah" />
-				<span class="textNamaSekolah">{{ namaSekolah }}</span>
+				<v-img class="gambarLogo" :src="logoWebsite" />
+				<span class="textNamaSekolah">{{ singkatanWebsite }}</span>
 			</div>
 			<v-divider vertical :thickness="2" color="white" />
 			<v-spacer></v-spacer>
@@ -11,14 +11,14 @@
     <v-row no-gutters>
       <v-col cols="12" class="d-flex flex-column justify-space-between align-center">
         <v-card class="elevation-12 tampilView" color="white">
-          <h1 class="text-center display-1 light-black--text" style="color: #272727;"><strong>{{ namaSekolah }}</strong></h1>
+          <h1 class="text-center display-1 light-black--text" style="color: #272727;"><strong>{{ namaWebsite }}<br>{{ `(${singkatanWebsite})` }}</strong></h1>
           <h2 class="text-center display-1 light-black--text ma-3"><div class="pembungkus"><h4>Masuk Panel</h4></div></h2>
           <v-form>
             <v-col cols="12" class="py-0 px-0 mb-3">
               <TextField
                 v-model="username"
-                icon-prepend-tf="mdi mdi-email"
-                label-tf="user@mail.com atau username55"
+                icon-prepend-tf="mdi mdi-account"
+                label-tf="username"
                 type="text"
                 :clearable-tf="true"
                 @keyup.enter="AutentificationLogin()"
@@ -77,7 +77,7 @@
               </v-row>
             </v-col>
           </v-form>
-          <h3 class="tombolLupaPass" @click="lupaSandi()">Lupa Kata Sandi ?</h3>
+          <!-- <h3 class="tombolLupaPass" @click="lupaSandi()">Lupa Kata Sandi ?</h3> -->
           <div class="text-center mt-3 mb-10">
             <Button 
               color-button="light-black darken-3"
@@ -88,7 +88,10 @@
         </v-card>
       </v-col>
     </v-row>
-    <Footer :nama-sekolah="namaSekolah" />
+    <Footer
+      :nama-website="namaWebsite"
+      :singkatan-website="singkatanWebsite"
+    />
     <v-dialog
       v-model="dialogNotifikasi"
       transition="dialog-bottom-transition"
@@ -146,10 +149,13 @@ export default {
     ...mapGetters({
       cmssettings: 'setting/cmssettings'
     }),
-    namaSekolah(){
-      return this.cmssettings ? this.cmssettings.namasekolah : null
+    namaWebsite(){
+      return this.cmssettings ? this.cmssettings.namawebsite : null
     },
-    logoSekolah(){
+    singkatanWebsite(){
+      return this.cmssettings ? this.cmssettings.singkatanwebsite : null
+    },
+    logoWebsite(){
       return this.cmssettings ? `${this.API_URL}bahan/${this.cmssettings.logo}` : null
     }
   },
@@ -184,39 +190,13 @@ export default {
         localStorage.setItem('user_token', data.accessToken);
         localStorage.setItem('nama', data.nama);
         localStorage.setItem('nama_role', data.namaRole);
-        localStorage.setItem('idLogin', data.idUser);
+        localStorage.setItem('idLogin', data.idAdmin);
         localStorage.setItem('roleID', data.consumerType);
+        localStorage.setItem('wilayah', data.kodeWilayah);
         localStorage.setItem('fotoProfil', data.fotoProfil);
-        if(data.consumerType === 3){
-          let jabatan = data.jabatanGuru.split(', ')
-          if(jabatan.includes('1') || jabatan.includes('2') || jabatan.includes('3') || jabatan.includes('4')){
-            localStorage.setItem('jabatan_guru', data.jabatanGuru);
-            localStorage.setItem('mengajar_bidang', data.mengajarBidang);
-            localStorage.setItem('mengajar_kelas', data.mengajarKelas);
-            localStorage.setItem('wali_kelas', data.waliKelas ? data.waliKelas : '');
-            const socket = io(this.API_URL);
-            socket.emit("dataonline");
-            return this.notifikasi("success", res.data.message, "2")
-          }
-          if(data.mengajarBidang === null || data.mengajarKelas === null){
-            this.createCaptcha();
-            this.captcha = '';
-            this.username = '';
-            this.katasandi = '';
-            localStorage.clear();
-            return this.notifikasi("warning", "Anda tidak bisa akses panel ini, karena anda bukan Guru Pengajar!", "1")
-          }
-          localStorage.setItem('jabatan_guru', data.jabatanGuru);
-          localStorage.setItem('mengajar_bidang', data.mengajarBidang);
-          localStorage.setItem('mengajar_kelas', data.mengajarKelas);
-          localStorage.setItem('wali_kelas', data.waliKelas ? data.waliKelas : '');
-        }else if(data.consumerType === 4){
-          localStorage.setItem('kelas', data.kelas);
-        }
 
-
-        const socket = io(this.API_URL);
-        socket.emit("dataonline");
+        // const socket = io(this.API_URL);
+        // socket.emit("dataonline");
         this.notifikasi("success", res.data.message, "2")
 			})
 			.catch((err) => {
@@ -247,11 +227,10 @@ export default {
       return rotationVariations[Math.floor(Math.random() * rotationVariations.length)];
     },
     goToProses() {
-      const socket = io(this.API_URL);
-      socket.emit("dataonline");
+      // const socket = io(this.API_URL);
+      // socket.emit("dataonline");
       this.dialogNotifikasi = false
-      let roleID = localStorage.getItem('roleID')
-      this.$router.push(roleID === '4' ? {name: "Profile"} : {name: "Dashboard"});
+      this.$router.push({name: "Dashboard"});
       window.location.reload();
     },
     lupaSandi() {
@@ -368,7 +347,7 @@ export default {
 	height: 60px;
 	background: #272727;
 	z-index: 1;
-	border-bottom: 3px solid #4CAF50;
+	border-bottom: 3px solid #c12626;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;

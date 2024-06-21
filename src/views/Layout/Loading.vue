@@ -3,8 +3,8 @@
     <v-overlay v-model="loading" persistent class="align-center justify-center">
 			<div class="kotakLoading">
 				<span class="loader">
-					<v-img class="gambarLogoScreen" :src="logoSekolah" />
-					<h2 style="color: black;">&nbsp;{{ namaSekolah }}&nbsp;</h2>
+					<v-img class="gambarLogoScreen" :src="logoWebsite" />
+					<h2 style="color: black;">&nbsp;{{ singkatanWebsite }}&nbsp;</h2>
 				</span>
 				<!-- <div class="tengah">
 					<v-progress-circular
@@ -13,7 +13,7 @@
 						color="success"
 						indeterminate
 					/>
-					<h2 style="color: black;">&nbsp;{{ namaSekolah }}&nbsp;</h2>
+					<h2 style="color: black;">&nbsp;{{ namaWebsite }}&nbsp;</h2>
 					<v-progress-circular
 						:size="40"
 						:width="3"
@@ -33,11 +33,15 @@ export default {
 			type: Boolean,
 			default: true
 		},
-		logoSekolah: {
+		logoWebsite: {
       type: String,
       default: null
     },
-		namaSekolah: {
+		namaWebsite: {
+      type: String,
+      default: null
+    },
+		singkatanWebsite: {
       type: String,
       default: null
     },
@@ -55,7 +59,7 @@ export default {
 </script>
 <style>
 .kotakLoading {
-	width: auto;
+	width: 200px;
 	border-radius: 20px;
 	opacity: 0.75;
 }
@@ -65,7 +69,7 @@ export default {
 	justify-content: center;
 }
 .gambarLogoScreen {
-  margin-right: 5px;
+  margin: 5px;
   align-items: center;
   display: flex;
   justify-content: center;

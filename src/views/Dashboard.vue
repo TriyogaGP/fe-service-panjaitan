@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1 class="subheading grey--text text-decoration-underline">Dashboard</h1>
-    <v-card class="pa-1 rounded" variant="outlined" elevation="4">
+    <!-- <v-card class="pa-1 rounded" variant="outlined" elevation="4">
       <v-container fluid>
         <v-row>
           <v-col cols="12" :lg="cols" v-if="roleID === '1'">
@@ -228,7 +228,7 @@
           </v-col>
         </v-row>
       </v-container>
-    </v-card>
+    </v-card> -->
     <!-- <div 
       @mouseover="hoverNih($event)"
       @mouseleave="hoverNih($event)"
@@ -263,8 +263,8 @@ export default {
     totalNotif: 0,
     cols: 4,
     roleID: '',
-    mengajarKelas: '',
-    kondisiJabatanTertentu: false,
+    // mengajarKelas: '',
+    // kondisiJabatanTertentu: false,
     
     //notifikasi
     dialogNotifikasi: false,
@@ -283,47 +283,47 @@ export default {
 
   },
   computed: {
-    ...mapState({
-      jabatan: store => store.setting.jabatanOptions,
-      dataDashboard: state => state.user.dataDashboard,
-    }),
-    jabatanOptions(){
-      if(this.roleID === '3'){
-        let jabatan_guru = localStorage.getItem('jabatan_guru').split(', ')
-        let result = []
-        jabatan_guru.map(str => {
-          let hasil = this.jabatan.filter(val => { return val.kode == str })
-          result.push(hasil.length ? hasil[0].label : '')
-        })
-        return result
-      }
-    },
+    // ...mapState({
+    //   jabatan: store => store.setting.jabatanOptions,
+    //   dataDashboard: state => state.user.dataDashboard,
+    // }),
+    // jabatanOptions(){
+    //   if(this.roleID === '3'){
+    //     let jabatan_guru = localStorage.getItem('jabatan_guru').split(', ')
+    //     let result = []
+    //     jabatan_guru.map(str => {
+    //       let hasil = this.jabatan.filter(val => { return val.kode == str })
+    //       result.push(hasil.length ? hasil[0].label : '')
+    //     })
+    //     return result
+    //   }
+    // },
   },
   watch: {
-    jabatanOptions: {
-			deep: true,
-			handler(value) {
-				if(this.roleID === '3'){
-          if(value.includes('Kepala Sekolah') || value.includes('WaKaBid. Kesiswaan')){
-            this.kondisiJabatanTertentu = true
-            this.getDashboard({kelas: null})
-          }
-        }
-			}
-		},
+    // jabatanOptions: {
+		// 	deep: true,
+		// 	handler(value) {
+		// 		if(this.roleID === '3'){
+    //       if(value.includes('Kepala Sekolah') || value.includes('WaKaBid. Kesiswaan')){
+    //         this.kondisiJabatanTertentu = true
+    //         this.getDashboard({kelas: null})
+    //       }
+    //     }
+		// 	}
+		// },
   },
   mounted() {
     if(!localStorage.getItem('user_token')) return this.$router.push({name: 'LogIn'});
     this.roleID = localStorage.getItem('roleID')
-    this.mengajarKelas = localStorage.getItem('mengajar_kelas')
-    if(this.kondisiJabatanTertentu === false && this.mengajarKelas !== 'null') {
-      this.getDashboard({kelas: this.mengajarKelas})
-    }
+    // this.mengajarKelas = localStorage.getItem('mengajar_kelas')
+    // if(this.kondisiJabatanTertentu === false && this.mengajarKelas !== 'null') {
+    //   this.getDashboard({kelas: this.mengajarKelas})
+    // }
     this.overlay = true
   },  
 	methods: {
     ...mapActions({
-      getDashboard: 'user/getDashboard',
+      // getDashboard: 'user/getDashboard',
       uploadFiles: 'upload/uploadFiles',
     }),
     // hoverNih(e){
@@ -354,8 +354,8 @@ export default {
 .box{
 	width: 120px;
 	height: 50px;
-  background-image:-moz-linear-gradient(top, #272727, #4CAF50);
-	background-image: -webkit-gradient(linear, 100% 25%, 50% 100%, from(#272727), to(#4CAF50), color-stop(1,#4CAF50));
+  background-image:-moz-linear-gradient(top, #272727, #c12626);
+	background-image: -webkit-gradient(linear, 100% 25%, 50% 100%, from(#272727), to(#c12626), color-stop(1,#c12626));
 	border-radius: 10px;
 	padding: 0px 5px;
   display: flex;

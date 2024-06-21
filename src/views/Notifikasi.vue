@@ -1,36 +1,50 @@
 <template>
   <div>
     <h1 class="subheading grey--text text-decoration-underline">Data Notifikasi</h1>
+    <div class="d-flex justify-end">
+      <Button
+        color-button="light-blue darken-3"
+        icon-prepend-button="mdi mdi-marker-check"
+        nama-button="Tandai Telah Dibaca"
+        size-button="x-small"
+        @proses="tandai()"
+      />
+      <Button
+        color-button="light-blue darken-3"
+        icon-prepend-button="mdi mdi-reload"
+        nama-button="Muat Ulang"
+        size-button="x-small"
+        @proses="muatulang()"
+      />
+    </div>
     <v-card class="mt-2 mb-2 pa-1 rounded" variant="outlined" elevation="4">
+      <div class="d-flex justify-center">
+        <Button
+          v-for="item in kategori"
+          :key="item.kode"
+          class="kotak-type"
+          :nama-button="`${item.text} (${item.count})`"
+          @proses="() => { kodeKategori = item.kode; }"
+        />
+      </div>
       <v-row no-gutters>
-        <v-col cols="12" lg="3" class="d-flex flex-row justify-center" style="border-right: 2px solid #000;">
+        <!-- <v-col cols="12" lg="3" class="d-flex flex-row justify-center" style="border-right: 2px solid #000;">
           <div class="wadah-kategori d-flex flex-column justify-start">
-            <Button
-              v-for="item in kategori"
-              :key="item.kode"
-              class="kotak-type"
-              :nama-button="`${item.text} (${item.count})`"
-              @proses="() => { kodeKategori = item.kode; }"
-            />
-            <Button
-              color-button="light-blue darken-3"
-              nama-button="Tandai Telah Dibaca"
-              @proses="tandai()"
-            />
+            
           </div>
-        </v-col>
-        <v-col cols="12" lg="9">
+        </v-col> -->
+        <v-col cols="12" lg="12">
           <div v-if="dataNotifikasi.length" class="wadah-notif">
             <div class="wadah-notif-scroll">
               <v-infinite-scroll @load="load" side="end">
-                <div v-for="notif in dataNotifikasi" :key="notif.idNotifikasi" class="kotak-notif" @click="openDialog(notif)">
+                <div v-for="notif in dataNotifikasi" :key="notif.idTemporaryData" class="kotak-notif" @click="openDialog(notif)">
                   <v-row no-gutters>
                     <v-col
                       cols="12"
                       md="6"
                     >
                       <!-- <span class="box fourcorners" style="background-color: rgba(8, 42, 128, 0.822);">{{notif.type}}</span> -->
-                      <span class="box fourcorners" :style="notif.type === 'Record' ? `background-color: rgba(4, 76, 4, 0.822);` : `background-color: rgba(8, 42, 128, 0.822);`">{{notif.type}}</span>
+                      <span class="box fourcorners" :style="notif.jenis === 'Update' ? `background-color: rgba(4, 76, 4, 0.822);` : `background-color: rgba(8, 42, 128, 0.822);`">{{notif.jenis === 'Update' ? 'Perubahan Data' : 'Penghapusan Data'}}</span>
                     </v-col>
                     <v-col
                       cols="12"
@@ -38,14 +52,23 @@
                       class="kondisiNotif"
                     >
                       <p>{{notif.isRead ? 'sudah dibaca' : 'belum dibaca' }} <v-icon :color="notif.isRead == true ? 'green' : 'red'" :icon="notif.isRead == true ? 'mdi mdi-check' : 'mdi mdi-close'" /></p>
+                      <p style="font-size: 12pt;">{{notif.statusExecute }}</p>
                     </v-col>
                   </v-row>
-                  <p class="judulNotif">{{notif.judul}}</p>
+                  <p class="judulNotif">{{notif.pesan.title}}</p>
                   <!-- <p class="pesanNotif">{{ (notif.pesan || '').length > 60 ? `${notif.pesan.substring(0, 60)}...` : notif.pesan }}</p> -->
                   <!-- <p class="pesanNotif">{{ notif.pesan }}</p> -->
                   <span class="pesanNotif" v-html="notif.pesan.message" /><br>
-                  <span v-if="notif.pesan.payload != 'null'" class="pesanNotif">payload: </span>
-                  <span v-if="notif.pesan.payload != 'null'" class="pesanNotif" v-html="notif.pesan.payload" />
+                  <span class="pesanNotif">Alasan : {{ notif.pesan.reason }}</span>
+                  <!-- <span v-if="notif.pesan.payload != 'null'" class="pesanNotif">{{ `payload: ${notif.pesan.payload}` }}</span> -->
+                  <!-- <JsonViewer
+                    v-if="notif.pesan.payload != 'null'"
+                    :value="JSON.parse(notif.pesan.payload)"
+                    :expand-depth=5
+                    copyable
+                    boxed
+                    sort>
+                  </JsonViewer> -->
                   <p class="tanggalNotif" v-html="notif.dikirim" />
                   <p class="tanggalNotif">{{notif.createdAt}}</p>
                 </div>
@@ -101,14 +124,14 @@
               md="4"
               class="pt-2 d-flex align-center font-weight-bold"
             >
-              Type
+              Jenis
             </v-col>
             <v-col
               cols="12"
               md="8"
               class="pt-3"
             >
-              {{ `: ${detailData.type}` }}
+              {{ `: ${detailData.jenis}` }}
             </v-col>
           </v-row>
           <v-row no-gutters>
@@ -117,14 +140,14 @@
               md="4"
               class="pt-2 d-flex align-center font-weight-bold"
             >
-              Judul
+              Title
             </v-col>
             <v-col
               cols="12"
               md="8"
               class="pt-3"
             >
-              {{ `: ${detailData.judul}` }}
+              {{ `: ${detailData.dataTemporary.title}` }}
             </v-col>
           </v-row>
           <v-row no-gutters>
@@ -133,15 +156,30 @@
               md="4"
               class="pt-2 d-flex align-center font-weight-bold"
             >
-              Pesan
+              Message
             </v-col>
             <v-col
               cols="12"
               md="8"
               class="pt-3"
             >
-              <!-- {{ `: ${detailData.pesan}` }} -->
-              : <span class="pesanNotif" v-html="detailData.pesan.message" /><br>
+              : <span class="pesanNotif" v-html="detailData.dataTemporary.message" /><br>
+            </v-col>
+          </v-row>
+          <v-row no-gutters>
+            <v-col
+              cols="12"
+              md="4"
+              class="pt-2 d-flex align-center font-weight-bold"
+            >
+              Alasan
+            </v-col>
+            <v-col
+              cols="12"
+              md="8"
+              class="pt-3"
+            >
+              {{ `: ${detailData.dataTemporary.reason !== '' ? detailData.dataTemporary.reason : '-'}` }}
             </v-col>
           </v-row>
           <v-row no-gutters>
@@ -158,7 +196,7 @@
               class="pt-3"
             >
               <JsonViewer
-                v-if="detailData.pesan.payload != 'null'"
+                v-if="detailData.dataTemporary.payload !== 'null'"
                 :value="jsonData"
                 :expand-depth=5
                 copyable
@@ -175,14 +213,14 @@
               md="4"
               class="pt-2 d-flex align-center font-weight-bold"
             >
-              Params
+              Direquest Oleh
             </v-col>
             <v-col
               cols="12"
               md="8"
               class="pt-3"
             >
-              {{ `: ${detailData.params ? detailData.params : '-'}` }}
+              : <span v-html="detailData.request" />
             </v-col>
           </v-row>
           <v-row no-gutters>
@@ -191,14 +229,14 @@
               md="4"
               class="pt-2 d-flex align-center font-weight-bold"
             >
-              Dikirim Oleh
+              Status Execute
             </v-col>
             <v-col
               cols="12"
               md="8"
               class="pt-3"
             >
-              : <span v-html="detailData.dikirim" />
+              {{ `: ${detailData.statusExecute}` }}
             </v-col>
           </v-row>
           <v-row no-gutters>
@@ -219,7 +257,30 @@
           </v-row>
         </v-card-text>
         <v-divider />
-        <v-card-actions />
+        <v-card-actions>
+          <v-row 
+            no-gutters
+            class="mr-3"
+          >
+            <v-col
+              class="text-end"
+              cols="12"
+            >
+              <Button
+                v-if="detailData.statusExecute === 'Menunggu Persetujuan Permohonan'"
+                color-button="#bd3a07"
+                nama-button="Tidak DiSetujui"
+                @click="prosesData('TIDAKSETUJU', 'Permohonan Tidak Disetujui')"
+              />
+              <Button 
+                v-if="detailData.statusExecute === 'Menunggu Persetujuan Permohonan'"
+                color-button="ligth-blue darken-3"
+                nama-button="Proses DiSetujui"
+                @click="prosesData('SETUJU', 'Permohonan Disetujui')"
+              />
+            </v-col>
+          </v-row>
+        </v-card-actions>
       </v-card>
     </v-dialog>
     <v-dialog
@@ -265,14 +326,15 @@ export default {
       totalPage: ''
     },
     detailData: {
-      idNotifikasi: '',
-      idUser: '',
-      type: '',
-      judul: '',
-      pesan: '',
-      params: null,
-      dikirim: '',
+      idTemporaryData: '',
+      idAdmin: '',
+      jenis: '',
+      dataTemporary: '',
+      imageTemporary: '',
       isRead: false,
+      statusExecute: false,
+      tujuan: '',
+      request: '',
       createdAt: ''
     },
 
@@ -348,33 +410,38 @@ export default {
     }),
     openDialog(item){
       this.detailData = {
-        idNotifikasi: item.idNotifikasi,
-        idUser: item.idUser,
-        type: item.type,
-        judul: item.judul,
-        pesan: item.pesan,
-        params: item.params,
-        dikirim: item.dikirim,
+        idTemporaryData: item.idTemporaryData,
+        idAdmin: item.idAdmin,
+        jenis: item.jenis,
+        dataTemporary: JSON.parse(item.dataTemporary),
+        imageTemporary: item.imageTemporary,
+        tujuan: item.tujuan,
+        request: item.request,
         isRead: item.isRead,
+        statusExecute: item.statusExecute,
         createdAt: item.createdAt
       }
-      this.jsonData = JSON.parse(this.detailData.pesan.payload)
+      console.log(item)
+      this.jsonData = JSON.parse(item.pesan.payload)
       if(this.detailData.isRead) this.DialogNotifikasi = true
       let bodyData = {
         jenis: 'ISREAD',
-        idNotifikasi: item.idNotifikasi,
+        idTemporaryData: item.idTemporaryData,
       }
       this.$store.dispatch('setting/postNotifikasi', bodyData)
       .then((res) => {
         this.DialogNotifikasi = true
-        this.dataNotifikasi = []
-        this.getKategoriNotifikasi()
-        this.dataCountNotifikasi()
-        this.getNotifikasi({kategori: this.kodeKategori, page: this.page, limit: this.limit})
+        this.muatulang()
 			})
 			.catch((err) => {
         this.notifikasi("error", err.response.data.message, "1")
 			});
+    },
+    muatulang(){
+      this.dataNotifikasi = []
+      this.getKategoriNotifikasi()
+      this.dataCountNotifikasi()
+      this.getNotifikasi({kategori: this.kodeKategori, page: this.page, limit: this.limit})
     },
     tandai(){
       let bodyData = {
@@ -383,10 +450,22 @@ export default {
       }
       this.$store.dispatch('setting/postNotifikasi', bodyData)
       .then((res) => {
-        this.dataNotifikasi = []
-        this.getKategoriNotifikasi()
-        this.dataCountNotifikasi()
-        this.getNotifikasi({kategori: this.kodeKategori, page: this.page, limit: this.limit})
+        this.muatulang()
+			})
+			.catch((err) => {
+        this.notifikasi("error", err.response.data.message, "1")
+			});
+    },
+    prosesData(jenis, status){
+      let bodyData = {
+        jenis,
+        idTemporaryData: this.detailData.idTemporaryData,
+        statusExecute: status,
+      }
+      this.$store.dispatch('setting/postNotifikasi', bodyData)
+      .then((res) => {
+        this.DialogNotifikasi = false
+        this.muatulang()
 			})
 			.catch((err) => {
         this.notifikasi("error", err.response.data.message, "1")
@@ -467,7 +546,7 @@ export default {
 .kotak-notif {
   height: 100%;
   width: 100%;
-  border: 2px solid #4CAF50;
+  border: 2px solid #c12626;
   border-radius: 10px;
   background-color: #272727;
   color: #ffffff;
@@ -483,9 +562,9 @@ export default {
   background-color: white;
   font-size: 8pt;
   align-items: center;
-  display: flex;
-  justify-content: center;
-  line-height: normal;
+  /* display: flex; */
+  /* justify-content: center; */
+  /* line-height: normal; */
   position: relative;
   text-align: center;
 }

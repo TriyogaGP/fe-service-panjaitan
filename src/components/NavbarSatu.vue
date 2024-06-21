@@ -2,15 +2,15 @@
 	<nav>
 		<v-app-bar class="nav-header" dark app>
 			<div class="nav-logo">
-				<v-img class="gambarLogo" :src="logoSekolah" />
-				<span class="textNamaSekolah">{{ namaSekolah }}</span>
+				<v-img class="gambarLogo" :src="logoWebsite" />
+				<span class="textNamaSekolah">{{ singkatanWebsite }}</span>
 			</div>
 			<v-divider vertical :thickness="2" color="white" />
 			<v-icon start style="margin-left: 10px;" size="middle" icon="mdi mdi-format-list-bulleted" @click.stop="drawer = !drawer" color="icon-white" />
 			<v-spacer />
 			<div class="nav-proses">
 				<v-badge
-					v-if="roleID === '1'"
+					v-if="roleID === '1' || roleID === '2'"
 					:content="`${totalNotif >= 99 ? '99+' : totalNotif}`"
 					:value="`${totalNotif >= 99 ? '99+' : totalNotif}`"
 					color="green"
@@ -50,7 +50,7 @@
 						class="listData"
 					>
 						<v-list-item
-							v-if="roleID === '1'"
+							v-if="roleID === '1' || roleID === '2'"
 							router to="/settings"
 							color="nav-back"
 							class="SelectedMenu"
@@ -76,7 +76,7 @@
 								<span class="menufont">Profil</span>
 							</template>
 						</v-list-item>
-						<v-list-item
+						<!-- <v-list-item
 							router to="/broadcast"
 							color="nav-back"
 							class="SelectedMenu"
@@ -105,7 +105,7 @@
 							<template v-slot:title>
 								<span class="menufont">Percakapan</span>
 							</template>
-						</v-list-item>
+						</v-list-item> -->
 						<v-list-item
 							@click="keluar()"
 							color="nav-back"
@@ -129,15 +129,14 @@
 					<span v-for="data in optionMenu" :key="data.menuText">
 						<v-list-item
 							v-if="!data.subMenu.length && !data.kondisi"
-							router :to="data.menuText === 'Ujian' && roleID === '4' ? `${data.menuRoute}/${jenisExam}` : data.menuRoute"
+							router :to="data.menuRoute"
 							class="SelectedMenu"
 							active-class="SelectedMenu-active"
 							:title="data.menuText"
 						>
 							<template v-slot:title>
 								<v-icon size="middle" :icon="data.menuIcon" color="icon-white" style="margin-right: 10px;" />
-								<span class="menufont">{{ data.menuText === 'Wali Kelas' && wali_kelas !== '' ? `${wali_kelas === null ? data.menuText : `${data.menuText} ${wali_kelas}`}` : 
-							data.menuText === 'Ujian' && roleID === '4' ? `${data.menuText} ${jenisExam}` : data.menuText }}</span>
+								<span class="menufont">{{ data.menuText }}</span>
 							</template>
 						</v-list-item>
 						<v-list-group
@@ -159,7 +158,7 @@
 								<v-list-item
 									v-for="submenu in (!data.kondisi) ? data.subMenu : mengajarOptions"
 									:key="(!data.kondisi) ? submenu.menuText : submenu.label"
-									router :to="(!data.kondisi) ? submenu.menuRoute : `/data-akademis/${jenis}/${submenu.link}`"
+									router :to="submenu.menuRoute"
 									class="SelectedSubMenu"
 									active-class="SelectedSubMenu-active"
 									:title="(!data.kondisi) ? submenu.menuText : submenu.label"
@@ -175,146 +174,6 @@
 				</v-list>
 			</div>
 		</v-navigation-drawer>
-		<!-- <div class="nav-header">
-			<div class="nav-logo">
-				<v-img class="gambarLogo" :src="logoSekolah" />
-				<span class="textNamaSekolah">{{ namaSekolah }}</span>
-			</div>
-			<v-divider vertical :thickness="2" color="white" />
-			<div id="navbar" class="navbar">
-				<ul class="nav">
-					<li v-if="roleID !== '4'">
-						<routerLink to="/dashboard">
-							<v-icon start size="middle" icon="mdi mdi-view-dashboard" color="icon-white" />Dashboard
-						</routerLink>
-					</li>
-					<li v-for="data in optionMenu" :key="data.menuText">
-						<routerLink v-if="!data.kondisi" :to="data.menuText === 'Ujian' && roleID === '4' ? `${data.menuRoute}/${jenisExam}` : data.menuRoute" :class="`${data.subMenu.length ? 'expand-btn' : ''}`">
-							<v-icon start size="middle" :icon="data.menuIcon" color="icon-white" />
-							{{ data.menuText === 'Wali Kelas' && wali_kelas !== '' ? `${wali_kelas === null ? data.menuText : `${data.menuText} ${wali_kelas}`}` : 
-							data.menuText === 'Ujian' && roleID === '4' ? `${data.menuText} ${jenisExam}` : data.menuText }}
-						</routerLink>
-						<routerLink v-if="data.kondisi" to="" class="expand-btn">
-							<v-icon start size="middle" :icon="data.menuIcon" color="icon-white" />{{ data.menuText }}
-						</routerLink>
-						<ul v-if="(data.subMenu.length && !data.kondisi) || (!data.subMenu.length && data.kondisi)">
-							<li v-for="submenu in (!data.kondisi) ? data.subMenu : mengajarOptions" :key="(!data.kondisi) ? submenu.menuText : submenu.label">
-								<routerLink :to="(!data.kondisi) ? submenu.menuRoute : `/data-akademis/${jenis}/${submenu.link}`">
-									<v-icon start size="middle" :icon="(!data.kondisi) ? submenu.menuIcon : 'mdi mdi-book-education'" color="icon-white" />{{ (!data.kondisi) ? submenu.menuText : submenu.label }}
-								</routerLink>
-							</li>
-						</ul>
-					</li>
-				</ul>
-			</div>
-			<div class="nav-proses">
-				<v-badge
-					v-if="roleID === '1'"
-					:content="`${totalNotif >= 99 ? '99+' : totalNotif}`"
-					:value="`${totalNotif >= 99 ? '99+' : totalNotif}`"
-					color="green"
-					overlap
-					:style="`${totalNotif >= 99 ? 'margin-right: 15px;' : 'margin-right: 5px;'}`"
-				>
-					<v-btn
-						size="small"
-						icon="mdi mdi-bell"
-						color="icon-white"
-						style="height: 28px; width: 28px;"
-						router to="/notifikasi" />
-				</v-badge>
-				<v-menu
-					rounded="t-xs b-lg"
-					open-on-click
-					offset-y
-					transition="slide-y-transition"
-					location="bottom"
-				>
-					<template v-slot:activator="{ props }">
-						<span
-							class="white--text ma-3 UserPanel"
-							v-bind="props"
-						>
-							{{ inisialuppercaseLetterFirst(nama) }}
-							<v-avatar size="35">
-								<v-img :src="fotoProfil"></v-img>
-							</v-avatar>
-						</span>
-					</template>
-
-					<v-list
-						:lines="false"
-						density="comfortable"
-						nav
-						class="listData"
-					>
-						<v-list-item
-							v-if="roleID === '1'"
-							router to="/settings"
-							color="nav-back"
-							class="SelectedMenu"
-						>
-							<template v-slot:append>
-								<v-icon size="middle" icon="mdi mdi-cog-outline" color="icon-white" />
-							</template>
-							<v-list-item-title>
-								<span class="menufont">Pengaturan</span>
-							</v-list-item-title>
-						</v-list-item>
-						<v-list-item
-							router to="/profile"
-							color="nav-back"
-							class="SelectedMenu"
-						>
-							<template v-slot:append>
-								<v-icon size="middle" icon="mdi mdi-account" color="icon-white" />
-							</template>
-							<v-list-item-title>
-								<span class="menufont">Profil</span>
-							</v-list-item-title>
-						</v-list-item>
-						<v-list-item
-							router to="/broadcast"
-							color="nav-back"
-							class="SelectedMenu"
-						>
-							<template v-slot:append>
-								<span class="boxnotif" v-html="totalBroadcast" />
-								<v-icon size="middle" icon="mdi mdi-broadcast" color="icon-white" />
-							</template>
-							<v-list-item-title>
-								<span class="menufont">Broadcast</span>
-							</v-list-item-title>
-						</v-list-item>
-						<v-list-item
-							v-if="roleID === '3' || roleID === '4'"
-							router to="/percakapan"
-							color="nav-back"
-							class="SelectedMenu"
-						>
-							<template v-slot:append>
-								<v-icon size="middle" icon="mdi mdi-chat" color="icon-white" />
-							</template>
-							<v-list-item-title>
-								<span class="menufont">Percakapan</span>
-							</v-list-item-title>
-						</v-list-item>
-						<v-list-item
-							@click="keluar()"
-							color="nav-back"
-							class="SelectedMenu"
-						>
-							<template v-slot:append>
-								<v-icon size="middle" icon="mdi mdi-logout" color="icon-white" />
-							</template>
-							<v-list-item-title>
-								<span class="menufont">Keluar</span>
-							</v-list-item-title>
-						</v-list-item>
-					</v-list>
-				</v-menu>
-			</div>
-		</div> -->
 		<v-dialog
 			v-model="dialogNotifikasi"
 			transition="dialog-bottom-transition"
@@ -341,19 +200,19 @@ export default {
     PopUpNotifikasi
   },
 	props: {
-    namaSekolah: {
+    namaWebsite: {
       type: String,
       default: null
     },
-    logoSekolah: {
+    singkatanWebsite: {
+      type: String,
+      default: null
+    },
+    logoWebsite: {
       type: String,
       default: null
     },
     totalNotif: {
-      type: Number,
-      default: 0,
-    },
-    totalBroadcast: {
       type: Number,
       default: 0,
     },
@@ -364,13 +223,7 @@ export default {
 		fotoProfil: '',
 		roleID: '',
 		nama: '',
-		wali_kelas: '',
-		kondisiKepalaSekolah: false,
-		kondisiWaKaBidKesiswaan: false,
-		kondisiWaKaBidKurikulum: false,
 		menuOptions: [],
-		jenis: '',
-		valueMenu: 'Pengguna',
 
 		//notifikasi
     dialogNotifikasi: false,
@@ -386,85 +239,40 @@ export default {
 		...mapGetters({
       cmssettings: 'setting/cmssettings',
     }),
-    jenisExam(){
-      return this.cmssettings ? this.cmssettings.jenisraport.value : null
-    },
-		mengajarOptions(){
-			if(this.roleID === '3'){
-				let result = []
-				if(localStorage.getItem('mengajar_bidang') === 'null') return result
-				let mengajar_bidang = localStorage.getItem('mengajar_bidang').split(', ')
-				mengajar_bidang.map(str => {
-					let hasil = this.mengajar.filter(val => { return val.kode == str })
-					result.push({ label: hasil.length ? hasil[0].label : '', link: hasil.length ? hasil[0].label.replace(' ', '-') : '' })
-				})
-				return result
-			}
-		},
-		jabatanOptions(){
-			if(this.roleID === '3'){
-				let jabatan_guru = localStorage.getItem('jabatan_guru').split(', ')
-				let result = []
-				jabatan_guru.map(str => {
-					let hasil = this.jabatan.filter(val => { return val.kode == str })
-					result.push(hasil.length ? hasil[0].label : '')
-				})
-				return result
-			}
-		},
 		optionMenu(){
 			if(this.roleID === '3'){
-				let jabatan_guru = localStorage.getItem('jabatan_guru').split(', ')
-				let result = []
-				jabatan_guru.map(str => {
-					let hasil = this.jabatan.filter(val => { return val.kode == str })
-					result.push(hasil.length ? hasil[0].label : '')
-				})
-				this.jenis = 'mapel'
-        if(result.includes('WaKaBid. Kurikulum')){
-					return this.menuOptions.filter(el => { return this.wali_kelas === '' ? el.menuText != "Wali Kelas" && el.menuText != "Guru" && el.menuText != "Siswa Siswi" : el.menuText != "Guru" && el.menuText != "Siswa Siswi"; })
-        }else if(result.includes('WaKaBid. Kesiswaan')){
-          return this.menuOptions.filter(el => { return this.wali_kelas === '' ? el.menuText != "Wali Kelas" && el.menuText != "Guru" && el.menuText != "Jadwal Mengajar" : el.menuText != "Guru" && el.menuText != "Jadwal Mengajar"; })
-				}else if(result.includes('Kepala Sekolah')){
-          return this.menuOptions.filter(el => { return this.wali_kelas === '' ? el.menuText != "Wali Kelas" : el; })
-        }else{
-          return this.menuOptions.filter(el => { return this.wali_kelas === '' ? el.menuText != "Wali Kelas" && el.menuText != "Guru" && el.menuText != "Siswa Siswi" && el.menuText != "Jadwal Mengajar" : el.menuText != "Guru" && el.menuText != "Siswa Siswi" && el.menuText != "Jadwal Mengajar"; })
-				}
-			}else if(this.roleID === '4'){
+				// let jabatan_guru = localStorage.getItem('jabatan_guru').split(', ')
+				// let result = []
+				// jabatan_guru.map(str => {
+				// 	let hasil = this.jabatan.filter(val => { return val.kode == str })
+				// 	result.push(hasil.length ? hasil[0].label : '')
+				// })
+        // if(result.includes('WaKaBid. Kurikulum')){
+				// 	return this.menuOptions.filter(el => { return this.wali_kelas === '' ? el.menuText != "Wali Kelas" && el.menuText != "Guru" && el.menuText != "Siswa Siswi" : el.menuText != "Guru" && el.menuText != "Siswa Siswi"; })
+        // }else if(result.includes('WaKaBid. Kesiswaan')){
+        //   return this.menuOptions.filter(el => { return this.wali_kelas === '' ? el.menuText != "Wali Kelas" && el.menuText != "Guru" && el.menuText != "Jadwal Mengajar" : el.menuText != "Guru" && el.menuText != "Jadwal Mengajar"; })
+				// }else if(result.includes('Kepala Sekolah')){
+        //   return this.menuOptions.filter(el => { return this.wali_kelas === '' ? el.menuText != "Wali Kelas" : el; })
+        // }else{
+        //   return this.menuOptions.filter(el => { return this.wali_kelas === '' ? el.menuText != "Wali Kelas" && el.menuText != "Guru" && el.menuText != "Siswa Siswi" && el.menuText != "Jadwal Mengajar" : el.menuText != "Guru" && el.menuText != "Siswa Siswi" && el.menuText != "Jadwal Mengajar"; })
+				// }
 				return this.menuOptions
 			}else if(this.roleID === '1' || this.roleID === '2'){
 				return this.menuOptions
-      }
+			}
 		},
   },
 	watch: {
-		jabatanOptions: {
-			deep: true,
-			handler(value) {
-				if(this.roleID === '3'){
-					if(value.includes('WaKaBid. Kurikulum')){
-						this.kondisiWaKaBidKurikulum = true
-					}else if(value.includes('WaKaBid. Kesiswaan')){
-						this.kondisiWaKaBidKesiswaan = true
-					}else if(value.includes('Kepala Sekolah')){
-						this.kondisiKepalaSekolah = true
-					}
-				}
-			}
-		},
+		
 	},
 	mounted() {
 		if(!localStorage.getItem('user_token')) return this.$router.push({name: 'LogIn'});
 		this.fotoProfil = localStorage.getItem('fotoProfil')
 		this.nama = localStorage.getItem('nama')
 		this.roleID = localStorage.getItem('roleID')
-		this.wali_kelas = localStorage.getItem('wali_kelas')
 		this.Navbar()
-		this.getMengajar()
-		this.getJabatan()
-    this.getCMSSettings()
+		this.getCMSSettings()
 		let path = this.$route.path.substring(1).split('/');
-		console.log(path);
 		if(path[0] === 'settings' || path[0] === 'profile' || path[0] === 'notifikasi' || path[0] === 'percakapan'){
 			this.drawer = false;
 			return this.drawer;
@@ -473,10 +281,7 @@ export default {
 	methods: {
 		...mapActions({
       getCMSSettings: 'setting/getCMSSettings',
-			getMengajar: "setting/getMengajar",
-			getJabatan: "setting/getJabatan",
 			getMenu: "setting/getMenu",
-			AuthLogout: "auth/AuthLogout",
 		}),
 		Navbar(){
 			this.getMenu(this.roleID)
@@ -495,16 +300,8 @@ export default {
 			this.notifikasi("question", "Apakah anda yakin ingin keluar ?", "2")
 		},
 		goToProses(){
-			this.AuthLogout(localStorage.getItem('idLogin'))
-			.then((res) => {
-				const socket = io(this.API_URL);
-        socket.emit("dataonline");
-				localStorage.clear();
-				this.$router.push({name: "LogIn"});
-			})
-			.catch((err) => {
-				this.notifikasi("error", err.response.data.message, "1")
-			});
+			localStorage.clear();
+			this.$router.push({name: "LogIn"});
 		},
 		notifikasi(kode, text, proses){
       this.dialogNotifikasi = true
@@ -553,7 +350,7 @@ left-tampilan-right {
 	width: 100%;
 	background: #272727;
 	z-index: 1;
-	border-bottom: 3px solid #4CAF50;
+	border-bottom: 3px solid #c12626;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -620,7 +417,7 @@ left-tampilan-right {
 	border-radius: 4px;
 }
 .SelectedMenu:hover {
-	background-color: #4CAF50;
+	background-color: #c12626;
 }
 .SelectedMenu:active {
 	background-color: #272727;
@@ -635,13 +432,13 @@ left-tampilan-right {
 	margin: 2px 0;
 }
 .SelectedMenu:hover {
-	background-color: #4CAF50;
+	background-color: #c12626;
 }
 .SelectedMenu-active {
-	background-color: #4CAF50;
+	background-color: #c12626;
 }
 .SelectedSubMenu{
-	background-color: #4CAF50;
+	background-color: #c12626;
 	color: white;
 	cursor: pointer;
 	border-radius: 5px;

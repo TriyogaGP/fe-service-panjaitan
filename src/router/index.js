@@ -14,11 +14,6 @@ const routes = [
     component: ForgotPass,
   },
   {
-    path: '/ujian/:kode',
-    name: 'Ujian',
-    component: () => import('@/views/page-content/content-view/V_Ujian.vue')
-  },
-  {
     path: '/',
     component: () => import("@/views/Layout/index.vue"),
     children: [
@@ -70,76 +65,31 @@ const routes = [
         component: () => import('@/views/page-content/Administrator/P_FormAdministrator.vue')
       },
       {
-        path: '/data-struktural',
-        name: 'DataStruktural',
-        component: () => import('@/views/page-content/Struktural/V_Struktural.vue')
+        path: '/data-biodata',
+        name: 'DataKeanggotaan',
+        component: () => import('@/views/page-content/Keanggotaan/V_Keanggotaan.vue')
       },
       {
-        path: '/formulir-struktural/:kondisi/:uid',
-        name: 'FormulirStruktural',
+        path: '/formulir-biodata/:kondisi/:uid',
+        name: 'FormulirKeanggotaan',
         props: true,
-        component: () => import('@/views/page-content/Struktural/P_FormStruktural.vue')
+        component: () => import('@/views/page-content/Keanggotaan/P_FormKeanggotaan.vue')
       },
       {
-        path: '/data-siswa-siswi',
-        name: 'DataSiswaSiswi',
-        component: () => import('@/views/page-content/SiswaSiswi/V_SiswaSiswi.vue')
+        path: '/data-pengurus',
+        name: 'DataPengurus',
+        component: () => import('@/views/page-content/Pengurus/V_Pengurus.vue')
       },
       {
-        path: '/formulir-siswa-siswi/:kondisi/:uid',
-        name: 'FormulirSiswaSiswi',
+        path: '/data-iuran',
+        name: 'DataIuran',
+        component: () => import('@/views/page-content/Iuran/V_Iuran.vue')
+      },
+      {
+        path: '/data-komisaris/:kode',
+        name: 'DataKomisaris',
         props: true,
-        component: () => import('@/views/page-content/SiswaSiswi/P_FormSiswaSiswi.vue')
-      },
-      {
-        path: '/data-kelas-siswa/:kelas',
-        name: 'DataKelasSiswa',
-        component: () => import('@/views/page-content/content-view/V_KelasSiswa.vue')
-      },
-      {
-        path: '/data-jadwal-mengajar',
-        name: 'DataJadwalMengajar',
-        component: () => import('@/views/page-content/content-view/V_JadwalMengajar.vue')
-      },
-      {
-        path: '/data-detail-kelas-siswa/:kondisi/:kelas',
-        name: 'DataDetailKelasSiswa',
-        component: () => import('@/views/page-content/content-view/V_DetailKelasSiswa.vue')
-      },
-      {
-        path: '/data-akademis',
-        name: 'DataAkademis',
-        component: () => import('@/views/page-content/content-view/V_Akademis.vue'),
-      },
-      {
-        path: '/data-akademis/:jenis/:mapel',
-        name: 'DataDetailAkademis',
-        component: () => import('@/views/page-content/content-view/V_DetailAkademis.vue')
-      },
-      {
-        path: '/data-wali-kelas',
-        name: 'DataWaliKelas',
-        component: () => import('@/views/page-content/content-view/V_WaliKelasSiswa.vue'),
-      },
-      {
-        path: '/question-exam',
-        name: 'QuestionExam',
-        component: () => import('@/views/page-content/content-view/V_QuestionExam.vue')
-      },
-      {
-        path: '/list-exam',
-        name: 'JadwalExam',
-        component: () => import('@/views/page-content/content-view/V_JadwalExam.vue')
-      },
-      {
-        path: '/data-exam/:jenis',
-        name: 'DataExam',
-        component: () => import('@/views/page-content/content-view/V_Exam.vue')
-      },
-      {
-        path: '/koreksi-exam',
-        name: 'KoreksiExam',
-        component: () => import('@/views/page-content/content-view/V_KoreksiExam.vue')
+        component: () => import('@/views/page-content/Iuran/V_Komisaris.vue')
       },
       
       {

@@ -29,7 +29,7 @@
         :loading="loadingtable"
         :items="DataAdministrator"
         expand-on-click
-        item-value="idUser"
+        item-value="idAdmin"
         :sort-by="sortBy"
         density="comfortable"
         hide-default-footer
@@ -60,9 +60,12 @@
         <template #[`item.number`]="{ item }">
           {{ page > 1 ? ((page - 1)*limit) + item.index + 1 : item.index + 1 }}
         </template>
-        <template #[`item.statusAktif`]="{ item }">
-          <v-icon size="small" v-if="item.raw.statusAktif == true" color="green" icon="mdi mdi-check" />
-          <v-icon size="small" v-else-if="item.raw.statusAktif == false" color="red" icon="mdi mdi-close" />
+        <template #[`item.wilayah`]="{ item }">
+          <span>{{ `${item.raw.namaWilayah} (${item.raw.kodeWilayah})` }}</span>
+        </template>
+        <template #[`item.statusAdmin`]="{ item }">
+          <v-icon size="small" v-if="item.raw.statusAdmin == true" color="green" icon="mdi mdi-check" />
+          <v-icon size="small" v-else-if="item.raw.statusAdmin == false" color="red" icon="mdi mdi-close" />
         </template>
         <template #[`item.flag`]="{ item }">
           <div class="flag" :style="item.raw.flag ? 'background-color: red;' : 'background-color: green;'" />
@@ -74,15 +77,17 @@
                 color-button="#0bd369"
                 icon-prepend-button="mdi mdi-pencil"
                 nama-button="Ubah"
-                :disabled-button="item.raw.idUser === idLog || item.raw.statusAktif === false"
-                @proses="ubahData(item.raw.idUser)"
+                size-button="x-small"
+                :disabled-button="item.raw.idAdmin === idLog || item.raw.statusAdmin === false"
+                @proses="ubahData(item.raw.idAdmin)"
               />
               <Button 
                 color-button="#0bd369"
-                :icon-prepend-button="item.raw.statusAktif === false ? 'mdi mdi-eye' : 'mdi mdi-eye-off'"
-                :nama-button="item.raw.statusAktif === false ? 'Active' : 'Non Active'"
-                :disabled-button="item.raw.idUser === idLog"
-                @proses="postRecord(item.raw, 'STATUSRECORD', !item.raw.statusAktif)"
+                :icon-prepend-button="item.raw.statusAdmin === false ? 'mdi mdi-eye' : 'mdi mdi-eye-off'"
+                :nama-button="item.raw.statusAdmin === false ? 'Active' : 'Non Active'"
+                size-button="x-small"
+                :disabled-button="item.raw.idAdmin === idLog"
+                @proses="postRecord(item.raw, 'STATUSRECORD', !item.raw.statusAdmin)"
               />
               <v-menu
                 open-on-click
@@ -98,6 +103,7 @@
                     icon-prepend-button="mdi mdi-delete"
                     icon-append-button="mdi mdi-menu-down"
                     nama-button="Hapus"
+                    size-button="x-small"
                   />
                 </template>
 
@@ -113,7 +119,7 @@
                     class="SelectedMenu"
                     active-class="SelectedMenu-active"
                     title="Delete Soft"
-                    :disabled="item.raw.idUser === idLog || item.raw.statusAktif === false"
+                    :disabled="item.raw.idAdmin === idLog || item.raw.statusAdmin === false"
                   >
                     <template v-slot:prepend>
                       <v-icon size="middle" icon="mdi mdi-delete" color="icon-white" />
@@ -127,7 +133,7 @@
                     class="SelectedMenu"
                     active-class="SelectedMenu-active"
                     title="Delete Hard"
-                    :disabled="item.raw.idUser === idLog"
+                    :disabled="item.raw.idAdmin === idLog"
                   >
                     <template v-slot:prepend>
                       <v-icon size="middle" icon="mdi mdi-delete" color="icon-white" />
@@ -142,6 +148,7 @@
                 color-button="#04f7f7"
                 icon-prepend-button="mdi mdi-information"
                 nama-button="Detail"
+                size-button="x-small"
                 @proses="openDialog(item.raw)"
               />
             </td>
@@ -149,11 +156,12 @@
         </template>
         <template #top>
           <v-row no-gutters class="pa-2">
-            <v-col cols="12" md="6">
+            <v-col cols="12" md="6" class="d-flex align-center">
               <Button 
                 color-button="light-blue darken-3"
                 icon-prepend-button="mdi mdi-plus-thick"
                 nama-button="Tambah"
+                size-button="x-small"
                 @proses="getUID"
               />
             </v-col>
@@ -311,22 +319,6 @@
               <v-col
                 cols="12"
                 md="4"
-                class="pt-2 d-flex align-center font-weight-bold"
-              >
-                Email
-              </v-col>
-              <v-col
-                cols="12"
-                md="8"
-                class="pt-3"
-              >
-                {{ previewData.email }}
-              </v-col>
-            </v-row>
-            <v-row no-gutters>
-              <v-col
-                cols="12"
-                md="4"
                 class="d-flex align-center font-weight-bold"
               >
                 Kata Sandi
@@ -348,7 +340,7 @@
             </v-row>
           </Fieldset>
           <Fieldset
-            legend="Data Alamat"
+            legend="Data Wilayah"
             :toggleable="true"
             :collapsed="true"
           >
@@ -358,158 +350,14 @@
                 md="4"
                 class="pt-2 d-flex align-center font-weight-bold"
               >
-                Tempat, Tanggal Lahir
+                Wilayah
               </v-col>
               <v-col
                 cols="12"
                 md="8"
                 class="pt-3"
               >
-                {{ previewData.tempat }}, {{ convertDateForMonth(previewData.tanggalLahir) }}
-              </v-col>
-            </v-row>
-            <v-row no-gutters>
-              <v-col
-                cols="12"
-                md="4"
-                class="pt-2 d-flex align-center font-weight-bold"
-              >
-                Jenis Kelamin
-              </v-col>
-              <v-col
-                cols="12"
-                md="8"
-                class="pt-3"
-              >
-                {{ previewData.jenisKelamin }}
-              </v-col>
-            </v-row>
-            <v-row no-gutters>
-              <v-col
-                cols="12"
-                md="4"
-                class="pt-2 d-flex align-center font-weight-bold"
-              >
-                Agama
-              </v-col>
-              <v-col
-                cols="12"
-                md="8"
-                class="pt-3"
-              >
-                {{ previewData.agama }}
-              </v-col>
-            </v-row>
-            <v-row no-gutters>
-              <v-col
-                cols="12"
-                md="4"
-                class="pt-2 d-flex align-center font-weight-bold"
-              >
-                Telepon
-              </v-col>
-              <v-col
-                cols="12"
-                md="8"
-                class="pt-3"
-              >
-                {{ previewData.telp }}
-              </v-col>
-            </v-row>
-            <v-row no-gutters>
-              <v-col
-                cols="12"
-                md="4"
-                class="pt-2 d-flex align-center font-weight-bold"
-              >
-                Alamat
-              </v-col>
-              <v-col
-                cols="12"
-                md="8"
-                class="pt-3"
-              >
-                {{ previewData.alamat }}
-              </v-col>
-            </v-row>
-            <v-row no-gutters>
-              <v-col
-                cols="12"
-                md="4"
-                class="pt-2 d-flex align-center font-weight-bold"
-              >
-                Provinsi
-              </v-col>
-              <v-col
-                cols="12"
-                md="8"
-                class="pt-3"
-              >
-                {{ previewData.provinsi }}
-              </v-col>
-            </v-row>
-            <v-row no-gutters>
-              <v-col
-                cols="12"
-                md="4"
-                class="pt-2 d-flex align-center font-weight-bold"
-              >
-                Kabupaten / Kota
-              </v-col>
-              <v-col
-                cols="12"
-                md="8"
-                class="pt-3"
-              >
-                {{ previewData.kabKota }}
-              </v-col>
-            </v-row>
-            <v-row no-gutters>
-              <v-col
-              cols="12"
-              md="4"
-                class="pt-2 d-flex align-center font-weight-bold"
-              >
-              Kecamatan
-              </v-col>
-              <v-col
-                cols="12"
-                md="8"
-                class="pt-3"
-              >
-                {{ previewData.kecamatan }}				
-              </v-col>
-            </v-row>
-            <v-row no-gutters>
-              <v-col
-                cols="12"
-                md="4"
-                class="pt-2 d-flex align-center font-weight-bold"
-              >
-                Kelurahan / Desa
-              </v-col>
-              <v-col
-                cols="12"
-                md="8"
-                class="pt-3"
-              >
-                {{ previewData.kelurahan }}
-              </v-col>
-            </v-row>
-            <v-row no-gutters>
-              <v-col
-                cols="12"
-                md="4"
-                class="pt-2 d-flex align-center font-weight-bold"
-              >
-                Kode Pos
-              </v-col>
-              <v-col
-                cols="12"
-                md="8"
-                class="pt-3"
-              >
-                {{ previewData.kodePos }}
+                {{ `${previewData.namaWilayah} (${previewData.kodeWilayah})` }}
               </v-col>
             </v-row>
           </Fieldset>
@@ -565,9 +413,9 @@ export default {
       { title: "NO", key: "number", sortable: false, width: "5%" },
       { title: "#", key: "data-table-expand", sortable: false, width: "5%" },
       { title: "NAMA", key: "nama", sortable: true },
-      { title: "EMAIL", key: "email", sortable: false },
+      { title: "WILAYAH", key: "wilayah", sortable: false },
       { title: "ROLE", key: "namaRole", sortable: true },
-      { title: "STATUS", key: "statusAktif", sortable: true },
+      { title: "STATUS", key: "statusAdmin", sortable: true },
       { title: "FLAG", key: "flag", sortable: false, width: "5%" },
     ],
     rowsPerPageItems: { "items-per-page-options": [5, 10, 25, 50] },
@@ -575,23 +423,13 @@ export default {
     roleID: '',
     idLog: '',
     previewData: {
-      idUser: '',
+      idAdmin: '',
       namaRole: '',
       nama: '',
       username: '',
-      email: '',
       password: '',
-      tempat: '',
-      tanggalLahir: '',
-      jenisKelamin: '',
-      agama: '',
-      telp: '',
-      alamat: '',
-      provinsi: '',
-      kabKota: '',
-      kecamatan: '',
-      kelurahan: '',
-      kodePos: '',
+      kodeWilayah: '',
+      namaWilayah: '',
       fotoProfil: '',
     },
     DialogAdministrator: false,
@@ -674,12 +512,9 @@ export default {
     }),
     postRecord(item, jenis, kondisi) {
       let bodyData = {
-        user: {
-          jenis: jenis,
-          idUser: item.idUser,
-          kondisi: kondisi,
-        },
-        userdetail: {}
+        jenis: jenis,
+        idAdmin: item.idAdmin,
+        kondisi: kondisi,
       }
       this.$store.dispatch('user/postAdministrator', bodyData)
       .then((res) => {
@@ -696,46 +531,26 @@ export default {
     openDialog(item){
       // this.getAdminbyUID(uid)
       this.previewData = {
-        idUser: item.idUser,
+        idAdmin: item.idAdmin,
         namaRole: item.namaRole,
         nama: item.nama,
         username: item.username,
-        email: item.email,
         password: item.kataSandi,
-        tempat: item.tempat,
-        tanggalLahir: item.tanggalLahir,
-        jenisKelamin: item.jenisKelamin,
-        agama: item.agama.label,
-        telp: item.telp,
-        alamat: item.alamat,
-        provinsi: item.provinsi.nama,
-        kabKota: `${item.kabKota.jenisKabKota} ${item.kabKota.nama}`,
-        kecamatan: item.kecamatan.nama,
-        kelurahan: `${item.kelurahan.jenisKelDes} ${item.kelurahan.nama}`,
-        kodePos: item.kodePos,
+        kodeWilayah: item.kodeWilayah,
+        namaWilayah: item.namaWilayah,
         fotoProfil: item.fotoProfil,
       }
       this.DialogAdministrator = true
     },
     clearData(){
       this.previewData = {
-        idUser: '',
+        idAdmin: '',
         namaRole: '',
         nama: '',
         username: '',
-        email: '',
         password: '',
-        tempat: '',
-        tanggalLahir: '',
-        jenisKelamin: '',
-        agama: '',
-        telp: '',
-        alamat: '',
-        provinsi: '',
-        kabKota: '',
-        kecamatan: '',
-        kelurahan: '',
-        kodePos: '',
+        kodeWilayah: '',
+        namaWilayah: '',
         fotoProfil: '',
       }
     },
@@ -763,10 +578,10 @@ export default {
   		this.getAdministrator({page: this.page, limit: this.limit, keyword: this.searchData, sorting: this.kumpulSort});
 		},
     clickrow(event, data) {
-      const index = this.$data.expanded.find(i => i === data?.item?.raw?.idUser);
+      const index = this.$data.expanded.find(i => i === data?.item?.raw?.idAdmin);
       if(typeof index === 'undefined') return this.$data.expanded = [];
       this.$data.expanded.splice(0, 1)
-      this.$data.expanded.push(data?.item?.raw?.idUser);
+      this.$data.expanded.push(data?.item?.raw?.idAdmin);
     },
     notifikasi(kode, text, proses){
       this.dialogNotifikasi = true

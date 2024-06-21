@@ -15,7 +15,23 @@
 					md="8"
 					class="pt-3"
 				>
-          {{ levelOptions.filter(str => str.value === DataStepOne.level )[0].text }}
+          {{ levelOptions.filter(str => str.value === DataStepOne.level )[0].title }}
+				</v-col>
+			</v-row>
+			<v-row no-gutters>
+				<v-col
+					cols="12"
+					md="4"
+					class="pt-2 d-flex align-center font-weight-bold"
+				>
+					Wilayah Panjaiatan
+				</v-col>
+				<v-col
+					cols="12"
+					md="8"
+					class="pt-3"
+				>
+          {{ wilayahPanjaitanText === '00' ? 'Tidak Memiliki Wilayah' : wilayahPanjaitanText }}
 				</v-col>
 			</v-row>
 			<v-row no-gutters>
@@ -56,22 +72,6 @@
 					md="4"
 					class="pt-2 d-flex align-center font-weight-bold"
 				>
-					Email
-				</v-col>
-				<v-col
-					cols="12"
-					md="8"
-					class="pt-3"
-				>
-          {{ DataStepOne.email }}
-				</v-col>
-			</v-row>
-			<v-row no-gutters>
-				<v-col
-					cols="12"
-					md="4"
-					class="pt-2 d-flex align-center font-weight-bold"
-				>
 					Kata Sandi
 				</v-col>
 				<v-col
@@ -81,167 +81,6 @@
 				>
 					<!-- {{ passText }} ({{ DataStepOne.password }}) -->
 					{{ DataStepOne.password }}
-				</v-col>
-			</v-row>
-      <h2 class="subheading black--text"><u>>>Data Alamat</u></h2>
-      <v-row no-gutters>
-				<v-col
-					cols="12"
-					md="4"
-					class="pt-2 d-flex align-center font-weight-bold"
-				>
-					Tempat, Tanggal Lahir
-				</v-col>
-				<v-col
-					cols="12"
-					md="8"
-					class="pt-3"
-				>
-					{{ DataStepTwo.tempat }}, {{ convertDateForMonth(DataStepTwo.tanggal_lahir) }}
-				</v-col>
-			</v-row>
-			<v-row no-gutters>
-				<v-col
-					cols="12"
-					md="4"
-					class="pt-2 d-flex align-center font-weight-bold"
-				>
-					Jenis Kelamin
-				</v-col>
-				<v-col
-					cols="12"
-					md="8"
-					class="pt-3"
-				>
-					{{ DataStepTwo.jenis_kelamin }}
-				</v-col>
-			</v-row>
-			<v-row no-gutters>
-				<v-col
-					cols="12"
-					md="4"
-					class="pt-2 d-flex align-center font-weight-bold"
-				>
-					Agama
-				</v-col>
-				<v-col
-					cols="12"
-					md="8"
-					class="pt-3"
-				>
-          {{ agamaText }}
-				</v-col>
-			</v-row>
-			<v-row no-gutters>
-				<v-col
-					cols="12"
-					md="4"
-					class="pt-2 d-flex align-center font-weight-bold"
-				>
-					Telepon
-				</v-col>
-				<v-col
-					cols="12"
-					md="8"
-					class="pt-3"
-				>
-					{{ DataStepTwo.telp }}
-				</v-col>
-			</v-row>
-			<v-row no-gutters>
-				<v-col
-					cols="12"
-					md="4"
-					class="pt-2 d-flex align-center font-weight-bold"
-				>
-					Alamat
-				</v-col>
-				<v-col
-					cols="12"
-					md="8"
-					class="pt-3"
-				>
-					{{ DataStepTwo.alamat }}
-				</v-col>
-			</v-row>
-			<v-row no-gutters>
-				<v-col
-					cols="12"
-					md="4"
-					class="pt-2 d-flex align-center font-weight-bold"
-				>
-					Provinsi
-				</v-col>
-				<v-col
-					cols="12"
-					md="8"
-					class="pt-3"
-				>
-					{{ provinsiText }}
-				</v-col>
-			</v-row>
-			<v-row no-gutters>
-				<v-col
-					cols="12"
-					md="4"
-					class="pt-2 d-flex align-center font-weight-bold"
-				>
-					Kabupaten / Kota
-				</v-col>
-				<v-col
-					cols="12"
-					md="8"
-					class="pt-3"
-				>
-          {{ kabkotaText }}
-				</v-col>
-			</v-row>
-			<v-row no-gutters>
-        <v-col
-        cols="12"
-        md="4"
-					class="pt-2 d-flex align-center font-weight-bold"
-				>
-        Kecamatan
-				</v-col>
-				<v-col
-					cols="12"
-					md="8"
-					class="pt-3"
-				>
-          {{ kecamatanText }}				
-				</v-col>
-			</v-row>
-			<v-row no-gutters>
-				<v-col
-					cols="12"
-					md="4"
-					class="pt-2 d-flex align-center font-weight-bold"
-				>
-					Kelurahan / Desa
-				</v-col>
-				<v-col
-					cols="12"
-					md="8"
-					class="pt-3"
-				>
-					{{ kelurahanText }}
-				</v-col>
-			</v-row>
-			<v-row no-gutters>
-				<v-col
-					cols="12"
-					md="4"
-					class="pt-2 d-flex align-center font-weight-bold"
-				>
-					Kode Pos
-				</v-col>
-				<v-col
-					cols="12"
-					md="8"
-					class="pt-3"
-				>
-          {{ DataStepTwo.kode_pos }}
 				</v-col>
 			</v-row>
 		</v-card>
@@ -298,9 +137,10 @@ export default {
 		preview: true,
     kondisi: '',
     passText: '',
-    levelOptions: [
-			{ text: 'Super Administrator', value: 1 },
-			{ text: 'Administrator', value: 2 },
+		levelOptions: [
+			{ title: 'Super Administrator', value: 1 },
+			{ title: 'Administrator Pusat', value: 2 },
+			{ title: 'Administrator Wilayah', value: 3 },
 		],
 
     //notifikasi
@@ -311,38 +151,19 @@ export default {
 	}),
 	setup(){
 		let DataStepOne = JSON.parse(localStorage.getItem('stepOne'))
-		let DataStepTwo = JSON.parse(localStorage.getItem('stepTwo'))
-		return { DataStepOne, DataStepTwo } 
+		return { DataStepOne } 
 	},
 	computed: {
 		...mapState({
-      agamaOptions: state => state.setting.agamaOptions,
-      ProvinsiOptions: state => state.setting.ProvinsiOptions,
-      KabKotaOptions: state => state.setting.KabKotaOptions,
-      KecamatanOptions: state => state.setting.KecamatanOptions,
-      KelurahanOptions: state => state.setting.KelurahanOptions,
+			wilayahpanjaitanOptions: store => store.setting.wilayahpanjaitanOptions,
     }),
-		agamaText(){
-			return this.agamaOptions.filter(str => str.kode === this.DataStepTwo.agama)[0].label
-		},
-		provinsiText(){
-			return this.ProvinsiOptions.filter(str => str.kode === this.DataStepTwo.provinsi)[0].nama
-		},
-		kabkotaText(){
-			let kabkota = this.KabKotaOptions.filter(str => str.kode === this.DataStepTwo.kabkota)[0]
-			return `${kabkota.jenisKabKota} ${kabkota.nama}`
-		},
-		kecamatanText(){
-			return this.KecamatanOptions.filter(str => str.kode === this.DataStepTwo.kecamatan)[0].nama
-		},
-		kelurahanText(){
-			let keldes = this.KelurahanOptions.filter(str => str.kode === this.DataStepTwo.kelurahan)[0]
-			return `${keldes.jenisKelDes} ${keldes.nama}`
+		wilayahPanjaitanText(){
+			return this.DataStepOne.wilayah === null ? '00' : this.wilayahpanjaitanOptions.filter(str => str.kode === this.DataStepOne.wilayah)[0].label
 		},
   },
 	watch: {
     stepperVal(n, o) {
-      if (n != o && n == 3) {
+      if (n != o && n == 2) {
         this.lazyStep2 = true;
       } else {
         this.lazyStep2 = false;
@@ -351,47 +172,26 @@ export default {
 	},
 	mounted() {
     this.kondisi = this.$route.params.kondisi
-		this.getAgama()
-		this.getWilayah2023({ bagian: 'provinsi', KodeWilayah: null })
-		this.getWilayah2023({ bagian: 'kabkota', KodeWilayah: this.DataStepTwo.provinsi })
-		this.getWilayah2023({ bagian: 'kecamatan', KodeWilayah: this.DataStepTwo.kabkota })
-		this.getWilayah2023({ bagian: 'kelurahan', KodeWilayah: this.DataStepTwo.kecamatan })
+		this.getWilayahPanjaitan()
 	},
 	methods: {
 		...mapActions({
 			fetchData: 'fetchData',
-			getAgama: 'setting/getAgama',
-			getWilayah2023: 'setting/getWilayah2023',
+			getWilayahPanjaitan: 'setting/getWilayahPanjaitan',
 		}),
 		simpanData() {
       let bodyData = {
-        user: {
-          jenis: this.kondisi,
-          idUser: this.DataStepOne.id_user,
-          consumerType: this.DataStepOne.level,
-          nama: this.DataStepOne.nama_lengkap,
-          username: this.DataStepOne.username,
-          email: this.DataStepOne.email,
-          password: this.DataStepOne.password,
-        },
-        userdetail: {
-          tempat: this.DataStepTwo.tempat,
-          tanggalLahir: this.DataStepTwo.tanggal_lahir,
-          jenisKelamin: this.DataStepTwo.jenis_kelamin,
-          agama: this.DataStepTwo.agama,
-          telp: this.DataStepTwo.telp,
-          alamat: this.DataStepTwo.alamat,
-          provinsi: this.DataStepTwo.provinsi,
-          kabKota: this.DataStepTwo.kabkota,
-          kecamatan: this.DataStepTwo.kecamatan,
-          kelurahan: this.DataStepTwo.kelurahan,
-          kodePos: this.DataStepTwo.kode_pos,
-        }
+				jenis: this.kondisi,
+				idAdmin: this.DataStepOne.id_user,
+				consumerType: this.DataStepOne.level,
+				wilayah: this.DataStepOne.wilayah === null ? '00' : this.DataStepOne.wilayah,
+				nama: this.DataStepOne.nama_lengkap,
+				username: this.DataStepOne.username,
+				password: this.DataStepOne.password,
       }
       this.$store.dispatch('user/postAdministrator', bodyData)
       .then((res) => {
 				localStorage.removeItem('stepOne')
-				localStorage.removeItem('stepTwo')
         this.notifikasi("success", res.data.message, "2")
 			})
 			.catch((err) => {
@@ -405,7 +205,7 @@ export default {
       this.stepperVal = --this.stepperVal;
     },
     backStep() {
-      this.$emit("backStep", 2);
+      this.$emit("backStep", 1);
     },
     notifikasi(kode, text, proses){
       this.dialogNotifikasi = true

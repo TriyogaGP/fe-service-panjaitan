@@ -695,7 +695,7 @@ export default {
 	height: 60px;
 	background: #272727;
 	z-index: 1;
-	border-bottom: 3px solid #4CAF50;
+	border-bottom: 3px solid #c12626;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -740,7 +740,7 @@ export default {
 	border-radius: 4px;
 }
 .SelectedMenu:hover {
-	background-color: #4CAF50;
+	background-color: #c12626;
 }
 .SelectedMenu:active {
 	background-color: #272727;

@@ -17,16 +17,8 @@
         <v-divider></v-divider>
 
         <v-stepper-item
-          :complete="stepperVal > 2"
-          title="Data Alamat"
-          :value="2"
-        ></v-stepper-item>
-
-        <v-divider></v-divider>
-
-        <v-stepper-item
           title="Preview Formulir"
-          :value="3"
+          :value="2"
         ></v-stepper-item>
       </v-stepper-header>
 
@@ -41,15 +33,6 @@
         </v-stepper-window-item>
 
         <v-stepper-window-item :value="2">
-          <C_DataAlamat 
-            :stepper-val="stepperVal"
-            :data-step-two="tampungStepTwo"
-            @backStep="backStep(2)"
-            @StepTwo="nextStep(2)"
-          />
-        </v-stepper-window-item>
-
-        <v-stepper-window-item :value="3">
           <v-lazy v-model="lazyStep2">
             <C_PreviewFormulir 
               :stepper-val="stepperVal"
@@ -66,40 +49,24 @@
 import { mapActions, mapGetters } from "vuex";
 import { useMeta } from 'vue-meta'
 import C_DataLogin from "./content/C_DataLogin.vue";
-import C_DataAlamat from "./content/C_DataAlamat.vue";
 import C_PreviewFormulir from "./content/C_PreviewFormulir.vue";
 export default {
   name: 'FormulirAdministrator',
   components: {
     C_DataLogin,
-    C_DataAlamat,
     C_PreviewFormulir
   },
   data: () => ({
     stepperVal: 1,
-    steps: 3,
+    steps: 2,
     lazyStep2: false,
     tampungStepOne: {
       id_user: '',
       level: null,
+      wilayah: null,
       nama_lengkap: '',
       username: '',
-      email: '',
       password: '',
-    },
-    tampungStepTwo: {
-      id_user: '',
-      tempat: '',
-      tanggal_lahir: '',
-      jenis_kelamin: null,
-      agama: null,
-      telp: '',
-      alamat: '',
-      provinsi: null,
-      kabkota: null,
-      kecamatan: null,
-      kelurahan: null,
-      kode_pos: '',
     },
   }),
   setup() {
@@ -122,7 +89,7 @@ export default {
         window.scrollTo(0, 0);
       }
 
-      if (n != o && n == 3) {
+      if (n != o && n == 2) {
         this.lazyStep2 = true;
       } else {
         this.lazyStep2 = false;
@@ -131,30 +98,15 @@ export default {
     administratorBy: {
       deep: true,
       handler(value) {
+        console.log(value);
         if(this.stepperVal === 1){
           this.tampungStepOne = {
-            id_user: value.idUser ? value.idUser : '',
+            id_user: value.idAdmin ? value.idAdmin : '',
             level: value.consumerType ? value.consumerType : null,
+            wilayah: value.kodeWilayah ? value.kodeWilayah : null,
             nama_lengkap: value.nama ? value.nama : '',
             username: value.username ? value.username : '',
-            email: value.email ? value.email : '',
             password: value.kataSandi ? value.kataSandi : '',
-          }
-        }
-        if(this.stepperVal === 2){
-          this.tampungStepTwo = {
-            id_user: value.idUser ? value.idUser : '',
-            tempat: value.tempat ? value.tempat : '',
-            tanggal_lahir: value.tanggalLahir ? value.tanggalLahir : '',
-            jenis_kelamin: value.jenisKelamin ? value.jenisKelamin : null,
-            agama: value.agama ? value.agama : null,
-            telp: value.telp ? value.telp : '',
-            alamat: value.alamat ? value.alamat : '',
-            provinsi: value.provinsi ? value.provinsi : null,
-            kabkota: value.kabKota ? value.kabKota : null,
-            kecamatan: value.kecamatan ? value.kecamatan : null,
-            kelurahan: value.kelurahan ? value.kelurahan : null,
-            kode_pos: value.kodePos ? value.kodePos : '',
           }
         }
       },
@@ -162,7 +114,6 @@ export default {
   },
   mounted() {
     localStorage.removeItem('stepOne')
-    localStorage.removeItem('stepTwo')
     // let uid = this.$route.params.uid;
     if(this.$route.params.kondisi === 'EDIT') return this.getAdministratorbyUID(this.$route.params.uid)
   },
@@ -172,7 +123,6 @@ export default {
     }),
     gotolist() {
       localStorage.removeItem('stepOne')
-      localStorage.removeItem('stepTwo')
       this.$router.push({name: "DataAdministrator"});
     },
     nextStep(step) {

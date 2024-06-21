@@ -293,7 +293,7 @@ export default {
 }
 #scrollTextArea::-webkit-scrollbar-thumb{
 	border-radius: 100px;
-	background-color: #4CAF50;
+	background-color: #c12626;
 }
 </style>
 <style scoped>
@@ -305,14 +305,14 @@ export default {
 .kotakleft {
 	border-top-left-radius: 5px;
 	border-bottom-left-radius: 5px;
-  border-right: 1px solid #4CAF50;
+  border-right: 1px solid #c12626;
   padding: 5px;
   height: 100%;
 }
 .kotakright {
 	border-top-right-radius: 5px;
 	border-bottom-right-radius: 5px;
-  border-left: 1px solid #4CAF50;
+  border-left: 1px solid #c12626;
   padding: 5px;
   height: 100%;
 }
@@ -378,7 +378,7 @@ export default {
   height: 50px;
   background: #272727;
   padding: 5px;
-  border-bottom: 3px solid #4CAF50;
+  border-bottom: 3px solid #c12626;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
 }
@@ -393,7 +393,7 @@ export default {
   width: 16px;
 }
 .customScrollLeft::-webkit-scrollbar-thumb {
-  background-color: #4CAF50;
+  background-color: #c12626;
   border: 5px solid #fff;
   border-radius: 10rem;
 }
@@ -414,7 +414,7 @@ export default {
   width: 16px;
 }
 .customScrollRight::-webkit-scrollbar-thumb {
-  background-color: #4CAF50;
+  background-color: #c12626;
   border: 5px solid #272727;
   border-radius: 10rem;
 }
@@ -482,7 +482,7 @@ export default {
   border-radius: 50%;
   width: 25px;
   height: 25px;
-  background-color: #4CAF50;
+  background-color: #c12626;
 }
 .textProfile {
 	color: #FFF;

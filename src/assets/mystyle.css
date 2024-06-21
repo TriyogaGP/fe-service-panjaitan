@@ -4,6 +4,10 @@
 }
 .dp__input {
 	height: 50px !important;
+  font-size: 9pt !important;
+  font-weight: 500 !important;
+  color: #908d8d !important;
+  font-family: "Roboto", sans-serif !important;
 }
 .v-dialog > .v-overlay__content > .v-card > .v-card-text, .v-dialog > .v-overlay__content > form > .v-card > .v-card-text {
   padding: 15px !important;
@@ -156,7 +160,7 @@
 }
 .wadah-notif-scroll {
   height: 100% !important;
-  max-height: 430px !important;
+  max-height: 350px !important;
   overflow-y: auto;
   overflow-x: hidden;
   padding: 8px;
@@ -165,7 +169,7 @@
   width: 16px;
 }
 .wadah-notif-scroll::-webkit-scrollbar-thumb {
-  background-color: #4CAF50;
+  background-color: #c12626;
   border: 5px solid #FFFFFF;
   border-radius: 10rem;
 }
@@ -189,7 +193,7 @@
   width: 16px;
 }
 .list-pick::-webkit-scrollbar-thumb {
-  background-color: #4CAF50;
+  background-color: #c12626;
   border: 5px solid #272727;
   border-radius: 10rem;
 }
@@ -283,7 +287,7 @@
   }
   .wadah-notif-scroll {
     height: 100% !important;
-    max-height: 720px !important;
+    max-height: 650px !important;
   }
   .list-pick {
     height: 100% !important;

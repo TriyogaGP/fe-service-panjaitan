@@ -31,9 +31,9 @@
 			<template #[`item.number`]="{ item }">
 				{{ page > 1 ? ((page - 1)*limit) + item.index + 1 : item.index + 1 }}
 			</template>
-			<template #[`item.status`]="{ item }">
-				<v-icon size="small" v-if="item.raw.status == true" color="green" icon="mdi mdi-check" />
-				<v-icon size="small" v-else-if="item.raw.status == false" color="red" icon="mdi mdi-close" />
+			<template #[`item.statusRole`]="{ item }">
+				<v-icon size="small" v-if="item.raw.statusRole == true" color="green" icon="mdi mdi-check" />
+				<v-icon size="small" v-else-if="item.raw.statusRole == false" color="red" icon="mdi mdi-close" />
 			</template>
 			<template #expanded-row="{ columns, item }">
 				<tr>
@@ -42,13 +42,15 @@
 							color-button="#0bd369"
 							icon-prepend-button="mdi mdi-pencil"
 							nama-button="Ubah"
+							size-button="x-small"
 							@proses="bukaDialog(item.raw, 1)"
 						/>
 						<Button 
 							color-button="#0bd369"
-							:icon-prepend-button="item.raw.status === false ? 'mdi mdi-eye' : 'mdi mdi-eye-off'"
-							:nama-button="item.raw.status === false ? 'Active' : 'Non Active'"
-							@proses="postRecord(item.raw, 'STATUSRECORD', !item.raw.status)"
+							:icon-prepend-button="item.raw.statusRole === false ? 'mdi mdi-eye' : 'mdi mdi-eye-off'"
+							:nama-button="item.raw.statusRole === false ? 'Active' : 'Non Active'"
+							size-button="x-small"
+							@proses="postRecord(item.raw, 'STATUSRECORD', !item.raw.statusRole)"
 						/>
 						<!-- <Button 
 							color-button="#bd3a07"
@@ -61,11 +63,12 @@
 			</template>
 			<template #top>
 				<v-row no-gutters class="pa-2">
-					<v-col cols="12" md="6">
+					<v-col cols="12" md="6" class="d-flex align-center">
 						<Button 
 							color-button="light-blue darken-3"
 							icon-prepend-button="mdi mdi-plus-thick"
 							nama-button="Tambah"
+							size-button="x-small"
 							@proses="bukaDialog(null, 0)"
 						/>
 					</v-col>
@@ -254,7 +257,7 @@ export default {
       { title: "No", key: "number", sortable: false, width: "7%" },
       { title: "#", key: "data-table-expand", sortable: false, width: "5%" },
       { title: "NAMA ROLE", key: "namaRole", sortable: false },
-      { title: "STATUS ROLE", key: "status", sortable: false },
+      { title: "STATUS ROLE", key: "statusRole", sortable: false },
     ],
     rowsPerPageItems: { "items-per-page-options": [5, 10, 25, 50] },
     totalItems: 0,
@@ -340,7 +343,7 @@ export default {
 		...mapActions({
 			getRole: 'setting/getRole',	
 		}),
-		postRecord(item = null, jenis, status) {
+		postRecord(item = null, jenis, statusRole) {
       let bodyData = {
 				ADDEDIT: {
 					jenis: jenis,
@@ -350,7 +353,7 @@ export default {
 				STATUSDELETE: {
 					jenis: jenis,
 					id_role: item?.idRole,
-					status: status,
+					status_role: statusRole,
 				}
       }
       this.$store.dispatch('setting/postRole', jenis === 'ADD' || jenis === 'EDIT' ? bodyData.ADDEDIT : bodyData.STATUSDELETE)

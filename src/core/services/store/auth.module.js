@@ -5,7 +5,6 @@ export const AUTH_LOGIN = "AuthLogin";
 export const GET_PROFILE = "getProfile";
 export const POST_PROFILE = "postProfile";
 export const POST_KATASANDI = "postKataSandi";
-export const AUTH_LOGOUT = "AuthLogout";
 
 // mutation types
 export const SET_PROFILE = "SET_PROFILE";
@@ -64,17 +63,6 @@ const actions = {
   [POST_KATASANDI](context, bodyData) {
     return new Promise((resolve, reject) => {
       ApiService.post(`auth/ubah-katasandi`, localStorage.getItem('user_token'), bodyData)
-      .then((response) => {
-          resolve(response);
-        })
-        .catch((error) => {
-          reject(error);
-        })
-    });
-  },
-  [AUTH_LOGOUT](context, uid) {
-    return new Promise((resolve, reject) => {
-      ApiService.get(`auth/logout/${uid}`, '12qwaszx@321123')
       .then((response) => {
           resolve(response);
         })

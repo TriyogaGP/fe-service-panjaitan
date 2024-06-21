@@ -3,20 +3,10 @@ import ApiService from "@/core/services/api.service";
 const token = '12qwaszx@321123'
 
 // action types
-export const GET_AGAMA = "getAgama";
-export const GET_HOBI = "getHobi";
-export const GET_CITACITA = "getCitaCita";
-export const GET_PENDIDIKAN = "getPendidikan";
-export const GET_PEKERJAAN = "getPekerjaan";
-export const GET_PENGHASILAN = "getPenghasilan";
-export const GET_STATUSORANGTUA = "getStatusOrangTua";
-export const GET_STATUSTEMPATTINGGAL = "getStatusTempatTinggal";
-export const GET_JARAKRUMAH = "getJarakRumah";
-export const GET_TRANSPORTASI = "getTransportasi";
-export const GET_JABATAN = "getJabatan";
-export const GET_MENGAJAR = "getMengajar";
-export const GET_JENJANGSEKOLAH = "getJenjangSekolah";
-export const GET_KELAS = "getKelas";
+export const GET_ANAK = "getAnak";
+export const GET_OMPU = "getOmpu";
+export const GET_KOMISARISWILAYAH = "getKomisarisWilayah";
+export const GET_WILAYAHPANJAITAN = "getWilayahPanjaitan";
 export const GET_WILAYAH = "getWilayah";
 export const GET_WILAYAH2023 = "getWilayah2023";
 export const GET_BERKAS = "getBerkas";
@@ -24,6 +14,8 @@ export const GET_MENU = "getMenu";
 export const GET_UID = "getUID";
 export const GET_CMS_SETTINGS = "getCMSSettings";
 export const POST_CMS_SETTINGS = "postCMSSettings";
+export const GET_KOMISARIS_WILAYAH = "getKomisaris";
+export const POST_KOMISARIS_WILAYAH = "postKomisaris";
 export const GET_ROLE = "getRole";
 export const POST_ROLE = "postRole";
 export const GET_MENUDATA = "getMenuData";
@@ -39,33 +31,21 @@ export const GET_USER_BROADCAST = "getUserBroadcast";
 export const GET_COUNT_NOTIFIKASI = "getCountNotifikasi";
 export const GET_DATA_BERKAS = "getDataBerkas";
 export const POST_DATA_BERKAS = "postDataBerkas";
-export const GET_LIST_EXAM = "getListExam";
-export const GET_DATA_RFID = "getDataRFID";
-export const POST_DATA_RFID = "postDataRFID";
 export const GET_DAERAH = "getDaerah";
 export const POST_DAERAH = "postDaerah";
 
 // mutation types
 export const SET_LOADINGTABLE = "SET_LOADINGTABLE";
-export const SET_AGAMA = "SET_AGAMA";
-export const SET_HOBI = "SET_HOBI";
-export const SET_CITACITA = "SET_CITACITA";
-export const SET_PENDIDIKAN = "SET_PENDIDIKAN";
-export const SET_PEKERJAAN = "SET_PEKERJAAN";
-export const SET_PENGHASILAN = "SET_PENGHASILAN";
-export const SET_STATUSORANGTUA = "SET_STATUSORANGTUA";
-export const SET_STATUSTEMPATTINGGAL = "SET_STATUSTEMPATTINGGAL";
-export const SET_JARAKRUMAH = "SET_JARAKRUMAH";
-export const SET_TRANSPORTASI = "SET_TRANSPORTASI";
-export const SET_JABATAN = "SET_JABATAN";
-export const SET_MENGAJAR = "SET_MENGAJAR";
-export const SET_JENJANGSEKOLAH = "SET_JENJANGSEKOLAH";
-export const SET_KELAS = "SET_KELAS";
+export const SET_ANAK = "SET_ANAK";
+export const SET_OMPU = "SET_OMPU";
+export const SET_KOMISARISWILAYAH = "SET_KOMISARISWILAYAH";
+export const SET_WILAYAHPANJAITAN = "SET_WILAYAHPANJAITAN";
 export const SET_WILAYAH = "SET_WILAYAH";
 export const SET_BERKAS = "SET_BERKAS";
 export const SET_MENU = "SET_MENU";
 export const SET_UID = "SET_UID";
 export const SET_CMSSETTINGS = "SET_CMSSETTINGS";
+export const SET_KOMISARIS_WILAYAH = "SET_KOMISARIS_WILAYAH";
 export const SET_ROLE = "SET_ROLE";
 export const SET_MENUDATA = "SET_MENUDATA";
 export const SET_SEQUENCEMENU = "SET_SEQUENCEMENU";
@@ -74,27 +54,13 @@ export const SET_KATEGORI_NOTIFIKASI = "SET_KATEGORI_NOTIFIKASI";
 export const SET_NOTIFIKASI = "SET_NOTIFIKASI";
 export const SET_USER_BROADCAST = "SET_USER_BROADCAST";
 export const SET_DATA_BERKAS = "SET_DATA_BERKAS";
-export const SET_DATA_RFID = "SET_DATA_RFID";
-export const SET_LIST_EXAM = "SET_LIST_EXAM";
 export const SET_DAERAH = "SET_DAERAH";
 
 const state = {
   loadingtable: false,
-  agamaOptions: [],
-  hobiOptions: [],
-  citacitaOptions: [],
-  pendidikanOptions: [],
-  pekerjaanOptions: [],
-  penghasilanOptions: [],
-  statusorangtuaOptions: [],
-  statustempattinggalOptions: [],
-  jarakrumahOptions: [],
-  transportasiOptions: [],
-  jabatanOptions: [],
-  mengajarOptions: [],
-  jenjangOptions: [],
-  kelasOptions: [],
-  kelasUseOptions: [],
+  ompuOptions: [],
+  komisariswilayahOptions: [],
+  wilayahpanjaitanOptions: [],
   ProvinsiOptions: [],
   KabKotaOptions: [],
   KecamatanOptions: [],
@@ -106,8 +72,9 @@ const state = {
   daerahOptions: [],
   menuOptions: [],
   berkasOptions: [],
-  listOptions: [],
 
+  dataAnak: [],
+  dataKomisarisWilayah: [],
   dataRole: [],
   dataMenu: [],
   dataSequenceMenu: [],
@@ -116,7 +83,6 @@ const state = {
   dataNotifikasi: [],
   dataUserBroadcast: [],
   dataBerkas: [],
-  dataRFID: [],
 
   dataCountNotifikasi: null,
   dataUID: null,
@@ -127,51 +93,17 @@ const mutations = {
   [SET_LOADINGTABLE](state, data) {
     state.loadingtable = data
   },
-  [SET_AGAMA](state, data) {
-    state.agamaOptions = data
+  [SET_ANAK](state, data) {
+    state.dataAnak = data
   },
-  [SET_HOBI](state, data) {
-    state.hobiOptions = data
+  [SET_OMPU](state, data) {
+    state.ompuOptions = data
   },
-  [SET_CITACITA](state, data) {
-    state.citacitaOptions = data
+  [SET_KOMISARISWILAYAH](state, data) {
+    state.komisariswilayahOptions = data
   },
-  [SET_PENDIDIKAN](state, data) {
-    state.pendidikanOptions = data
-  },
-  [SET_PEKERJAAN](state, data) {
-    state.pekerjaanOptions = data
-  },
-  [SET_PENGHASILAN](state, data) {
-    state.penghasilanOptions = data
-  },
-  [SET_STATUSORANGTUA](state, data) {
-    state.statusorangtuaOptions = data
-  },
-  [SET_STATUSTEMPATTINGGAL](state, data) {
-    state.statustempattinggalOptions = data
-  },
-  [SET_JARAKRUMAH](state, data) {
-    state.jarakrumahOptions = data
-  },
-  [SET_TRANSPORTASI](state, data) {
-    state.transportasiOptions = data
-  },
-  [SET_JABATAN](state, data) {
-    state.jabatanOptions = data
-  },
-  [SET_MENGAJAR](state, data) {
-    state.mengajarOptions = data
-  },
-  [SET_JENJANGSEKOLAH](state, data) {
-    state.jenjangOptions = data
-  },
-  [SET_KELAS](state, data) {
-    if(data.kategori === 'All'){
-      state.kelasOptions = data.kelas
-    }else if(data.kategori === 'Use'){
-      state.kelasUseOptions = data.kelas
-    }
+  [SET_WILAYAHPANJAITAN](state, data) {
+    state.wilayahpanjaitanOptions = data
   },
   [SET_WILAYAH](state, data) {
     if(data.kategori === 'provinsi'){
@@ -197,15 +129,15 @@ const mutations = {
   [SET_BERKAS](state, data) {
     state.berkasOptions = data
   },
-  [SET_LIST_EXAM](state, data) {
-    state.listOptions = data
-  },
   
   [SET_UID](state, data) {
     state.dataUID = data
   },
   [SET_CMSSETTINGS](state, data) {
     state.dataCMSSetting = data
+  },
+  [SET_KOMISARIS_WILAYAH](state, data) {
+    state.dataKomisarisWilayah = data
   },
   [SET_MENU](state, data) {
     state.menuOptions = data
@@ -234,9 +166,6 @@ const mutations = {
   [SET_DATA_BERKAS](state, data) {
     state.dataBerkas = data
   },
-  [SET_DATA_RFID](state, data) {
-    state.dataRFID = data
-  },
 }
 
 const getters = {
@@ -245,6 +174,12 @@ const getters = {
   },
   cmssettings(state) {
     return state.dataCMSSetting;
+  },
+  anakAll(state) {
+    return state.dataAnak;
+  },
+  komisariswilayahAll(state) {
+    return state.dataKomisarisWilayah;
   },
   roleAll(state) {
     return state.dataRole;
@@ -270,23 +205,17 @@ const getters = {
   berkasAll(state) {
     return state.dataBerkas;
   },
-  rfidAll(state) {
-    return state.dataRFID;
-  },
   daerahAll(state) {
     return state.daerahOptions;
-  },
-  mengajarAll(state) {
-    return state.mengajarOptions;
   },
 }
 
 const actions = {
-  [GET_AGAMA](context) {
+  [GET_ANAK](context) {
     return new Promise((resolve, reject) => {
-      ApiService.get(`settings/optionsAgama`, token)
+      ApiService.get(`settings/optionsAnak${data.uid ? `?uid=${data.uid}` : ''}`, token)
       .then((response) => {
-          context.commit('SET_AGAMA', response.data.result)
+          context.commit('SET_ANAK', response.data.result)
           resolve(response);
         })
         .catch((error) => {
@@ -294,11 +223,11 @@ const actions = {
         })
     });
   },
-  [GET_HOBI](context) {
+  [GET_OMPU](context) {
     return new Promise((resolve, reject) => {
-      ApiService.get(`settings/optionsHobi`, token)
+      ApiService.get(`settings/optionsOmpu`, token)
       .then((response) => {
-          context.commit('SET_HOBI', response.data.result)
+          context.commit('SET_OMPU', response.data.result)
           resolve(response);
         })
         .catch((error) => {
@@ -306,11 +235,11 @@ const actions = {
         })
     });
   },
-  [GET_CITACITA](context) {
+  [GET_KOMISARISWILAYAH](context, data) {
     return new Promise((resolve, reject) => {
-      ApiService.get(`settings/optionsCitaCita`, token)
+      ApiService.get(`settings/optionsKomisarisWilayah${typeof data.kodeWilayah !== 'undefined' ? `?kodeWilayah=${data.kodeWilayah}` : ''}`, token)
       .then((response) => {
-          context.commit('SET_CITACITA', response.data.result)
+          context.commit('SET_KOMISARISWILAYAH', response.data.result)
           resolve(response);
         })
         .catch((error) => {
@@ -318,131 +247,11 @@ const actions = {
         })
     });
   },
-  [GET_PENDIDIKAN](context) {
+  [GET_WILAYAHPANJAITAN](context) {
     return new Promise((resolve, reject) => {
-      ApiService.get(`settings/optionsPendidikan`, token)
+      ApiService.get(`settings/optionsWilayahPanjaitan`, token)
       .then((response) => {
-          context.commit('SET_PENDIDIKAN', response.data.result)
-          resolve(response);
-        })
-        .catch((error) => {
-          reject(error);
-        })
-    });
-  },
-  [GET_PEKERJAAN](context) {
-    return new Promise((resolve, reject) => {
-      ApiService.get(`settings/optionsPekerjaan`, token)
-      .then((response) => {
-          context.commit('SET_PEKERJAAN', response.data.result)
-          resolve(response);
-        })
-        .catch((error) => {
-          reject(error);
-        })
-    });
-  },
-  [GET_PENGHASILAN](context) {
-    return new Promise((resolve, reject) => {
-      ApiService.get(`settings/optionsPenghasilan`, token)
-      .then((response) => {
-          context.commit('SET_PENGHASILAN', response.data.result)
-          resolve(response);
-        })
-        .catch((error) => {
-          reject(error);
-        })
-    });
-  },
-  [GET_STATUSORANGTUA](context) {
-    return new Promise((resolve, reject) => {
-      ApiService.get(`settings/optionsStatusOrangtua`, token)
-      .then((response) => {
-          context.commit('SET_STATUSORANGTUA', response.data.result)
-          resolve(response);
-        })
-        .catch((error) => {
-          reject(error);
-        })
-    });
-  },
-  [GET_STATUSTEMPATTINGGAL](context) {
-    return new Promise((resolve, reject) => {
-      ApiService.get(`settings/optionsStatusTempatTinggal`, token)
-      .then((response) => {
-          context.commit('SET_STATUSTEMPATTINGGAL', response.data.result)
-          resolve(response);
-        })
-        .catch((error) => {
-          reject(error);
-        })
-    });
-  },
-  [GET_JARAKRUMAH](context) {
-    return new Promise((resolve, reject) => {
-      ApiService.get(`settings/optionsJarakRumah`, token)
-      .then((response) => {
-          context.commit('SET_JARAKRUMAH', response.data.result)
-          resolve(response);
-        })
-        .catch((error) => {
-          reject(error);
-        })
-    });
-  },
-  [GET_TRANSPORTASI](context) {
-    return new Promise((resolve, reject) => {
-      ApiService.get(`settings/optionsTransportasi`, token)
-      .then((response) => {
-          context.commit('SET_TRANSPORTASI', response.data.result)
-          resolve(response);
-        })
-        .catch((error) => {
-          reject(error);
-        })
-    });
-  },
-  [GET_JABATAN](context) {
-    return new Promise((resolve, reject) => {
-      ApiService.get(`settings/optionsJabatan`, token)
-      .then((response) => {
-          context.commit('SET_JABATAN', response.data.result)
-          resolve(response);
-        })
-        .catch((error) => {
-          reject(error);
-        })
-    });
-  },
-  [GET_MENGAJAR](context) {
-    return new Promise((resolve, reject) => {
-      ApiService.get(`settings/optionsMengajar`, token)
-      .then((response) => {
-          context.commit('SET_MENGAJAR', response.data.result)
-          resolve(response);
-        })
-        .catch((error) => {
-          reject(error);
-        })
-    });
-  },
-  [GET_JENJANGSEKOLAH](context) {
-    return new Promise((resolve, reject) => {
-      ApiService.get(`settings/optionsJenjangSekolah`, token)
-      .then((response) => {
-          context.commit('SET_JENJANGSEKOLAH', response.data.result)
-          resolve(response);
-        })
-        .catch((error) => {
-          reject(error);
-        })
-    });
-  },
-  [GET_KELAS](context, data) {
-    return new Promise((resolve, reject) => {
-      ApiService.get(`settings/optionsKelas?kondisi=${data.kondisi}${data.walikelas ? `&walikelas=${data.walikelas}` : ''}`, token)
-      .then((response) => {
-          context.commit('SET_KELAS', { kelas: response.data.result, kategori: data.kondisi })
+          context.commit('SET_WILAYAHPANJAITAN', response.data.result)
           resolve(response);
         })
         .catch((error) => {
@@ -479,18 +288,6 @@ const actions = {
       ApiService.get(`settings/optionsBerkas${data.kategori ? `?kategori=${data.kategori}` : ''}`, token)
       .then((response) => {
           context.commit('SET_BERKAS', response.data.result)
-          resolve(response);
-        })
-        .catch((error) => {
-          reject(error);
-        })
-    });
-  },
-  [GET_LIST_EXAM](context, data) {
-    return new Promise((resolve, reject) => {
-      ApiService.get(`settings/listExam${data.kelas ? `?kelas=${data.kelas}` : ''}`, token)
-      .then((response) => {
-          context.commit('SET_LIST_EXAM', response.data.result)
           resolve(response);
         })
         .catch((error) => {
@@ -544,6 +341,32 @@ const actions = {
         .catch((error) => {
           reject(error);
         })
+    });
+  },
+  [GET_KOMISARIS_WILAYAH](context, data) {
+    return new Promise((resolve, reject) => {
+      context.commit('SET_LOADINGTABLE', true)
+      ApiService.get(`settings/KomisarisWilayah?page=${data.page}&limit=${data.limit}${data.keyword ? `&keyword=${data.keyword}` : ''}${data.sorting !== '' ? `&sort=${data.sorting}` : ''}`, token)
+      .then((response) => {
+        context.commit('SET_LOADINGTABLE', false)
+        context.commit('SET_KOMISARIS_WILAYAH', response.data.result)
+        resolve(response);
+      })
+      .catch((error) => {
+        context.commit('SET_LOADINGTABLE', false)
+        reject(error);
+      })
+    });
+  },
+  [POST_KOMISARIS_WILAYAH](context, bodyData) {
+    return new Promise((resolve, reject) => {
+      ApiService.post(`settings/KomisarisWilayah`, token, bodyData)
+      .then((response) => {
+        resolve(response);
+      })
+      .catch((error) => {
+        reject(error);
+      })
     });
   },
   [GET_ROLE](context, data) {
@@ -656,7 +479,7 @@ const actions = {
   [GET_NOTIFIKASI](context, data) {
     return new Promise((resolve, reject) => {
       context.commit('SET_LOADINGTABLE', true)
-      ApiService.get(`settings/Notifikasi?kategori=${data.kategori}&untuk=${data.untuk ? `${data.untuk}` : 'penerima'}&page=${data.page}&limit=${data.limit}`, localStorage.getItem('user_token'))
+      ApiService.get(`settings/Notifikasi?kategori=${data.kategori}&page=${data.page}&limit=${data.limit}`, localStorage.getItem('user_token'))
       .then((response) => {
           context.commit('SET_LOADINGTABLE', false)
           context.commit('SET_NOTIFIKASI', response.data.result)
@@ -731,32 +554,6 @@ const actions = {
   [POST_DATA_BERKAS](context, bodyData) {
     return new Promise((resolve, reject) => {
       ApiService.post(`settings/Berkas`, token, bodyData)
-      .then((response) => {
-          resolve(response);
-        })
-        .catch((error) => {
-          reject(error);
-        })
-    });
-  },
-  [GET_DATA_RFID](context, data) {
-    return new Promise((resolve, reject) => {
-      context.commit('SET_LOADINGTABLE', true)
-      ApiService.get(`settings/data-rfid?page=${data.page}&limit=${data.limit}${data.keyword ? `&keyword=${data.keyword}` : ''}`, token)
-      .then((response) => {
-          context.commit('SET_LOADINGTABLE', false)
-          context.commit('SET_DATA_RFID', response.data.result)
-          resolve(response);
-        })
-        .catch((error) => {
-          context.commit('SET_LOADINGTABLE', false)
-          reject(error);
-        })
-    });
-  },
-  [POST_DATA_RFID](context, bodyData) {
-    return new Promise((resolve, reject) => {
-      ApiService.post(`settings/data-rfid`, token, bodyData)
       .then((response) => {
           resolve(response);
         })

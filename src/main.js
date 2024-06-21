@@ -16,6 +16,7 @@ import "primevue/resources/primevue.min.css"; /* Deprecated */
 import Tailwind from 'primevue/passthrough/tailwind';
 import { SvgMap } from "vue-svg-map";
 import VueSignaturePad from 'vue-signature-pad';
+// import OrganizationChart from 'vue-organization-chart'
 import {
   DraggableElement,
   DraggableArea,
@@ -36,6 +37,7 @@ import VLoaderDataTables from './components/use-component/VLoaderDataTables.vue'
 
 import CascadeSelect from 'primevue/cascadeselect';
 import Fieldset from 'primevue/fieldset';
+// import OrganizationChart from 'primevue/organizationchart';
 
 const app = createApp(App)
 
@@ -58,6 +60,7 @@ app.use(router)
 // component
 app.component('Footer', Footer);
 
+// app.component('OrganizationChart', OrganizationChart);
 app.component('svg-map', SvgMap);
 app.component('vue-date-picker', VueDatePicker);
 app.component('Button', VButton);
@@ -68,6 +71,7 @@ app.component('LoaderDataTables', VLoaderDataTables);
 
 app.component('CascadeSelect', CascadeSelect);
 app.component('Fieldset', Fieldset);
+// app.component('OrganizationChart', OrganizationChart);
 
 //cropper
 app.component('DraggableElement', DraggableElement);

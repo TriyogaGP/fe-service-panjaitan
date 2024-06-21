@@ -44,7 +44,7 @@
   position: relative;
   background: #272727;
   border-radius: 0 0 5px 5px;
-  border-top: 2px solid #4CAF50;
+  border-top: 2px solid #c12626;
   opacity: 0;
   top: 14px;
   visibility: hidden;
@@ -62,7 +62,7 @@
   border-radius: 5px;
 }
 .navbar .menu-item:hover {
-  color: #4CAF50;
+  color: #c12626;
 }
 .menu-item.first-item {
   padding: 5px;
@@ -79,7 +79,7 @@
   border-radius: 5px; */
 }
 .navbar .menu-subitem:hover {
-  color: #4CAF50;
+  color: #c12626;
 }
 .menu-subitem.first-subitem {
   padding: 5px;

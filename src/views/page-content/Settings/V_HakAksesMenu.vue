@@ -36,6 +36,7 @@
 					color-button="#04f7f7"
 					icon-prepend-button="mdi mdi-information"
 					nama-button="Detail"
+					size-button="x-small"
 					@proses="openDetail(item.raw.menu)"
 				/>
 			</template>
@@ -46,6 +47,7 @@
 							color-button="#0bd369"
 							icon-prepend-button="mdi mdi-pencil"
 							nama-button="Ubah"
+              size-button="x-small"
 							@proses="bukaDialog(item.raw)"
 						/>
 					</td>
@@ -141,7 +143,7 @@
 				</v-toolbar>
 				<v-card-text class="pt-4 v-dialog--custom">
 					<div
-            style="background-color: #4CAF50; border-radius: 5px; border: 2px solid #000;"
+            style="background-color: #c12626; border-radius: 5px; border: 2px solid #000;"
             class="pa-2 mb-2"
 						v-for="i in (1 + jumlahMenuHakAkses)"
 						:key="i"

@@ -247,6 +247,6 @@ export default {
   align-items: center;
 }
 .list-menu:hover {
-	background-color: #4CAF50;
+	background-color: #c12626;
 }
 </style>

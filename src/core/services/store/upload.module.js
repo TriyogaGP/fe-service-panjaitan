@@ -19,8 +19,9 @@ const actions = {
       }else if(data.jenis === 'excel') {
         fData.append('jenis', data.jenis); //jenis
         fData.append('kategori', data.kategori); //kategori
-        fData.append('mapel', data.mapel); //mapel
-        fData.append('kelas', data.kelas); //kelas
+        fData.append('wilayah', data.wilayah); //kategori
+        // fData.append('mapel', data.mapel); //mapel
+        // fData.append('kelas', data.kelas); //kelas
         fData.append('createupdateBy', data.createupdateBy); //createupdateBy
         fData.append('file', data.files); //data files
       }else if(data.jenis === 'logo') {

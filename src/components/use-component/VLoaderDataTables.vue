@@ -2,7 +2,7 @@
   <v-progress-linear
     indeterminate
     class="loader"
-    color="#4CAF50"
+    color="#c12626"
   />
 </template>
 

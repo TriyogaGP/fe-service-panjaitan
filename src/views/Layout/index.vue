@@ -3,23 +3,28 @@
     <Loading
       v-if="overlay"
       :overlay="overlay"
-      :logo-sekolah="logoSekolah"  
-      :nama-sekolah="namaSekolah"
+      :logo-website="logoWebsite"  
+      :nama-website="namaWebsite"
+      :singkatan-website="singkatanWebsite"
     />
     <div v-else class="blurBack">
       <Navbar
-        :nama-sekolah="namaSekolah"
-        :logo-sekolah="logoSekolah"
-        :total-notif="roleID === '1' ? this.dataNotifikasi.allNotif : 0"
-        :total-broadcast="this.dataNotifikasi.broadcast"
+        :nama-website="namaWebsite"
+        :logo-website="logoWebsite"
+        :singkatan-website="singkatanWebsite"
+        :total-notif="roleID === '1' || roleID === '2' ? this.allNotif : 0"
       />
+        <!-- :total-broadcast="this.dataNotifikasi.broadcast" -->
       <v-main class="ma-4">
         <routerView style="margin-bottom: 20px;"  />
-        <div v-if="roleID === '3' || roleID === '4'" class="floating" @click="sendMessageAdmin()">
+        <!-- <div v-if="roleID === '3'" class="floating" @click="sendMessageAdmin()">
           <span class="tulisan"><v-icon size="small" icon="mdi mdi-chat" />&nbsp;Chat Administrator</span>
-        </div>
+        </div> -->
       </v-main>
-      <Footer :nama-sekolah="namaSekolah" />
+      <Footer
+        :nama-website="namaWebsite"
+        :singkatan-website="singkatanWebsite"
+      />
     </div>
     <v-overlay v-model="isLoading" persistent class="align-center justify-center">
       <div style="width: 550px;">
@@ -145,19 +150,14 @@ export default {
   components: { Navbar, Loading, PopUpNotifikasi },
   data: () => ({
     API_URL: process.env.VUE_APP_BASE_URL_VIEW,
-    dataNotifikasi: {
-      allNotif: 0,
-      record: 0,
-      report: 0,
-      broadcast: 0,
-    },
+    allNotif: 0,
     musik: '',
-    inputData: {
-      // idUser: ['2MMOu7xFdkbe4YFRjpp71fRkV26', '2MMP5z4O4HRLY67I2KkEBxfLR1K', '2Mcz9AarOl15kALKGIgvTThTRMJ'],
-      idUser: '2MMOu7xFdkbe4YFRjpp71fRkV26',
-      judul: '',
-      pesan: '',
-    },
+    // inputData: {
+    //   // idUser: ['2MMOu7xFdkbe4YFRjpp71fRkV26', '2MMP5z4O4HRLY67I2KkEBxfLR1K', '2Mcz9AarOl15kALKGIgvTThTRMJ'],
+    //   idUser: '2MMOu7xFdkbe4YFRjpp71fRkV26',
+    //   judul: '',
+    //   pesan: '',
+    // },
     kondisiTombol: true,
     DialogPengaduan: false,
     overlay: false,
@@ -178,10 +178,13 @@ export default {
     ...mapGetters({
       cmssettings: 'setting/cmssettings',
     }),
-    namaSekolah(){
-      return this.cmssettings ? this.cmssettings.namasekolah : null
+    namaWebsite(){
+      return this.cmssettings ? this.cmssettings.namawebsite : null
     },
-    logoSekolah(){
+    singkatanWebsite(){
+      return this.cmssettings ? this.cmssettings.singkatanwebsite : null
+    },
+    logoWebsite(){
       return this.cmssettings ? `${this.API_URL}bahan/${this.cmssettings.logo}` : null
     },
   },
@@ -189,16 +192,8 @@ export default {
     dataCountNotifikasi: {
       deep: true,
       handler(value){
-        this.dataNotifikasi = {
-          allNotif: value.length ? value[0].count : 0,
-          record: value.length ? value[1].count : 0,
-          report: value.length ? value[2].count : 0,
-          broadcast: value.length ? value[3].count : 0,
-        }
-        if((this.roleID === '1') && this.dataNotifikasi.allNotif > 0) {
-          this.audio()
-        }
-        if((this.roleID === '2' || this.roleID === '3' || this.roleID === '4') && this.dataNotifikasi.broadcast > 0) {
+        this.allNotif = value.length ? value[0].count : 0
+        if((this.roleID === '1' || this.roleID === '2') && this.allNotif > 0) {
           this.audio()
         }
       }

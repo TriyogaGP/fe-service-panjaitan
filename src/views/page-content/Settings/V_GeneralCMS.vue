@@ -3,7 +3,7 @@
 		<h1 class="subheading grey--text text-decoration-underline">Panel General CMS</h1>
     <v-row>
       <v-col cols="12" md="12" class="text-right">
-				<v-menu
+				<!-- <v-menu
 					open-on-click
 					rounded="t-xs b-lg"
 					offset-y
@@ -72,30 +72,31 @@
 							</template>
 						</v-list-item>
 					</v-list>
-				</v-menu>
+				</v-menu> -->
 				<Button
 					color-button="light-blue darken-3"
 					nama-button="Simpan Data"
+					size-button="x-small"
 					@proses="SimpanGeneranCMS()"
 				/>
       </v-col>
     </v-row>
 		<v-card class="mt-2 mb-2 pa-2 ma-1">
-      <h2><u>Logo Sekolah</u></h2>
+      <h2><u>Logo Website</u></h2>
 			<div class="mt-4 d-flex flex-column justify-space-between align-center">
-				<div class="avatar" @click="$refs.logoSekolah.click()">
+				<div class="avatar" @click="$refs.logoWebsite.click()">
 					<span class="tulisan">
-						<v-icon color="white" icon="mdi mdi-camera-account" />&nbsp;Ubah Logo Sekolah
+						<v-icon color="white" icon="mdi mdi-camera-account" />&nbsp;Ubah Logo Website
 					</span>
 					<v-img :src="inputData.logo" />
 				</div>
 				<input 
-					ref="logoSekolah"
+					ref="logoWebsite"
 					:key="componentKey"
 					type="file"
 					accept=".png"
 					style="display: none"
-					@change="uploadLogoSekolah($event)"
+					@change="uploadLogoWebsite($event)"
 				>
 			</div>
 		</v-card>
@@ -104,74 +105,17 @@
       <v-row no-gutters>
         <v-col cols="12" md="6" class="pa-4">
           <TextField
-						v-model="inputData.namasekolah"
-						label-tf="Nama Sekolah"
+						v-model="inputData.namawebsite"
+						label-tf="Nama Website"
 						:clearable-tf="true"
 					/>
         </v-col>
-        <v-col cols="12" md="6" class="pa-4">
-          <Autocomplete
-						v-model="inputData.statussekolah"
-						:data-a="statusSekolahOptions"
-						item-title="label"
-						item-value="kode"
-						label-a="Status Sekolah"
-						:clearable-a="true"
-					/>
-        </v-col>
-      </v-row>
-      <v-row no-gutters>
-        <v-col cols="12" md="6" class="pa-4">
-          <Autocomplete
-						v-model="inputData.tahunpelajaran"
-						:data-a="tahunOptions"
-						label-a="Tahun Pelajaran"
-						:clearable-a="true"
-					/>
-        </v-col>
-        <v-col cols="12" md="6" class="pa-4">
-					<Autocomplete
-						v-model="inputData.pdfraport"
-						:data-a="raportOptions"
-						item-title="label"
-						item-value="value"
-						label-a="Raport PDF"
-						:clearable-a="true"
-					/>
-				</v-col>
-      </v-row>
-      <v-row no-gutters>
-        <v-col cols="12" md="6" class="pa-4">
-          <Autocomplete
-						v-model="inputData.jenisraport"
-						:data-a="jenisRaportOptions"
-						item-title="label"
-						item-value="value"
-						label-a="Jenis Raport"
-						:clearable-a="true"
-					/>
-        </v-col>
-        <v-col cols="12" md="6" class="pa-4">
-					<Autocomplete
-						v-model="inputData.semester"
-						:data-a="semesterOptions"
-						item-title="label"
-						item-value="value"
-						label-a="Semester"
-						:clearable-a="true"
-					/>
-				</v-col>
-      </v-row>
-			<v-row no-gutters>
         <v-col cols="12" md="6" class="pa-4">
           <TextField
-						v-model="inputData.kkm"
-						label-tf="KKM Default"
+						v-model="inputData.singkatanwebsite"
+						label-tf="Singkatan Website"
 						:clearable-tf="true"
 					/>
-        </v-col>
-        <v-col cols="12" md="6" class="pa-4">
-          <!--  kosong-->
         </v-col>
       </v-row>
     </v-card>
@@ -644,26 +588,9 @@ export default {
   name: 'GeneralCMS',
 	components: { PopUpNotifikasi, RectangleStencil },
   data: () => ({
-    statusSekolahOptions: [
-			{ label: 'Negeri', kode: 1 },
-			{ label: 'Swasta', kode: 2 },
-		],
-    raportOptions: [
-			{ label: 'False', value: 0 },
-			{ label: 'True', value: 1 },
-		],
-    semesterOptions: [
-			{ label: 'Genap', value: 0 },
-			{ label: 'Ganjil', value: 1 },
-		],
-    jenisRaportOptions: [
-			{ label: 'PENILAIAN AKHIR TAHUN (PAT)', value: 'PAT' },
-			{ label: 'PENILAIAN AKHIR SEMESTER (PAS)', value: 'PAS' },
-			{ label: 'PENILAIAN TENGAH SEMESTER (PTS)', value: 'PTS' },
-		],
     inputData: {
-      namasekolah: '',
-      statussekolah: null,
+      namawebsite: '',
+      singkatanwebsite: '',
       telepon: '',
       alamat: '',
       provinsi: null,
@@ -673,14 +600,8 @@ export default {
       kodepos: '',
       latitude: '',
       longitude: '',
-      tahunpelajaran: null,
-      pdfraport: null,
-      jenisraport: null,
-      semester: null,
-      kkm: '',
       logo: '',
     },
-    tahunOptions: [],
     DialogUploadBerkas: false,
     DialogBerkas: false,
     dialogCrop: false,
@@ -716,8 +637,8 @@ export default {
       src: null,
       type: null,
     },
-    FileLogoSekolah: '',
-    logoSekolah: '',
+    FileLogoWebsite: '',
+    logoWebsite: '',
 
 		//notifikasi
     dialogNotifikasi: false,
@@ -786,14 +707,9 @@ export default {
     cmssettings:{
 			deep: true,
 			handler(value) {
-				const d = new Date();
-        for (let tahun = 2020; tahun <= d.getFullYear(); tahun++) {
-          let tulisan = `${tahun}/${tahun+1}`
-          this.tahunOptions.push(tulisan.toString())
-        }
 				this.inputData = {
-					namasekolah: value.namasekolah ? value.namasekolah : null,
-					statussekolah: value.statussekolah ? value.statussekolah.value : null,
+					namawebsite: value.namawebsite ? value.namawebsite : null,
+					singkatanwebsite: value.singkatanwebsite ? value.singkatanwebsite : null,
 					telepon: value.telepon ? value.telepon : null,
 					alamat: value.alamat ? value.alamat : null,
 					provinsi: value.provinsi ? value.provinsi.value : null,
@@ -803,11 +719,6 @@ export default {
 					kodepos: value.kodepos ? value.kodepos : null,
 					latitude: value.latitude ? value.latitude : null,
 					longitude: value.longitude ? value.longitude : null,
-					tahunpelajaran: value.tahunpelajaran ? value.tahunpelajaran : null,
-					pdfraport: value.pdfraport ? value.pdfraport.value : null,
-					jenisraport: value.jenisraport ? value.jenisraport.value : null,
-					semester: value.semester ? value.semester.value : null,
-					kkm: value.kkm ? value.kkm : null,
 					logo: value.logo ? `${this.API_URL}bahan/${value.logo}` : null,
 				}
 				this.getWilayah2023({ bagian: 'kabkota', KodeWilayah: this.inputData.provinsi })
@@ -895,19 +806,10 @@ export default {
 			}
 		},
     SimpanGeneranCMS(){
-      const d = new Date();
-      for (let tahun = 2020; tahun <= d.getFullYear(); tahun++) {
-        let tulisan = `${tahun}/${tahun+1}`
-        this.tahunOptions.push(tulisan.toString())
-      }
 			this.getWilayah2023({ bagian: 'provinsi', KodeWilayah: null })
 			this.getWilayah2023({ bagian: 'kabkota', KodeWilayah: this.inputData.provinsi })
 			this.getWilayah2023({ bagian: 'kecamatan', KodeWilayah: this.inputData.kabupatenkota })
 			this.getWilayah2023({ bagian: 'kelurahan', KodeWilayah: this.inputData.kecamatan })
-      let semester = this.semesterOptions.filter(str => str.value === this.inputData.semester)[0]
-      let jenisraport = this.jenisRaportOptions.filter(str => str.value === this.inputData.jenisraport)[0]
-      let raport = this.raportOptions.filter(str => str.value === this.inputData.pdfraport)[0]
-      let status = this.statusSekolahOptions.filter(str => str.kode === this.inputData.statussekolah)[0]
       let provinsi = this.ProvinsiOptions.filter(str => str.kode === this.inputData.provinsi)[0]
       let kabkota = this.KabKotaOptions.filter(str => str.kode === this.inputData.kabupatenkota)[0]
       let kec = this.KecamatanOptions.filter(str => str.kode === this.inputData.kecamatan)[0]
@@ -933,26 +835,9 @@ export default {
         kodepos: this.inputData.kodepos,
         latitude: this.inputData.latitude,
         longitude: this.inputData.longitude,
-        namasekolah: this.inputData.namasekolah,
-        statussekolah: {
-            label: status.label,
-            value: status.kode
-        },
-        tahunpelajaran: this.inputData.tahunpelajaran,
-        pdfraport: {
-          label: raport.label,
-          value: raport.value,
-        },
-        jenisraport: {
-          label: jenisraport.label,
-          value: jenisraport.value,
-        },
-        semester: {
-          label: semester.label,
-          value: semester.value,
-        },
+        namawebsite: this.inputData.namawebsite,
+        singkatanwebsite: this.inputData.singkatanwebsite,
         telepon: this.inputData.telepon,
-        kkm: this.inputData.kkm,
       }
 			// return console.log(bodyData);
 			this.$store.dispatch('setting/postCMSSettings', bodyData)
@@ -1053,7 +938,7 @@ export default {
         this.notifikasi("error", err.response.data.message, "1")
 			});
 		},
-		async uploadLogoSekolah(e) {
+		async uploadLogoWebsite(e) {
       let files = e.target.files[0];
       if(!files) return this.notifikasi("warning", 'Ulangi unggah Logo Sekolah', "1")
       let ukuran = (files.size / (1024*1024)).toFixed(2);
@@ -1061,7 +946,7 @@ export default {
         this.componentKey++; 
         return this.notifikasi("warning", 'Unggah Logo Sekolah anda terlalu besar !', "1")
       }
-      this.logoSekolah = files.name
+      this.logoWebsite = files.name
       this.loadImage(files)
     },
 		loadImage(files) {
@@ -1079,9 +964,9 @@ export default {
 		crop() {
 			const { canvas } = this.$refs.cropper.getResult();
 			canvas.toBlob(async (blob) => {
-        this.FileLogoSekolah = blob
-        let uploadLogoSekolah = await this.uploadLampiran(this.FileLogoSekolah)
-        if(uploadLogoSekolah === 'success'){ 
+        this.FileLogoWebsite = blob
+        let uploadLogoWebsite = await this.uploadLampiran(this.FileLogoWebsite)
+        if(uploadLogoWebsite === 'success'){ 
           this.tutupDialogCrop()
           this.notifikasi("success", "Berhasil ubah Logo Sekolah", "2")
         }else{ 
@@ -1095,7 +980,7 @@ export default {
 			if(dataUpload){
 				const bodyData = {
 					kode: 'logo',
-					nama_file: `${this.makeRandom(10)}-logosekolah`,
+					nama_file: `${this.makeRandom(10)}-logoWebsite`,
 					jenis: "logo",
 					bagian: "berkas",
 					table: "CMSSetting",
@@ -1112,13 +997,13 @@ export default {
       }
 		},
 		tutupDialogCrop(){
-      this.FileLogoSekolah = ''
-      this.logoSekolah = '';
+      this.FileLogoWebsite = ''
+      this.logoWebsite = '';
 			this.image = {
         src: null,
         type: null,
       }
-      this.$refs.logoSekolah.value = null
+      this.$refs.logoWebsite.value = null
 			this.$refs.cropper.value = null
       this.dialogCrop = false
     },

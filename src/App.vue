@@ -11,7 +11,7 @@
 export default {
   name: "App",
   data: () => ({
-    site_name: 'MTsS. SIROJUL ATHFAL',
+    site_name: 'Punguan Panjaitan Dohot Boruna Jabodetabek (PPDB)',
   }),
   watch: {
     overlay(val) {

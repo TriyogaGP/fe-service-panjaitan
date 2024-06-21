@@ -82,7 +82,7 @@
             v-if="kode == 'warning2'"
             class="elevation-0 tombol-question white--text"
             color-button="#5b0505"
-            nama-button="Download Data Pending"
+            nama-button="Download Data Already Available"
             @proses="tombolProses(notifikasiButton)"
           />
           <!-- <Button 
@@ -136,7 +136,9 @@ export default {
   },
   methods:{
     tombolProses(pilih){
-      if(pilih == '2'){
+      if(pilih == '3'){
+        this.$emit("download");
+      }else if(pilih == '2'){
         this.$emit("proses");
       }else{
         this.$emit("cancel");

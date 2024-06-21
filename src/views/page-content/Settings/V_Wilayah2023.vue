@@ -64,12 +64,14 @@
 							color-button="#0bd369"
 							icon-prepend-button="mdi mdi-pencil"
 							nama-button="Ubah"
+              size-button="x-small"
 							@proses="bukaDialog(item.raw, 1)"
 						/>
 						<Button 
 							color-button="#0bd369"
 							:icon-prepend-button="item.raw.statusAktif === false ? 'mdi mdi-eye' : 'mdi mdi-eye-off'"
 							:nama-button="item.raw.statusAktif === false ? 'Active' : 'Non Active'"
+              size-button="x-small"
 							@proses="postRecord2(item.raw, 'STATUSRECORD', !item.raw.statusAktif)"
 						/>
 					</td>
@@ -77,11 +79,12 @@
 			</template>
 			<template #top>
 				<v-row no-gutters class="pa-2">
-					<v-col cols="12" md="6">
+					<v-col cols="12" md="6" class="d-flex align-center">
 						<Button 
 							color-button="light-blue darken-3"
 							icon-prepend-button="mdi mdi-plus-thick"
 							nama-button="Tambah"
+              size-button="x-small"
 							@proses="bukaDialog(null, 0)"
 						/>
 					</v-col>

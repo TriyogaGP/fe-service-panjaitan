@@ -7,6 +7,7 @@ import "@fortawesome/fontawesome-free/css/all.css";
 import 'vue-svg-map/dist/index.css'
 import 'vuetify/styles'
 import 'vue-advanced-cropper/dist/style.css';
+// import 'vue-organization-chart/dist/orgchart.css'
 import 'vue-json-viewer/style.css'
 import { createVuetify } from 'vuetify'
 import * as labsComponents from 'vuetify/labs/components'
@@ -22,12 +23,13 @@ const myCustomLightTheme = {
     'primary-darken-1': '#3700B3',
     secondary: '#03DAC6',
     'secondary-darken-1': '#018786',
-    error: '#B00020',
+    error: '#c12626',
     info: '#2196F3',
-    success: '#4CAF50',
+    success: '#c12626',
     warning: '#FB8C00',
     'icon-white': '#FFFFFF',
     'icon-black': '#000000',
+    'icon-red': '#c12626',
     'nav-back': '#a9a9d9',
     'background-dialog-card': '#e1e1f0',
   },

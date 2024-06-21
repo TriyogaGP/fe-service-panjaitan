@@ -1,16 +1,16 @@
 <template>
   <div>
-    <h1 class="subheading grey--text text-decoration-underline">Formulir Struktural</h1>
+    <h1 class="subheading grey--text text-decoration-underline">Formulir Keanggotaan</h1>
     <div class="text-right wadah">
-      <span class="link" @click="gotolist()">Data Struktural</span>
+      <span class="link" @click="gotolist()">Data Keanggotaan</span>
       <v-icon size="small" class="iconstyle" icon="mdi mdi-menu-right" />
-      <span>Formulir Struktural</span>
+      <span>Formulir Keanggotaan</span>
     </div>
     <v-stepper v-model="stepperVal">
       <v-stepper-header>
         <v-stepper-item
           :complete="stepperVal > 1"
-          title="Data Log in"
+          title="Data Pribadi"
           :value="1"
         ></v-stepper-item>
 
@@ -18,7 +18,7 @@
 
         <v-stepper-item
           :complete="stepperVal > 2"
-          title="Data Alamat"
+          title="Data Istri & Tanggungan"
           :value="2"
         ></v-stepper-item>
 
@@ -40,7 +40,7 @@
 
       <v-stepper-window>
         <v-stepper-window-item :value="1">
-          <C_DataLogin 
+          <C_DataBiodata 
             :stepper-val="stepperVal"
             :data-step-one="tampungStepOne"
             @StepOne="nextStep(1)"
@@ -49,9 +49,10 @@
         </v-stepper-window-item>
 
         <v-stepper-window-item :value="2">
-          <C_DataAlamat 
+          <C_DataAnakIstri
             :stepper-val="stepperVal"
             :data-step-two="tampungStepTwo"
+            :data-step-two-anak="tampungStepTwoAnak"
             @backStep="backStep(2)"
             @StepTwo="nextStep(2)"
           />
@@ -82,15 +83,15 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import { useMeta } from 'vue-meta'
-import C_DataLogin from "./content/C_DataLogin.vue";
-import C_DataAlamat from "./content/C_DataAlamat.vue";
+import C_DataBiodata from "./content/C_DataBiodata.vue";
+import C_DataAnakIstri from "./content/C_DataAnakIstri.vue";
 import C_DataKelengkapan from "./content/C_DataKelengkapan.vue";
 import C_PreviewFormulir from "./content/C_PreviewFormulir.vue";
 export default {
-  name: 'FormulirStruktural',
+  name: 'FormulirKeanggotaan',
   components: {
-    C_DataLogin,
-    C_DataAlamat,
+    C_DataBiodata,
+    C_DataAnakIstri,
     C_DataKelengkapan,
     C_PreviewFormulir
   },
@@ -99,39 +100,47 @@ export default {
     steps: 4,
     lazyStep2: false,
     tampungStepOne: {
-      id_user: '',
+      id_biodata: '',
       nama_lengkap: '',
-      username: '',
-      email: '',
-      password: '',
-    },
-    tampungStepTwo: {
-      id_user: '',
       tempat: '',
-      tanggal_lahir: '',
-      jenis_kelamin: null,
-      agama: null,
-      telp: '',
+      tanggal_lahir_suami: '',
       alamat: '',
       provinsi: null,
       kabkota: null,
       kecamatan: null,
       kelurahan: null,
       kode_pos: '',
+      pekerjaan_suami: '',
+      telp: '',
+      status_suami: null,
+    },
+    tampungStepTwo: {
+      id_biodata: '',
+      nama_istri: '',
+      tanggal_lahir_istri: '',
+      pekerjaan_istri: '',
+      status_istri: null,
+    },
+    tampungStepTwoAnak: {
+      kategoriAnak: [],
+      namaAnak: [],
+      tanggalLahir: [],
+      statusAnak: [],
+      // anaklength: 0,
     },
     tampungStepThree: {
-      id_user: '',
-      nomor_induk: '',
-      pendidikan_guru: null,
-      jabatan_guru: null,
-      mengajar_bidang: null,
-      mengajar_kelas: null,
-      wali_kelas: null,
+      id_biodata: '',
+      jabatan_pengurus: '',
+      wilayah: null,
+      komisaris_wilayah: null,
+      daerah: '',
+      ompu: null,
+      generasi: '',
     },
   }),
   setup() {
     useMeta({
-      title: "Formulir Struktural",
+      title: "Formulir Keanggotaan",
       htmlAttrs: {
         lang: "id",
         amp: true,
@@ -140,7 +149,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      strukturalBy: 'user/strukturalBy',
+      keanggotaanBy: 'user/keanggotaanBy',
     })
   },
   watch: {
@@ -155,69 +164,79 @@ export default {
         this.lazyStep2 = false;
       }
     },
-    strukturalBy: {
+    keanggotaanBy: {
       deep: true,
       handler(value) {
         if(this.stepperVal === 1){
           this.tampungStepOne = {
-            id_user: value.idUser ? value.idUser : '',
-            nama_lengkap: value.nama ? value.nama : '',
-            username: value.username ? value.username : '',
-            email: value.email ? value.email : '',
-            password: value.kataSandi ? value.kataSandi : '',
-          }
-        }
-        if(this.stepperVal === 2){
-          this.tampungStepTwo = {
-            id_user: value.idUser ? value.idUser : '',
+            id_biodata: value.idBiodata ? value.idBiodata : '',
+            nama_lengkap: value.namaLengkap ? value.namaLengkap : '',
             tempat: value.tempat ? value.tempat : '',
-            tanggal_lahir: value.tanggalLahir ? value.tanggalLahir : '',
-            jenis_kelamin: value.jenisKelamin ? value.jenisKelamin : null,
-            agama: value.agama ? value.agama : null,
-            telp: value.telp ? value.telp : '',
+            tanggal_lahir_suami: value.tanggalLahirSuami ? value.tanggalLahirSuami : '',
             alamat: value.alamat ? value.alamat : '',
             provinsi: value.provinsi ? value.provinsi : null,
             kabkota: value.kabKota ? value.kabKota : null,
             kecamatan: value.kecamatan ? value.kecamatan : null,
             kelurahan: value.kelurahan ? value.kelurahan : null,
             kode_pos: value.kodePos ? value.kodePos : '',
+            pekerjaan_suami: value.pekerjaanSuami ? value.pekerjaanSuami : '',
+            telp: value.telp ? value.telp : '',
+					  status_suami: value.statusSuami === 'Meninggal' ? 'Meninggal' : value.statusSuami === 'Hidup' ? 'Hidup' : null,
+          }
+        }
+        if(this.stepperVal === 2){
+          this.tampungStepTwo = {
+            id_biodata: value.idBiodata ? value.idBiodata : '',
+            nama_istri: value.namaIstri ? value.namaIstri : '',
+            tanggal_lahir_istri: value.tanggalLahirIstri ? value.tanggalLahirIstri : '',
+            pekerjaan_istri: value.pekerjaanIstri ? value.pekerjaanIstri : '',
+					  status_istri: value.statusIstri === 'Meninggal' ? 'Meninggal' : value.statusIstri === 'Hidup' ? 'Hidup' : null,
+          }
+          this.tampungStepTwoAnak = {
+            kategoriAnak: value.anak.length ? value.anak.map(val => val.kategoriAnak) : [],
+            namaAnak: value.anak.length ? value.anak.map(val => val.namaAnak) : [],
+            tanggalLahir: value.anak.length ? value.anak.map(val => val.tanggalLahir) : [],
+            statusAnak: value.anak.length ? value.anak.map(val => val.statusAnak) : [],
+            anaklength: this.$route.params.kondisi === 'EDIT' ? value.anak.length ? value.anak.length : 1 : 0,
           }
         }
         if(this.stepperVal === 3){
           this.tampungStepThree = {
-            id_user: value.idUser ? value.idUser : '',
-            nomor_induk: value.nomorInduk ? value.nomorInduk : '',
-            pendidikan_guru: value.pendidikanGuru ? value.pendidikanGuru : null,
-            jabatan_guru: value.jabatanGuru ? value.jabatanGuru : null,
-            mengajar_bidang: value.mengajarBidang ? value.mengajarBidang : null,
-            mengajar_kelas: value.mengajarKelas ? value.mengajarKelas : null,
-            wali_kelas: value.waliKelas ? value.waliKelas : null,
+            id_biodata: value.idBiodata ? value.idBiodata : '',
+            jabatan_pengurus: value.jabatanPengurus ? value.jabatanPengurus : '',
+            wilayah: value.wilayah ? value.wilayah : null,
+            komisaris_wilayah: value.komisarisWilayah ? value.komisarisWilayah : null,
+            daerah: value.komisarisWilayah ? value.komisarisWilayah.daerah : null,
+            ompu: value.ompu ? value.ompu : null,
+            generasi: value.generasi ? value.generasi : '',
           }
+          // console.log(this.tampungStepThree);
         }
       },
     }
   },
   mounted() {
     // let uid = this.$route.params.uid;
-    if(this.$route.params.kondisi === 'EDIT') return this.getStrukturalbyUID(this.$route.params.uid)
+    if(this.$route.params.kondisi === 'EDIT') return this.getKeanggotaanbyUID(this.$route.params.uid)
   },
 	methods: {
 		...mapActions({
-      getStrukturalbyUID: 'user/getStrukturalbyUID',
+      getKeanggotaanbyUID: 'user/getKeanggotaanbyUID',
     }),
     gotolist() {
       localStorage.removeItem('stepOne')
       localStorage.removeItem('stepTwo')
+      localStorage.removeItem('stepTwoAnak')
       localStorage.removeItem('stepThree')
-      this.$router.push({name: "DataStruktural"});
+      this.$router.push({name: "DataKeanggotaan"});
     },
     nextStep(step) {
       this.stepperVal = step + 1;
-      if(this.$route.params.kondisi === 'EDIT') return this.getStrukturalbyUID(this.$route.params.uid)
+      if(this.$route.params.kondisi === 'EDIT') return this.getKeanggotaanbyUID(this.$route.params.uid)
     },
     backStep(step) {
       this.stepperVal = step - 1;
-      if(this.$route.params.kondisi === 'EDIT') return this.getStrukturalbyUID(this.$route.params.uid)
+      if(this.$route.params.kondisi === 'EDIT') return this.getKeanggotaanbyUID(this.$route.params.uid)
     },
 	}
 }
