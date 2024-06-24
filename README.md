@@ -1,4 +1,4 @@
-# frontend-service-gatsa-vue3
+# frontend-service
 
 ## Project setup
 ```
