@@ -1,4 +1,4 @@
-FROM node:14
+FROM node:16-alpine
 
 WORKDIR /app
 
@@ -10,6 +10,6 @@ COPY . .
 
 RUN npm run-script stg-build
 
-EXPOSE 4002
+EXPOSE 4005
 
-CMD ["npm", "run", "stg-serve"]
+CMD ["npm", "run", "build"]
