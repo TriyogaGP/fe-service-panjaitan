@@ -12,4 +12,4 @@ RUN npm run-script stg-build
 
 EXPOSE 4005
 
-CMD ["npm", "run", "build"]
+CMD ["npm", "run", "dev"]
