@@ -166,7 +166,7 @@ const actions = {
   [GET_IURAN](context, data) {
     return new Promise((resolve, reject) => {
       context.commit('SET_LOADINGTABLE', true)
-      ApiService.get(`user/iuran?komisaris_wilayah=${data.komisaris_wilayah}&tahun=${data.tahun}`, token)
+      ApiService.get(`user/iuran?komisaris_wilayah=${data.komisaris_wilayah}&tahun=${data.tahun}${data.keyword ? `&keyword=${data.keyword}` : ''}`, token)
       .then((response) => {
         context.commit('SET_LOADINGTABLE', false)
         context.commit('SET_IURAN', response.data.result)

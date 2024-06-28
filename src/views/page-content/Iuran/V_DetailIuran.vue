@@ -10,6 +10,7 @@
         :loading="loadingtable"
         :items="dataIuran"
         item-key="idIuran"
+        :items-per-page="500"
         hide-default-header
         hide-default-footer
         class="elavation-3 rounded"
@@ -52,6 +53,26 @@
             <td class="tableHeader">{{ item.raw.totalIuran === 0 ? 0 : `Rp. ${currencyDotFormatNumber(item.raw.totalIuran)}` }}</td>
             <td class="tableHeader"></td>
           </tr>
+        </template>
+        <template #top>
+          <v-row no-gutters class="pa-2">
+            <v-col cols="12" md="8" />
+            <v-col cols="12" md="4" class="text-right">
+              <TextField
+                v-model="searchData"
+                icon-prepend-tf="mdi mdi-magnify"
+                label-tf="Pencarian..."
+                :clearable-tf="true"
+                @click:clear="() => {
+                  getIuran({ komisaris_wilayah: komisaris_wilayah, tahun: tahun.getFullYear(), keyword: '' })
+                }"
+                @keyup.enter="() => {
+                  getIuran({ komisaris_wilayah: komisaris_wilayah, tahun: tahun.getFullYear(), keyword: searchData })
+                }"
+              />
+            </v-col>
+          </v-row>
+          <v-divider :thickness="2" class="border-opacity-100" color="white" />
         </template>
         <template #bottom />
       </v-data-table>
@@ -405,6 +426,7 @@ export default {
     // bulan: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'],
     bulan: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agt', 'Sep', 'Okt', 'Nov', 'Des'],
     conditionValue: [],
+		searchData: '',
     detailIuran: {
       idBiodata: '',
       idIuran: '',
@@ -529,7 +551,7 @@ export default {
   },
   mounted() {
     if(!localStorage.getItem('user_token')) return this.$router.push({name: 'LogIn'});
-    this.getIuran({ komisaris_wilayah: this.komisaris_wilayah, tahun: this.tahun.getFullYear() })
+    this.getIuran({ komisaris_wilayah: this.komisaris_wilayah, tahun: this.tahun.getFullYear(), keyword: this.searchData })
 	},
 	methods: {
     ...mapActions({
@@ -597,7 +619,7 @@ export default {
       this.$store.dispatch('user/postIuran', bodyData)
       .then((res) => {
         this.closeDialog()
-        this.getIuran({ komisaris_wilayah: this.komisaris_wilayah, tahun: this.tahun.getFullYear() })
+        this.getIuran({ komisaris_wilayah: this.komisaris_wilayah, tahun: this.tahun.getFullYear(), keyword: this.searchData })
         this.notifikasi("success", res.data.message, "1")
 			})
 			.catch((err) => {

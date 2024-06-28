@@ -2,7 +2,7 @@
   <div>
     <h1 class="subheading grey--text text-decoration-underline">Dashboard</h1>
     <v-card class="mb-2 pa-1 rounded" variant="outlined" elevation="4">
-      <h2 class="subheading grey--text text-decoration-underline">Total Keanggotaan</h2>
+      <h2 class="subheading grey--text text-decoration-underline">Total KK dari 12 Wilayah</h2>
       <v-container fluid>
         <v-row>
           <v-col
