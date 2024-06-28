@@ -10,6 +10,8 @@ export const POST_ADMINISTRATOR = "postAdministrator";
 export const GET_KEANGGOTAAN = "getKeanggotaan";
 export const GET_KEANGGOTAAN_BY = "getKeanggotaanbyUID";
 export const POST_KEANGGOTAAN = "postKeanggotaan";
+export const GET_IURAN = "getIuran";
+export const POST_IURAN = "postIuran";
 
 // mutation types
 export const SET_LOADINGTABLE = "SET_LOADINGTABLE";
@@ -18,6 +20,7 @@ export const SET_ADMINISTRATOR = "SET_ADMINISTRATOR";
 export const SET_ADMINISTRATORBY = "SET_ADMINISTRATORBY";
 export const SET_KEANGGOTAAN = "SET_KEANGGOTAAN";
 export const SET_KEANGGOTAANBY = "SET_KEANGGOTAANBY";
+export const SET_IURAN = "SET_IURAN";
 
 const state = {
   loadingtable: false,
@@ -26,6 +29,7 @@ const state = {
   dataAdministratorBy: null,
   dataKeanggotaan: [],
   dataKeanggotaanBy: null,
+  dataIuran: [],
 }
 
 const mutations = {
@@ -47,6 +51,9 @@ const mutations = {
   [SET_KEANGGOTAANBY](state, data) {
     state.dataKeanggotaanBy = data
   },
+  [SET_IURAN](state, data) {
+    state.dataIuran = data
+  },
 }
 
 const getters = {
@@ -62,12 +69,15 @@ const getters = {
   keanggotaanBy(state) {
     return state.dataKeanggotaanBy;
   },
+  iuranAll(state) {
+    return state.dataIuran;
+  },
 }
 
 const actions = {
   [GET_DASHBOARD](context, data) {
     return new Promise((resolve, reject) => {
-      ApiService.get(`user/dashboard${data.kelas !== null ? `?kelas=${data.kelas}` : ''}`, token)
+      ApiService.get(`user/dashboard`, token)
       .then((response) => {
         context.commit('SET_DASHBOARD', response.data.result)
         resolve(response);
@@ -145,6 +155,32 @@ const actions = {
   [POST_KEANGGOTAAN](context, bodyData) {
     return new Promise((resolve, reject) => {
       ApiService.post(`user/biodata`, token, bodyData)
+      .then((response) => {
+        resolve(response);
+      })
+      .catch((error) => {
+        reject(error);
+      })
+    });
+  },
+  [GET_IURAN](context, data) {
+    return new Promise((resolve, reject) => {
+      context.commit('SET_LOADINGTABLE', true)
+      ApiService.get(`user/iuran?komisaris_wilayah=${data.komisaris_wilayah}&tahun=${data.tahun}`, token)
+      .then((response) => {
+        context.commit('SET_LOADINGTABLE', false)
+        context.commit('SET_IURAN', response.data.result)
+        resolve(response);
+      })
+      .catch((error) => {
+        context.commit('SET_LOADINGTABLE', false)
+        reject(error);
+      })
+    });
+  },
+  [POST_IURAN](context, bodyData) {
+    return new Promise((resolve, reject) => {
+      ApiService.post(`user/iuran`, token, bodyData)
       .then((response) => {
         resolve(response);
       })

@@ -615,7 +615,7 @@ export default {
 			});
 		},
     goToProses(){
-			this.$router.push({name: "DataKeanggotaan"});
+			this.$router.push({name: "DataKeanggotaan", params: { kategori: 'all' }});
 		},
 		cancel() {
       this.stepperVal = --this.stepperVal;

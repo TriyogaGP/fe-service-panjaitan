@@ -129,7 +129,7 @@
 					<span v-for="data in optionMenu" :key="data.menuText">
 						<v-list-item
 							v-if="!data.subMenu.length && !data.kondisi"
-							router :to="data.menuRoute"
+							router :to="data.menuRoute === '/data-biodata' ? `${data.menuRoute}/all` : data.menuRoute"
 							class="SelectedMenu"
 							active-class="SelectedMenu-active"
 							:title="data.menuText"
@@ -273,7 +273,7 @@ export default {
 		this.Navbar()
 		this.getCMSSettings()
 		let path = this.$route.path.substring(1).split('/');
-		if(path[0] === 'settings' || path[0] === 'profile' || path[0] === 'notifikasi' || path[0] === 'percakapan'){
+		if(path[0] === 'settings' || path[0] === 'profile' || path[0] === 'notifikasi' || path[0] === 'data-detail-iuran'){
 			this.drawer = false;
 			return this.drawer;
 		}

@@ -923,6 +923,7 @@
 <script>
 import { mapActions, mapState, mapGetters } from "vuex";
 import { useMeta } from 'vue-meta'
+import { useRoute } from "vue-router";
 import PopUpNotifikasi from "../../Layout/PopUpNotifikasi.vue";
 import Stencil from "../../Layout/Stencil.vue";
 import { RectangleStencil } from "vue-advanced-cropper";
@@ -1074,7 +1075,9 @@ export default {
         amp: true,
       }
     })
-    return { RectangleStencil }
+    const route = useRoute()
+    let kategori = route.params.kategori
+    return { kategori, RectangleStencil }
   },
   computed: {
 		...mapState({
@@ -1143,10 +1146,11 @@ export default {
     filterby: {
 			deep: true,
 			handler(value, oldValue) {
-        console.log(value, oldValue);
         if(oldValue === null || oldValue !== value){
-          this.filterByOptions = []
-          this.filterforby = null
+          if(this.kategori === 'all') {
+            this.filterByOptions = []
+            this.filterforby = null
+          }
         }
         if(value === 'Status'){
           this.filterByOptions.push(
@@ -1169,14 +1173,19 @@ export default {
     if(!localStorage.getItem('user_token')) return this.$router.push({name: 'LogIn'});
     this.roleID = localStorage.getItem('roleID')
     this.BASEURL = process.env.VUE_APP_BASE_URL
-		this.getKeanggotaan({page: this.page, limit: this.limit, keyword: this.searchData, filter: `${this.filterby}-${this.filterforby}`, sorting: this.kumpulSort});
     this.getWilayahPanjaitan();
     this.getKomisarisWilayah({ kodeWilayah: localStorage.getItem('wilayah') === '00' ? undefined : localStorage.getItem('wilayah') });
     if(this.roleID === '3') {
       let getWilayah = this.wilayahpanjaitanOptions.filter(val => val.kode === localStorage.getItem('wilayah'))
       this.namawilayah = getWilayah.length ? getWilayah[0].label : ''
     }
-    // if(this.roleID === '4') { this.headers.splice(7,3); }
+    if(this.kategori === 'all'){
+      this.getKeanggotaan({page: this.page, limit: this.limit, keyword: this.searchData, filter: `${this.filterby}-${this.filterforby}`, sorting: this.kumpulSort});
+    }else{
+      let getWilayah = this.wilayahpanjaitanOptions.filter(val => val.kode === this.kategori)
+      this.searchData = getWilayah.length ? getWilayah[0].label : ''
+      this.getKeanggotaan({page: this.page, limit: this.limit, keyword: this.searchData, filter: `${this.filterby}-${this.filterforby}`, sorting: this.kumpulSort});
+    }
 	},
   beforeDestroy () {
     clearInterval(this.interval)
@@ -1281,19 +1290,6 @@ export default {
             this.dataJumlahImportAvailable = dataResp.jsonDataAvailable;
             this.downloadFile = dataResp.path
             this.queryAndIndeterminate(1)
-            // setTimeout(() => {
-            //   files = ''
-            //   this.$refs.inputExcel.value = null
-            //   this.isLoadingImport = false
-            //   this.dialogImport = false
-            //   let dataResp = response.data.result
-            //   if (dataResp.jsonDataAvailable > 0) { 
-            //     this.downloadFile = dataResp.path
-            //     return this.notifikasi("warning2", "Masih terdapat data yang sudah diinputkan !", "3");
-            //   }
-            //   this.getKeanggotaan({page: this.page, limit: this.limit, keyword: this.searchData, filter: `${this.filterby}-${this.filterforby}`, sorting: this.kumpulSort});
-            //   this.notifikasi("success", "Berhasil import Data Keanggotaan", "1")
-            // }, 30000)
           })
         } catch (err) {
           // this.isLoadingImport = false
@@ -1336,7 +1332,6 @@ export default {
           nilai += dataindex
           const data = (nilai / this.dataJumlahImport) * 100
           this.progress = Math.ceil(data)
-          console.log(nilai, data, this.dataJumlahImport, this.progress)
         }, 2000)
       }, 2500)
     },
@@ -1376,7 +1371,6 @@ export default {
           namawilayah = getdata.length ? getdata[0].label : ''
           nameFile = `Data Keanggotaan By Komisaris Wilayah ${namawilayah}`;
           url = `?kategori=komisaris&wilayah=${wilayah}`
-          console.log(nameFile);
         }
       }
       this.isLoadingExport = true
@@ -1406,7 +1400,6 @@ export default {
 			.then(response => response.arrayBuffer())
 			.then(async response => {
         setTimeout(() => {
-          // console.log(response)
           this.isLoadingDownload = false
           let blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
           this.downloadBlob(blob,`Template Data Keanggotaan${this.roleID === '3' ? ` Wilayah ${this.namawilayah}` : ''}.xlsx`)

@@ -1,240 +1,30 @@
 <template>
   <div>
     <h1 class="subheading grey--text text-decoration-underline">Dashboard</h1>
-    <!-- <v-card class="pa-1 rounded" variant="outlined" elevation="4">
+    <v-card class="mb-2 pa-1 rounded" variant="outlined" elevation="4">
+      <h2 class="subheading grey--text text-decoration-underline">Total Keanggotaan</h2>
       <v-container fluid>
         <v-row>
-          <v-col cols="12" :lg="cols" v-if="roleID === '1'">
-            <v-card color="white" style="border: 2px solid #000;">
-              <v-sheet color="green" class="sheetData" elevation="2">
-                <v-icon icon="mdi mdi-account-group" size="large" />
-                <v-card-title class="text-white" style="font-weight: bold; font-size: 15px; margin-left: 5px;">Administrator</v-card-title>
+          <v-col
+            v-for="hasil in dataDashboard"
+            :key="hasil.kode"
+            cols="12"
+            lg="3"
+          >
+            <v-card color="white" style="border: 2px solid #000;" @click="LinkRoute(hasil.kode)">
+              <v-sheet color="#c12626" class="sheetData" elevation="2" style="padding: 5px;">
+                <v-divider :thickness="2" class="border-opacity-75" color="white"/>
+                <v-card-title class="text-white"><h6>{{ hasil.label }}</h6></v-card-title>
+                <v-divider :thickness="2" class="border-opacity-75" color="white"/>
               </v-sheet>
-              <v-card-text style="height: 160px;" class="d-flex flex-column justify-center align-center">
-                <v-chip-group>
-                  <v-chip class="box">{{ dataDashboard?.jmlAdmin }} Orang</v-chip>
-                </v-chip-group>
+              <v-card-text class="d-flex flex-column justify-center align-center">
+                <v-card-title class="text-black"><h6>{{ `${hasil.jml} orang` }}</h6></v-card-title>
               </v-card-text>
-              <v-divider :thickness="2" class="border-opacity-75" />
-              <v-card-actions>
-                <v-row no-gutters>
-                  <v-col cols="12" class="pa-0 pr-2 text-end">
-                    <Button
-                      router to="/data-administrator"
-                      icon-append-button="mdi mdi-arrow-right-thick"
-                      nama-button="View"
-                    />
-                  </v-col>
-                </v-row>
-              </v-card-actions>
-            </v-card>
-          </v-col>
-          <v-col cols="12" :lg="cols" v-if="roleID === '1' || roleID === '2' || this.kondisiJabatanTertentu">
-            <v-card color="white" style="border: 2px solid #000;">
-              <v-sheet color="green" class="sheetData" elevation="2">
-                <v-icon icon="mdi mdi-account-group" size="large" />
-                <v-card-title class="text-white" style="font-weight: bold; font-size: 15px; margin-left: 5px;">Struktural</v-card-title>
-              </v-sheet>
-              <v-card-text style="height: 160px;" class="d-flex flex-column justify-center align-center">
-                <v-chip-group>
-                  <v-chip class="box">{{ dataDashboard?.jmlStruktural }} Orang</v-chip>
-                </v-chip-group>
-              </v-card-text>
-              <v-divider :thickness="2" class="border-opacity-75" />
-              <v-card-actions>
-                <v-row no-gutters>
-                  <v-col cols="12" class="pa-0 pr-2 text-end">
-                    <Button
-                      router to="/data-struktural"
-                      icon-append-button="mdi mdi-arrow-right-thick"
-                      nama-button="View"
-                    />
-                  </v-col>
-                </v-row>
-              </v-card-actions>
-            </v-card>
-          </v-col>
-          <v-col cols="12" :lg="cols">
-            <v-card color="white" style="border: 2px solid #000;">
-              <v-sheet color="green" class="sheetData" elevation="2">
-                <v-icon icon="mdi mdi-account-group" size="large" />
-                <v-card-title class="text-white" style="font-weight: bold; font-size: 15px; margin-left: 5px;">Siswa Siswa</v-card-title>
-              </v-sheet>
-              <v-card-text style="height: 160px;" class="d-flex flex-column justify-center align-center">
-                <v-chip-group>
-                  <v-chip class="box">
-                    Laki-Laki<br>
-                    {{ dataDashboard?.jmlSiswa?.laki_laki }} Orang
-                  </v-chip>
-                  <v-chip class="box">
-                    Perempuan<br>
-                    {{ dataDashboard?.jmlSiswa?.perempuan }} Orang
-                  </v-chip>
-                </v-chip-group>
-              </v-card-text>
-              <v-divider :thickness="2" class="border-opacity-75" />
-              <v-card-actions>
-                <v-row no-gutters>
-                  <v-col cols="12" class="pa-0 pr-2 text-end">
-                    <Button
-                      router to="/data-siswa-siswi"
-                      icon-append-button="mdi mdi-arrow-right-thick"
-                      nama-button="View"
-                    />
-                  </v-col>
-                </v-row>
-              </v-card-actions>
-            </v-card>
-          </v-col>
-          <v-col cols="12" :lg="cols">
-            <v-card color="white" style="border: 2px solid #000;">
-              <v-sheet color="green" class="sheetData" elevation="2">
-                <v-icon icon="mdi mdi-account-group" size="large" />
-                <v-card-title class="text-white" style="font-weight: bold; font-size: 15px; margin-left: 5px;">Siswa Siswa</v-card-title>
-              </v-sheet>
-              <v-card-text style="height: 160px;" class="d-flex flex-column justify-center align-center">
-                <v-chip-group>
-                  <v-chip class="box">
-                    Validation<br>
-                    {{ dataDashboard?.jmlSiswa?.validation }} Orang
-                  </v-chip>
-                  <v-chip class="box">
-                    Not Validation<br>
-                    {{ dataDashboard?.jmlSiswa?.not_validation }} Orang
-                  </v-chip>
-                </v-chip-group>
-              </v-card-text>
-              <v-divider :thickness="2" class="border-opacity-75" />
-              <v-card-actions>
-                <v-row no-gutters>
-                  <v-col cols="12" class="pa-0 pr-2 text-end">
-                    <Button
-                      router to="/data-siswa-siswi"
-                      icon-append-button="mdi mdi-arrow-right-thick"
-                      nama-button="View"
-                    />
-                  </v-col>
-                </v-row>
-              </v-card-actions>
-            </v-card>
-          </v-col>
-          <v-col cols="12" :lg="cols">
-            <v-card color="white" style="border: 2px solid #000;">
-              <v-sheet color="green" class="sheetData" elevation="2">
-                <v-icon icon="mdi mdi-account-group" size="large" />
-                <v-card-title class="text-white" style="font-weight: bold; font-size: 15px; margin-left: 5px;">Siswa Siswa</v-card-title>
-              </v-sheet>
-              <v-card-text style="height: 160px;" class="d-flex flex-column justify-center align-center">
-                <v-chip-group>
-                  <v-chip class="box">
-                    Mutation<br>
-                    {{ dataDashboard?.jmlSiswa?.mutation }} Orang
-                  </v-chip>
-                  <v-chip class="box">
-                    Not Mutation<br>
-                    {{ dataDashboard?.jmlSiswa?.not_mutation }} Orang
-                  </v-chip>
-                </v-chip-group>
-              </v-card-text>
-              <v-divider :thickness="2" class="border-opacity-75" />
-              <v-card-actions>
-                <v-row no-gutters>
-                  <v-col cols="12" class="pa-0 pr-2 text-end">
-                    <Button
-                      router to="/data-siswa-siswi"
-                      icon-append-button="mdi mdi-arrow-right-thick"
-                      nama-button="View"
-                    />
-                  </v-col>
-                </v-row>
-              </v-card-actions>
-            </v-card>
-          </v-col>
-          <v-col cols="12" :lg="cols" v-if="roleID === '1' || roleID === '2'">
-            <v-card color="white" style="border: 2px solid #000;">
-              <v-sheet color="green" class="sheetData" elevation="2">
-                <v-icon icon="mdi mdi-view-list" size="large" />
-                <v-card-title class="text-white" style="font-weight: bold; font-size: 15px; margin-left: 5px;">Kelas</v-card-title>
-              </v-sheet>
-              <v-card-text style="height: 160px;" class="d-flex flex-column justify-center align-center">
-                <v-chip-group>
-                  <v-chip class="box">
-                    Kelas 7<br>
-                    {{ dataDashboard?.jmlKelas?.kelas_7 }} Kelas
-                  </v-chip>
-                  <v-chip class="box">
-                    Kelas 8<br>
-                    {{ dataDashboard?.jmlKelas?.kelas_8 }} Kelas
-                  </v-chip>
-                  <v-chip class="box">
-                    Kelas 9<br>
-                    {{ dataDashboard?.jmlKelas?.kelas_9 }} Kelas
-                  </v-chip>
-                </v-chip-group>
-              </v-card-text>
-              <v-divider :thickness="2" class="border-opacity-75" />
-              <v-card-actions>
-                <v-row no-gutters>
-                  <v-col cols="12" class="pa-0 pr-2 text-end">
-                    <Button
-                      router to="/settings"
-                      icon-append-button="mdi mdi-arrow-right-thick"
-                      nama-button="View"
-                    />
-                  </v-col>
-                </v-row>
-              </v-card-actions>
-            </v-card>
-          </v-col>
-          <v-col cols="12" :lg="cols">
-            <v-card color="white" style="border: 2px solid #000;">
-              <v-sheet color="green" class="sheetData" elevation="2">
-                <v-icon icon="mdi mdi-table-question" size="large" />
-                <v-card-title class="text-white" style="font-weight: bold; font-size: 15px; margin-left: 5px;">Question Exam</v-card-title>
-              </v-sheet>
-              <v-card-text style="height: 160px;" class="d-flex flex-column justify-center align-center">
-                <v-chip-group>
-                  <v-chip class="box">
-                    Pilihan Ganda<br>
-                    {{ dataDashboard?.jmlQuestionExam?.jenisPG }} Soal
-                  </v-chip>
-                  <v-chip class="box">
-                    Menjodohkan<br>
-                    {{ dataDashboard?.jmlQuestionExam?.jenisMenjodohkan }} Soal
-                  </v-chip>
-                  <v-chip class="box">
-                    Benar Salah<br>
-                    {{ dataDashboard?.jmlQuestionExam?.jenisBS }} Soal
-                  </v-chip>
-                  <v-chip class="box">
-                    Essay<br>
-                    {{ dataDashboard?.jmlQuestionExam?.jenisEssay }} Soal
-                  </v-chip>
-                </v-chip-group>
-              </v-card-text>
-              <v-divider :thickness="2" class="border-opacity-75" />
-              <v-card-actions>
-                <v-row no-gutters>
-                  <v-col cols="12" class="pa-0 pr-2 text-end">
-                    <Button
-                      router to="/question-exam"
-                      icon-append-button="mdi mdi-arrow-right-thick"
-                      nama-button="View"
-                    />
-                  </v-col>
-                </v-row>
-              </v-card-actions>
             </v-card>
           </v-col>
         </v-row>
       </v-container>
-    </v-card> -->
-    <!-- <div 
-      @mouseover="hoverNih($event)"
-      @mouseleave="hoverNih($event)"
-    >
-      haha
-    </div> -->
+    </v-card>
     <v-dialog
       v-model="dialogNotifikasi"
       transition="dialog-bottom-transition"
@@ -263,8 +53,6 @@ export default {
     totalNotif: 0,
     cols: 4,
     roleID: '',
-    // mengajarKelas: '',
-    // kondisiJabatanTertentu: false,
     
     //notifikasi
     dialogNotifikasi: false,
@@ -283,57 +71,25 @@ export default {
 
   },
   computed: {
-    // ...mapState({
-    //   jabatan: store => store.setting.jabatanOptions,
-    //   dataDashboard: state => state.user.dataDashboard,
-    // }),
-    // jabatanOptions(){
-    //   if(this.roleID === '3'){
-    //     let jabatan_guru = localStorage.getItem('jabatan_guru').split(', ')
-    //     let result = []
-    //     jabatan_guru.map(str => {
-    //       let hasil = this.jabatan.filter(val => { return val.kode == str })
-    //       result.push(hasil.length ? hasil[0].label : '')
-    //     })
-    //     return result
-    //   }
-    // },
+    ...mapState({
+			dataDashboard: store => store.user.dataDashboard,
+		}),
   },
   watch: {
-    // jabatanOptions: {
-		// 	deep: true,
-		// 	handler(value) {
-		// 		if(this.roleID === '3'){
-    //       if(value.includes('Kepala Sekolah') || value.includes('WaKaBid. Kesiswaan')){
-    //         this.kondisiJabatanTertentu = true
-    //         this.getDashboard({kelas: null})
-    //       }
-    //     }
-		// 	}
-		// },
   },
   mounted() {
     if(!localStorage.getItem('user_token')) return this.$router.push({name: 'LogIn'});
     this.roleID = localStorage.getItem('roleID')
-    // this.mengajarKelas = localStorage.getItem('mengajar_kelas')
-    // if(this.kondisiJabatanTertentu === false && this.mengajarKelas !== 'null') {
-    //   this.getDashboard({kelas: this.mengajarKelas})
-    // }
-    this.overlay = true
+    this.getDashboard()
   },  
 	methods: {
     ...mapActions({
-      // getDashboard: 'user/getDashboard',
+      getDashboard: 'user/getDashboard',
       uploadFiles: 'upload/uploadFiles',
     }),
-    // hoverNih(e){
-    //   if(e.type === 'mouseover'){
-    //     this.hover = true
-    //   }else if(e.type === 'mouseleave'){
-    //     this.hover = false
-    //   }
-    //   console.log(e.type, this.hover);
-    // },
+    LinkRoute(kode){
+      this.$router.push({name: "DataKeanggotaan", params: { kategori: this.roleID === '1' || this.roleID === '2' ? kode : 'all' }});
+    },
     notifikasi(kode, text, proses){
       this.dialogNotifikasi = true
       this.notifikasiKode = kode

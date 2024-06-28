@@ -65,7 +65,7 @@ const routes = [
         component: () => import('@/views/page-content/Administrator/P_FormAdministrator.vue')
       },
       {
-        path: '/data-biodata',
+        path: '/data-biodata/:kategori',
         name: 'DataKeanggotaan',
         component: () => import('@/views/page-content/Keanggotaan/V_Keanggotaan.vue')
       },
@@ -90,6 +90,12 @@ const routes = [
         name: 'DataKomisaris',
         props: true,
         component: () => import('@/views/page-content/Iuran/V_Komisaris.vue')
+      },
+      {
+        path: '/data-detail-iuran/:komisaris_wilayah',
+        name: 'DataDetailIuran',
+        props: true,
+        component: () => import('@/views/page-content/Iuran/V_DetailIuran.vue')
       },
       
       {

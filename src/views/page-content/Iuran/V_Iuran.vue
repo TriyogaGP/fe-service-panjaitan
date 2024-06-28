@@ -127,6 +127,7 @@ export default {
       console.log(kode);
     },
     LinkRouteKomisaris(kode){
+      this.$router.push({name: "DataDetailIuran", params: { komisaris_wilayah: kode }});
       console.log(kode);
     },
     notifikasi(kode, text, proses){

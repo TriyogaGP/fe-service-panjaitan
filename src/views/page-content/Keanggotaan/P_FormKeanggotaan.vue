@@ -228,7 +228,7 @@ export default {
       localStorage.removeItem('stepTwo')
       localStorage.removeItem('stepTwoAnak')
       localStorage.removeItem('stepThree')
-      this.$router.push({name: "DataKeanggotaan"});
+      this.$router.push({name: "DataKeanggotaan", params: { kategori: 'all' }});
     },
     nextStep(step) {
       this.stepperVal = step + 1;
