@@ -220,11 +220,11 @@ export default {
 				}else{
 					this.kondisiTombol = true
 				}
-				localStorage.setItem('stepThree', JSON.stringify(this.inputDataKelengkapan))
+				localStorage.setItem('stepThree', JSON.stringify(value))
 			}
 		},
 		dataStepThree: {
-			deep: true,
+			deep: false,
 			handler(value) {
 				this.inputDataKelengkapan = {
 					id_biodata: value.id_biodata ? value.id_biodata : '',

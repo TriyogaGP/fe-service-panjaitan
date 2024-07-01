@@ -284,17 +284,17 @@ export default {
 				}else{
 					this.kondisiTombol = true
 				}
-				localStorage.setItem('stepTwo', JSON.stringify(this.inputDataIstri))
+				localStorage.setItem('stepTwo', JSON.stringify(value))
 			}
 		},
 		inputDataAnak:{
 			deep: true,
 			handler(value) {
-				localStorage.setItem('stepTwoAnak', JSON.stringify(this.inputDataAnak))
+				localStorage.setItem('stepTwoAnak', JSON.stringify(value))
 			}
 		},
 		dataStepTwo: {
-			deep: true,
+			deep: false,
 			handler(value) {
 				this.inputDataIstri = {
 					id_biodata: value.id_biodata ? value.id_biodata : '',
@@ -306,13 +306,14 @@ export default {
 			}
 		},
 		dataStepTwoAnak: {
-			deep: true,
+			deep: false,
 			handler(value) {
+				console.log('ini awal masuk',value);
 				this.inputDataAnak = {
-					kategoriAnak: value.kategoriAnak ? value.kategoriAnak : [],
-					namaAnak: value.namaAnak ? value.namaAnak : [],
-					tanggalLahir: value.tanggalLahir ? value.tanggalLahir : [],
-					statusAnak: value.statusAnak ? value.statusAnak : [],
+					kategoriAnak: value.kategoriAnak ? value.kategoriAnak : [null],
+					namaAnak: value.namaAnak ? value.namaAnak : [''],
+					tanggalLahir: value.tanggalLahir ? value.tanggalLahir : [''],
+					statusAnak: value.statusAnak ? value.statusAnak : [null],
 					anaklength: value.anaklength,
 				}
 			}
@@ -339,7 +340,7 @@ export default {
 					this.inputDataAnak.kategoriAnak.push(null);
 					this.inputDataAnak.namaAnak.push('');
 					this.inputDataAnak.tanggalLahir.push('');
-					this.inputDataAnak.statusAnak.push('');
+					this.inputDataAnak.statusAnak.push(null);
 				}else if(kondisi === 'hapus'){
 					this.inputDataAnak.anaklength -= 1;
 					this.inputDataAnak.kategoriAnak.splice(index, 1);
@@ -353,7 +354,7 @@ export default {
 					this.inputDataAnak.kategoriAnak.push(null);
 					this.inputDataAnak.namaAnak.push('');
 					this.inputDataAnak.tanggalLahir.push('');
-					this.inputDataAnak.statusAnak.push('');
+					this.inputDataAnak.statusAnak.push(null);
 				}else if(kondisi === 'hapus'){
 					this.inputDataAnak.anaklength -= 1;
 					this.inputDataAnak.kategoriAnak.splice(index, 1);
@@ -361,6 +362,7 @@ export default {
 					this.inputDataAnak.tanggalLahir.splice(index, 1);
 					this.inputDataAnak.statusAnak.splice(index, 1);
 					if(this.inputDataAnak.anaklength === 0){
+						this.inputDataAnak.anaklength = 1;
 						this.inputDataAnak.kategoriAnak.push(null);
 						this.inputDataAnak.namaAnak.push('');
 						this.inputDataAnak.tanggalLahir.push('');

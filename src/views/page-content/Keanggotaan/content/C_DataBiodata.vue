@@ -387,7 +387,7 @@ export default {
 				}else{
 					this.kondisiTombol = true
 				}
-				localStorage.setItem('stepOne', JSON.stringify(this.inputDataBiodata))
+				localStorage.setItem('stepOne', JSON.stringify(value))
 			}
 		},
 		dataStepOne: {

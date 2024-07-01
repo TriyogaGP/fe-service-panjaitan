@@ -193,10 +193,10 @@ export default {
 					  status_istri: value.statusIstri === 'Meninggal' ? 'Meninggal' : value.statusIstri === 'Hidup' ? 'Hidup' : null,
           }
           this.tampungStepTwoAnak = {
-            kategoriAnak: value.anak.length ? value.anak.map(val => val.kategoriAnak) : [],
-            namaAnak: value.anak.length ? value.anak.map(val => val.namaAnak) : [],
-            tanggalLahir: value.anak.length ? value.anak.map(val => val.tanggalLahir) : [],
-            statusAnak: value.anak.length ? value.anak.map(val => val.statusAnak) : [],
+            kategoriAnak: this.$route.params.kondisi === 'EDIT' ? value.anak.length ? value.anak.map(val => val.kategoriAnak) : [null] : [],
+            namaAnak: this.$route.params.kondisi === 'EDIT' ? value.anak.length ? value.anak.map(val => val.namaAnak) : [''] : [],
+            tanggalLahir: this.$route.params.kondisi === 'EDIT' ? value.anak.length ? value.anak.map(val => val.tanggalLahir) : [''] : [],
+            statusAnak: this.$route.params.kondisi === 'EDIT' ? value.anak.length ? value.anak.map(val => val.statusAnak) : [null] : [],
             anaklength: this.$route.params.kondisi === 'EDIT' ? value.anak.length ? value.anak.length : 1 : 0,
           }
         }

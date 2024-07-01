@@ -1204,6 +1204,7 @@ export default {
         jenis: jenis,
         idBiodata: item.idBiodata,
         kondisi: kondisi,
+        reason: this.reason,
       }
       if(this.roleID === '1' || this.roleID === '2') this.kirimData(this.bodyData);
       if(this.roleID === '3') this.dialogQuestion = true;

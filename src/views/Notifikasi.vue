@@ -421,7 +421,7 @@ export default {
         statusExecute: item.statusExecute,
         createdAt: item.createdAt
       }
-      console.log(item)
+      
       this.jsonData = JSON.parse(item.pesan.payload)
       if(this.detailData.isRead) this.DialogNotifikasi = true
       let bodyData = {
@@ -466,6 +466,7 @@ export default {
       .then((res) => {
         this.DialogNotifikasi = false
         this.muatulang()
+        this.getNotifikasi({kategori: this.kodeKategori, page: this.page, limit: this.limit})
 			})
 			.catch((err) => {
         this.notifikasi("error", err.response.data.message, "1")

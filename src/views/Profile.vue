@@ -1,282 +1,262 @@
 <template>
   <div>
     <!-- <v-card class="pa-1 rounded" style="border: 1px solid #000; border-radius: 5px;"> -->
-    <v-card class="pa-1 rounded" variant="outlined" elevation="4">
-      <v-row class="ma-1 tampilView">
-        <v-col cols="8" class="kotakleft">
-          <v-tabs
-            v-model="tab"
-            fixed-tabs
-            bg-color="background-dialog-card"
-            density="comfortable"
-          >
-            <v-tab v-for="item in itemsTab" :key="item.code" :value="item.code">
-              <v-icon :icon="item.icon" />
-              {{ item.text }}
-            </v-tab>
-          </v-tabs>
-          <v-window v-model="tab">
-            <v-window-item value="1">
-              <div class="customScrollLeft">
-                <div class="text-right">
-                  <Button 
-                    color-button="#0bd369"
-                    :icon-prepend-button="kondisiForm ? 'mdi mdi-pencil' : 'mdi mdi-close'"
-                    nama-button="Ubah Data Diri"
-                    size-button="x-small"
-                    @proses="() => { kondisiForm = !kondisiForm; }"
-                  />
-                </div>
-                <Fieldset
-                  legend="Data Log In"
-                  :toggleable="true"
-                >
-                  <v-row no-gutters>
-                    <v-col
-                      cols="12"
-                      md="4"
-                      class="pt-2 d-flex align-center font-weight-bold"
-                    >
-                      Consumer Type
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      md="8"
-                      class="pt-3"
-                    >
-                      <span v-html="previewData.namaRole"></span>
-                      <!-- <span v-if="kondisiForm" v-html="previewData.namaRole"></span>
-                      <Autocomplete
-                      v-else
-                        v-model="inputAdministrator.level"
-                        :data-a="levelOptions"
-                        item-title="title"
-                        item-value="value"
-                        label-a="Consumer Type"
-                        :clearable-a="true"
-                      /> -->
-                    </v-col>
-                  </v-row>
-                  <v-row no-gutters v-if="inputAdministrator.level === 3">
-                    <v-col
-                    cols="12"
-                      md="4"
-                      class="pt-2 d-flex align-center font-weight-bold"
-                    >
-                      Wilayah
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      md="8"
-                      class="pt-3"
-                    >
-                      <span v-html="previewData.wilayah"></span>
-                      <!-- <span v-if="kondisiForm" v-html="previewData.wilayah"></span>
-                      <Autocomplete
-                        v-else
-                        v-model="inputAdministrator.wilayah"
-                        :data-a="wilayahpanjaitanOptions"
-                        item-title="label"
-                        item-value="kode"
-                        label-a="Wilayah"
-                        :clearable-a="true"
-                      /> -->
-                    </v-col>
-                  </v-row>
-                  <v-row no-gutters>
-                    <v-col
-                      cols="12"
-                      md="4"
-                      class="pt-2 d-flex align-center font-weight-bold"
-                    >
-                      Nama Lengkap
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      md="8"
-                      class="pt-3"
-                    >
-                      <span v-if="kondisiForm" v-html="previewData.nama"></span>
-                      <TextField
-                        v-else
-                        v-model="inputAdministrator.nama"
-                        label-tf="Nama Lengkap"
-                        :clearable-tf="true"
-                      />
-                    </v-col>
-                  </v-row>
-                  <v-row no-gutters>
-                    <v-col
-                      cols="12"
-                      md="4"
-                      class="pt-2 d-flex align-center font-weight-bold"
-                    >
-                      Username
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      md="8"
-                      class="pt-3"
-                    >
-                      <span v-if="kondisiForm" v-html="previewData.username"></span>
-                      <TextField
-                        v-else
-                        v-model="inputAdministrator.username"
-                        label-tf="Username"
-                        :clearable-tf=true
-                      />
-                    </v-col>
-                  </v-row>
-                  <v-row no-gutters>
-                    <v-col
-                      cols="12"
-                      md="4"
-                      class="pt-2 d-flex align-center font-weight-bold"
-                    >
-                      Kata Sandi
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      md="8"
-                      class="pt-3"
-                    >
-                      {{ previewData.password }}&nbsp;
-                      <v-icon
-                        class="mr-1"
-                        color="light-black darken-3"
-                        tabindex="-1"
-                        @click="endecryptData('endecryptType')"
-                        :icon="endecryptType ? 'mdi mdi-eye-lock' : 'mdi mdi-eye-lock-open'"
-                        size="large"
-                      />
-                    </v-col>
-                  </v-row>
-                </Fieldset>
-                <div class="text-right">
-                  <Button
-                    v-if="!kondisiForm"
-                    color-button="#0bd369"
-                    nama-button="Simpan Data"
-                    size-button="x-small"
-                    @proses="SimpanDataProfile()"
-                  />
-                </div>
-              </div>
-            </v-window-item>
-            <v-window-item value="2">
-              <div class="customScrollLeft">
-                <v-row no-gutters>
-                  <v-col
-                    cols="12"
-                    md="4"
-                    class="pt-2 d-flex align-center"
-                  >
-                    Kata Sandi Lama
-                  </v-col>
-                  <v-col
-                    cols="12"
-                    md="8"
-                    class="pt-3"
-                  >
-                    <TextField
-                      v-model="authData.passwordLama"
-                      :slot-tf="true"
-                      label-tf="Kata Sandi Lama"
-                      :type-tf="passTypeLama ? 'text' : 'password'"
-                      :icon-append-tf="passTypeLama ? 'mdi mdi-eye-lock' : 'mdi mdi-eye-lock-open'"
-                      :clearable-tf="true"
-                      autocomplete="current-password"
-                      @prosesicon="onClickVisible('passTypeLama')"
-                    />
-                  </v-col>
-                </v-row>
-                <v-row no-gutters>
-                  <v-col
-                    cols="12"
-                    md="4"
-                    class="pt-2 d-flex align-center"
-                  >
-                    Kata Sandi Baru
-                  </v-col>
-                  <v-col
-                    cols="12"
-                    md="8"
-                    class="pt-3"
-                  >
-                    <TextField
-                      v-model="authData.passwordBaru"
-                      :slot-tf="true"
-                      label-tf="Kata Sandi Baru"
-                      :type-tf="passTypeBaru ? 'text' : 'password'"
-                      :icon-append-tf="passTypeBaru ? 'mdi mdi-eye-lock' : 'mdi mdi-eye-lock-open'"
-                      :clearable-tf="true"
-                      autocomplete="new-password"
-                      @prosesicon="onClickVisible('passTypeBaru')"
-                    />
-                  </v-col>
-                </v-row>
-                <v-row no-gutters>
-                  <v-col
-                    cols="12"
-                    md="4"
-                    class="pt-2 d-flex align-center"
-                  >
-                    Kata Sandi Konfirmasi Baru
-                  </v-col>
-                  <v-col
-                    cols="12"
-                    md="8"
-                    class="pt-3"
-                  >
-                    <TextField
-                      v-model="authData.passwordConfBaru"
-                      :slot-tf="true"
-                      label-tf="Kata Sandi Konfirmasi Baru"
-                      :type-tf="passTypeConfBaru ? 'text' : 'password'"
-                      :icon-append-tf="passTypeConfBaru ? 'mdi mdi-eye-lock' : 'mdi mdi-eye-lock-open'"
-                      :clearable-tf="true"
-                      autocomplete="new-password"
-                      @prosesicon="onClickVisible('passTypeConfBaru')"
-                    />
-                  </v-col>
-                </v-row>
-                <div class="text-right mt-2">
-                  <Button
-                    color-button="#0bd369"
-                    nama-button="Ubah Kata Sandi"
-                    size-button="x-small"
-                    :disabled-button="kondisiTombol"
-                    @proses="UbahKataSandi()"
-                  />
-                </div>
-              </div>
-            </v-window-item>
-          </v-window>
-        </v-col>
-        <v-col cols="4" class="kotakright">
-          <div class="mt-4 d-flex flex-column justify-space-between align-center">
-            <div class="avatar" @click="pilihFile()">
-              <span class="tulisan">
-                <v-icon color="white" icon="mdi mdi-camera-account" />&nbsp;Ubah Foto Profil
-              </span>
-              <v-img :src="previewData.fotoProfil" />
-            </div>
-            <input 
-              ref="fotoProfile"
-              :key="componentKey"
-              type="file"
-              accept="image/*"
-              style="display: none"
-              @change="uploadFotoProfile($event)"
+      <v-card class="pa-1 rounded" variant="outlined" elevation="4">
+        <v-row class="ma-1 tampilView">
+          <v-col cols="8" class="kotakleft">
+            <v-tabs
+              v-model="tab"
+              fixed-tabs
+              bg-color="background-dialog-card"
+              density="comfortable"
             >
-          </div>
-          <p class="white--text mt-1 text-center" style="font-size: 10pt;"><strong>{{nama}}</strong></p>
-          <p class="white--text text-center" style="font-size: 9pt;">{{namaRole}}</p>
-          <p class="white--text text-center" style="font-size: 9pt;">{{ wilayahPanjaitanText === '00' ? 'Tidak Memiliki Wilayah' : wilayahPanjaitanText }}</p>
-          <v-divider :thickness="2" class="border-opacity-100" />
-        </v-col>
-      </v-row>
-    </v-card>
+              <v-tab v-for="item in itemsTab" :key="item.code" :value="item.code">
+                <v-icon :icon="item.icon" />
+                {{ item.text }}
+              </v-tab>
+            </v-tabs>
+            <v-window v-model="tab">
+              <v-window-item value="1">
+                <div class="customScrollLeft">
+                  <div class="text-right">
+                    <Button 
+                      color-button="#0bd369"
+                      :icon-prepend-button="kondisiForm ? 'mdi mdi-pencil' : 'mdi mdi-close'"
+                      nama-button="Ubah Data Diri"
+                      size-button="x-small"
+                      @proses="() => { kondisiForm = !kondisiForm; }"
+                    />
+                  </div>
+                  <Fieldset
+                    legend="Data Log In"
+                    :toggleable="true"
+                  >
+                    <v-row no-gutters>
+                      <v-col
+                        cols="12"
+                        md="4"
+                        class="pt-2 d-flex align-center font-weight-bold"
+                      >
+                        Consumer Type
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        md="8"
+                        class="pt-3"
+                      >
+                        <span v-html="previewData.namaRole"></span>
+                      </v-col>
+                    </v-row>
+                    <v-row no-gutters v-if="inputAdministrator.level === 3">
+                      <v-col
+                      cols="12"
+                        md="4"
+                        class="pt-2 d-flex align-center font-weight-bold"
+                      >
+                        Wilayah
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        md="8"
+                        class="pt-3"
+                      >
+                        <span v-html="previewData.wilayah"></span>
+                      </v-col>
+                    </v-row>
+                    <v-row no-gutters>
+                      <v-col
+                        cols="12"
+                        md="4"
+                        class="pt-2 d-flex align-center font-weight-bold"
+                      >
+                        Nama Lengkap
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        md="8"
+                        class="pt-3"
+                      >
+                        <span v-if="kondisiForm" v-html="previewData.nama"></span>
+                        <TextField
+                          v-else
+                          v-model="inputAdministrator.nama"
+                          label-tf="Nama Lengkap"
+                          :clearable-tf="true"
+                        />
+                      </v-col>
+                    </v-row>
+                    <v-row no-gutters>
+                      <v-col
+                        cols="12"
+                        md="4"
+                        class="pt-2 d-flex align-center font-weight-bold"
+                      >
+                        Username
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        md="8"
+                        class="pt-3"
+                      >
+                        <span v-if="kondisiForm" v-html="previewData.username"></span>
+                        <TextField
+                          v-else
+                          v-model="inputAdministrator.username"
+                          label-tf="Username"
+                          :clearable-tf=true
+                        />
+                      </v-col>
+                    </v-row>
+                    <v-row no-gutters>
+                      <v-col
+                        cols="12"
+                        md="4"
+                        class="pt-2 d-flex align-center font-weight-bold"
+                      >
+                        Kata Sandi
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        md="8"
+                        class="pt-3"
+                      >
+                        {{ previewData.password }}&nbsp;
+                        <v-icon
+                          class="mr-1"
+                          color="light-black darken-3"
+                          tabindex="-1"
+                          @click="endecryptData('endecryptType')"
+                          :icon="endecryptType ? 'mdi mdi-eye-lock' : 'mdi mdi-eye-lock-open'"
+                          size="large"
+                        />
+                      </v-col>
+                    </v-row>
+                  </Fieldset>
+                  <div class="text-right">
+                    <Button
+                      v-if="!kondisiForm"
+                      color-button="#0bd369"
+                      nama-button="Simpan Data"
+                      size-button="x-small"
+                      @proses="SimpanDataProfile()"
+                    />
+                  </div>
+                </div>
+              </v-window-item>
+              <v-window-item value="2">
+                <div class="customScrollLeft">
+                  <v-row no-gutters>
+                    <v-col
+                      cols="12"
+                      md="4"
+                      class="pt-2 d-flex align-center"
+                    >
+                      Kata Sandi Lama
+                    </v-col>
+                    <v-col
+                      cols="12"
+                      md="8"
+                      class="pt-3"
+                    >
+                      <TextField
+                        v-model="authData.passwordLama"
+                        :slot-tf="true"
+                        label-tf="Kata Sandi Lama"
+                        :type-tf="passTypeLama ? 'text' : 'password'"
+                        :icon-append-tf="passTypeLama ? 'mdi mdi-eye-lock' : 'mdi mdi-eye-lock-open'"
+                        :clearable-tf="true"
+                        autocomplete="current-password"
+                        @prosesicon="onClickVisible('passTypeLama')"
+                      />
+                    </v-col>
+                  </v-row>
+                  <v-row no-gutters>
+                    <v-col
+                      cols="12"
+                      md="4"
+                      class="pt-2 d-flex align-center"
+                    >
+                      Kata Sandi Baru
+                    </v-col>
+                    <v-col
+                      cols="12"
+                      md="8"
+                      class="pt-3"
+                    >
+                      <TextField
+                        v-model="authData.passwordBaru"
+                        :slot-tf="true"
+                        label-tf="Kata Sandi Baru"
+                        :type-tf="passTypeBaru ? 'text' : 'password'"
+                        :icon-append-tf="passTypeBaru ? 'mdi mdi-eye-lock' : 'mdi mdi-eye-lock-open'"
+                        :clearable-tf="true"
+                        autocomplete="new-password"
+                        @prosesicon="onClickVisible('passTypeBaru')"
+                      />
+                    </v-col>
+                  </v-row>
+                  <v-row no-gutters>
+                    <v-col
+                      cols="12"
+                      md="4"
+                      class="pt-2 d-flex align-center"
+                    >
+                      Kata Sandi Konfirmasi Baru
+                    </v-col>
+                    <v-col
+                      cols="12"
+                      md="8"
+                      class="pt-3"
+                    >
+                      <TextField
+                        v-model="authData.passwordConfBaru"
+                        :slot-tf="true"
+                        label-tf="Kata Sandi Konfirmasi Baru"
+                        :type-tf="passTypeConfBaru ? 'text' : 'password'"
+                        :icon-append-tf="passTypeConfBaru ? 'mdi mdi-eye-lock' : 'mdi mdi-eye-lock-open'"
+                        :clearable-tf="true"
+                        autocomplete="new-password"
+                        @prosesicon="onClickVisible('passTypeConfBaru')"
+                      />
+                    </v-col>
+                  </v-row>
+                  <div class="text-right mt-2">
+                    <Button
+                      color-button="#0bd369"
+                      nama-button="Ubah Kata Sandi"
+                      size-button="x-small"
+                      :disabled-button="kondisiTombol"
+                      @proses="UbahKataSandi()"
+                    />
+                  </div>
+                </div>
+              </v-window-item>
+            </v-window>
+          </v-col>
+          <v-col cols="4" class="kotakright">
+            <div class="mt-4 d-flex flex-column justify-space-between align-center">
+              <div class="avatar" @click="pilihFile()">
+                <span class="tulisan">
+                  <v-icon color="white" icon="mdi mdi-camera-account" />&nbsp;Ubah Foto Profil
+                </span>
+                <v-img :src="previewData.fotoProfil" />
+              </div>
+              <input 
+                ref="fotoProfile"
+                :key="componentKey"
+                type="file"
+                accept="image/*"
+                style="display: none"
+                @change="uploadFotoProfile($event)"
+              >
+            </div>
+            <p class="white--text mt-1 text-center" style="font-size: 10pt;"><strong>{{nama}}</strong></p>
+            <p class="white--text text-center" style="font-size: 9pt;">{{namaRole}}</p>
+            <p class="white--text text-center" style="font-size: 9pt;">{{ wilayahPanjaitanText === '00' ? 'Tidak Memiliki Wilayah' : wilayahPanjaitanText }}</p>
+            <v-divider :thickness="2" class="border-opacity-100" />
+          </v-col>
+        </v-row>
+      </v-card>
     <v-dialog
       v-model="dialogCrop"
       scrollable
@@ -454,7 +434,7 @@ export default {
     wilayahPanjaitanText(){
       let wilayah = localStorage.getItem("wilayah")
       let hasil = wilayah === '00' ? '00' : this.wilayahpanjaitanOptions.filter(str => str.kode === wilayah)
-      return hasil === '00' ? '00' : `Wilayah ${hasil[0].label}`
+      return hasil === '00' ? '00' : hasil.length ? `Wilayah ${hasil[0].label}` : '-'
 		},
   },
   watch:{
@@ -483,7 +463,7 @@ export default {
 		tab:{
       deep: true,
 			handler(value){
-				if (value == '1') {
+				if (value === '1') {
           this.getProfile(localStorage.getItem("idLogin"))
           this.passType = true
           this.endecryptType = false
@@ -519,6 +499,7 @@ export default {
     this.passTypeBaru = false
     this.passTypeConfBaru = false
 		this.getWilayahPanjaitan()
+    // this.getProfile(localStorage.getItem("idLogin"))
   },
   methods: {
     ...mapActions({
