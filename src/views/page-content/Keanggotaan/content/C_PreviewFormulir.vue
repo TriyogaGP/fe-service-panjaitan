@@ -558,7 +558,7 @@ export default {
 			getWilayah2023: "setting/getWilayah2023",
 		}),
 		prosesData() {
-			if(localStorage.getItem('roleID') === '1' || localStorage.getItem('roleID') === '2') simpanData();
+			if(localStorage.getItem('roleID') === '1' || localStorage.getItem('roleID') === '2') this.simpanData();
       if(localStorage.getItem('roleID') === '3') this.dialogQuestion = true;
 		},
 		simpanData() {
