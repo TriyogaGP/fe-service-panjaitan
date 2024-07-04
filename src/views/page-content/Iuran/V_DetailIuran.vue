@@ -18,14 +18,14 @@
         <!-- header -->
         <template #headers="{  }">
           <tr>
-            <td rowspan="2" class="tableHeader">NOMOR INDUK</td>
-            <td rowspan="2" class="tableHeader">NAMA LENGKAP</td>
-            <td :colspan="(Number(jumlahBulanTemp))" class="tableHeader" style="text-align: center;">BULAN</td>
-            <td rowspan="2" class="tableHeader">TOTAL</td>
-            <td rowspan="2" class="tableHeader">AKSI</td>
+            <td rowspan="2" class="tableHeader">Nomor Induk</td>
+            <td rowspan="2" class="tableHeader">Nama Lengkap</td>
+            <td :colspan="(Number(jumlahBulanTemp) + 1)" class="tableHeader" style="text-align: center;">{{ `Bulan Per Tahun ${tahun}` }}</td>
+            <!-- <td rowspan="2" class="tableHeader">TOTAL</td> -->
+            <td rowspan="2" class="tableHeader">Aksi</td>
           </tr>
           <tr>
-            <td v-for="index in (Number(jumlahBulanTemp))" :key="index" class="tableHeader">
+            <td v-for="index in (Number(jumlahBulanTemp) + 1)" :key="index" class="tableHeader">
               {{ bulan[index-1] }}
             </td>
           </tr>
@@ -37,39 +37,57 @@
           <tr v-if="item.raw.nik !== ''">
             <td class="tableHeader">{{ item.raw.nik }}</td>
             <td class="tableHeader">{{ item.raw.namaLengkap }}</td>
-            <td v-for="index in (Number(jumlahBulanTemp))" :key="index" class="tableHeader" style="text-align: center;">
+            <td v-for="index in (Number(jumlahBulanTemp) + 1)" :key="index" class="tableHeader" style="text-align: center;">
               {{ item.raw.iuran[conditionValue[index-1].name] === 0 ? 0 : `Rp. ${currencyDotFormatNumber(item.raw.iuran[conditionValue[index-1].name])}` }}
             </td>
-            <td class="tableHeader">{{ item.raw.totalIuran === '0' ? 0 : `Rp. ${currencyDotFormatNumber(item.raw.totalIuran)}` }}</td>
             <td class="tableHeader">
-              <v-icon color="white" icon="mdi mdi-pencil" style="cursor: pointer;" @click="openDialog(item.raw)"/>
+              <v-icon v-if="tahun === now" color="white" icon="mdi mdi-pencil" style="cursor: pointer;" @click="openDialog(item.raw)"/>
             </td>
           </tr>
           <tr v-else>
-            <td colspan="2" class="tableHeader" style="text-align: center;">TOTAL</td>
-            <td v-for="index in (Number(jumlahBulanTemp))" :key="index" class="tableHeader" style="text-align: center;">
+            <td colspan="2" class="tableHeader" style="text-align: center;">{{ `Total Keseluruhan Tahun ${tahun}` }}</td>
+            <td v-for="index in (Number(jumlahBulanTemp) + 1)" :key="index" class="tableHeader" style="text-align: center;">
               {{ item.raw.iuran[conditionValue[index-1].name] === 0 ? 0 : `Rp. ${currencyDotFormatNumber(item.raw.iuran[conditionValue[index-1].name])}` }}
             </td>
-            <td class="tableHeader">{{ item.raw.totalIuran === 0 ? 0 : `Rp. ${currencyDotFormatNumber(item.raw.totalIuran)}` }}</td>
             <td class="tableHeader"></td>
           </tr>
         </template>
         <template #top>
           <v-row no-gutters class="pa-2">
-            <v-col cols="12" md="8" />
+            <v-col cols="12" md="8" style="font-size: 10pt;" class="text-left d-flex align-center font-weight-bold">
+              {{ `Total Keseluruhan Tahun ${tahun} : ${totalKeseluruhanIuranPerTahun === 0 ? 'Rp. 0' : `Rp. ${currencyDotFormatNumber(totalKeseluruhanIuranPerTahun)}`}` }}<br>
+              {{ `Total Keseluruhan : ${totalKeseluruhanIuran === 0 ? 'Rp. 0' : `Rp. ${currencyDotFormatNumber(totalKeseluruhanIuran)}`}` }}
+            </v-col>
             <v-col cols="12" md="4" class="text-right">
-              <TextField
-                v-model="searchData"
-                icon-prepend-tf="mdi mdi-magnify"
-                label-tf="Pencarian..."
-                :clearable-tf="true"
-                @click:clear="() => {
-                  getIuran({ komisaris_wilayah: komisaris_wilayah, tahun: tahun.getFullYear(), keyword: '' })
-                }"
-                @keyup.enter="() => {
-                  getIuran({ komisaris_wilayah: komisaris_wilayah, tahun: tahun.getFullYear(), keyword: searchData })
-                }"
-              />
+              <v-row no-gutters class="pa-2">
+                <v-col cols="12" md="8" class="text-right pr-2">
+                  <TextField
+                    v-model="searchData"
+                    icon-prepend-tf="mdi mdi-magnify"
+                    label-tf="Pencarian..."
+                    :clearable-tf="true"
+                    @click:clear="() => {
+                      getIuran({ komisaris_wilayah: komisaris_wilayah, tahun: tahun, keyword: '' })
+                    }"
+                    @keyup.enter="() => {
+                      getIuran({ komisaris_wilayah: komisaris_wilayah, tahun: tahun, keyword: searchData })
+                    }"
+                  />
+                </v-col>
+                <v-col cols="12" md="4" class="text-right">
+                  <Autocomplete
+                    v-model="tahun"
+                    :data-a="tahunOptions"
+                    label-a="Tahun"
+                  />
+                </v-col>
+              </v-row>
+            </v-col>
+          </v-row>
+          <v-divider :thickness="2" class="border-opacity-100" color="white" />
+          <v-row no-gutters class="pa-2">
+            <v-col cols="12" md="8" class="font-weight-bold">
+              <span style="font-size: 10pt;" v-html="`Nama Komisaris : ${namakomisarisText} - Wilayah ${wilayahText}`" />
             </v-col>
           </v-row>
           <v-divider :thickness="2" class="border-opacity-100" color="white" />
@@ -380,8 +398,16 @@
 						class="mt-1 mr-3"
 					>
 						<v-col
+							class="text-start d-flex align-center font-weight-bold"
+							cols="12"
+              md="6"
+						>
+              {{ `TOTAL : ${detailIuran.iuran.total === 0 ? 0 : `Rp. ${currencyDotFormatNumber(detailIuran.iuran.total)}`}` }}
+						</v-col>
+						<v-col
 							class="text-end"
 							cols="12"
+              md="6"
 						>
 							<Button 
 								color-button="black"
@@ -422,9 +448,10 @@ export default {
   data: () => ({
     dataIuran: [],
     jumlahBulanTemp: 12,
-    tahun: new Date(),
+    now: new Date().getFullYear(),
+    tahun: new Date().getFullYear(),
     // bulan: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'],
-    bulan: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agt', 'Sep', 'Okt', 'Nov', 'Des'],
+    bulan: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agt', 'Sep', 'Okt', 'Nov', 'Des', 'Total'],
     conditionValue: [],
 		searchData: '',
     detailIuran: {
@@ -445,10 +472,13 @@ export default {
         september: 0,
         oktober: 0,
         november: 0,
-        desember: 0
+        desember: 0,
+        total: 0
       },
       totalIuran: 0,
     },
+    totalKeseluruhanIuran: 0,
+    totalKeseluruhanIuranPerTahun: 0,
     DialogIuran: false,
     headers: [
       { title: "NOMOR INDUK", key: "nik", sortable: false, width: "20%" },
@@ -491,77 +521,67 @@ export default {
   computed: {
     ...mapState({
       loadingtable: store => store.user.loadingtable,
+			komisariswilayahOptions: store => store.setting.komisariswilayahOptions,
     }),
     ...mapGetters({
       iuranAll: 'user/iuranAll', 
     }),
+    wilayahText(){
+			let namawilayah = this.komisariswilayahOptions.filter(str => str.kodeKomisarisWilayah === this.komisaris_wilayah)
+			return namawilayah.length ? namawilayah[0].namaWilayah : '-'
+		},
+		namakomisarisText(){
+			let namakomisaris = this.komisariswilayahOptions.filter(str => str.kodeKomisarisWilayah === this.komisaris_wilayah)
+			return namakomisaris.length ? namakomisaris[0].namaKomisaris : '-'
+		},
+    tahunOptions(){
+      let tahun = []
+      for (let index = 2024; index <= Number(this.now); index++) {
+        tahun.push(index)
+      }
+      return tahun
+    },
   },
   watch: {
     iuranAll: {
 			deep: true,
 			async handler(value) {
         this.conditional();
-        let dataiuran = []
-        let totaliuran = 0
-        await value.map(str => {
-          dataiuran.push(str.iuran)
-          totaliuran += Number(str.totalIuran)
-        })
-        const countObj = dataiuran.reduce((acc, curr) => {
-          return {
-            januari: acc.januari + curr.januari,
-            februari: acc.februari + curr.februari,
-            maret: acc.maret + curr.maret,
-            april: acc.april + curr.april,
-            mei: acc.mei + curr.mei,
-            juni: acc.juni + curr.juni,
-            juli: acc.juli + curr.juli,
-            agustus: acc.agustus + curr.agustus,
-            september: acc.september + curr.september,
-            oktober: acc.oktober + curr.oktober,
-            november: acc.november + curr.november,
-            desember: acc.desember + curr.desember,
-          };
-        }, {
-          januari: 0,
-          februari: 0,
-          maret: 0,
-          april: 0,
-          mei: 0,
-          juni: 0,
-          juli: 0,
-          agustus: 0,
-          september: 0,
-          oktober: 0,
-          november: 0,
-          desember: 0
-        });
-        
-        this.dataIuran = value.length ? [...value, {
-          idBiodata: '',
-          idIuran: '',
-          nik: '',
-          namaLengkap: '',
-          komisarisWilayah: '',
-          iuran: countObj,
-          totalIuran: totaliuran,
-        }] : []
+        this.dataIuran = value.result
+        this.totalKeseluruhanIuran = value.totalKeseluruhanIuran
+        this.totalKeseluruhanIuranPerTahun = value.totalKeseluruhanIuranPerTahun
+      }
+    },
+    detailIuran: {
+			deep: true,
+			async handler(value) {
+        this.detailIuran.iuran.total = Number(value.iuran.januari) + Number(value.iuran.februari) + Number(value.iuran.maret)
+        + Number(value.iuran.april) + Number(value.iuran.mei) + Number(value.iuran.juni) + Number(value.iuran.juli) + Number(value.iuran.agustus)
+        + Number(value.iuran.september) + Number(value.iuran.oktober) + Number(value.iuran.november) + Number(value.iuran.desember);
+      }
+    },
+    tahun: {
+			deep: true,
+			async handler(value) {
+        this.getIuran({ komisaris_wilayah: this.komisaris_wilayah, tahun: value, keyword: this.searchData })
       }
     },
   },
   mounted() {
     if(!localStorage.getItem('user_token')) return this.$router.push({name: 'LogIn'});
-    this.getIuran({ komisaris_wilayah: this.komisaris_wilayah, tahun: this.tahun.getFullYear(), keyword: this.searchData })
+    this.getIuran({ komisaris_wilayah: this.komisaris_wilayah, tahun: this.tahun, keyword: this.searchData })
+		this.getKomisarisWilayah({ KodeWilayah: '' });
 	},
 	methods: {
     ...mapActions({
       fetchData: 'fetchData',
       getIuran: "user/getIuran", 
+			getKomisarisWilayah: 'setting/getKomisarisWilayah',
     }),
     conditional(){
       this.conditionValue = []
-      let bulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']
-      for (let index = 0; index < Number(this.jumlahBulanTemp); index++) {
+      let bulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember', 'Total']
+      for (let index = 0; index < (Number(this.jumlahBulanTemp) + 1); index++) {
         this.conditionValue.push({
           name: bulan[index].toLowerCase(),
         })
@@ -586,7 +606,9 @@ export default {
           september: item.iuran.september,
           oktober: item.iuran.oktober,
           november: item.iuran.november,
-          desember: item.iuran.desember
+          desember: item.iuran.desember,
+          total: item.iuran.januari + item.iuran.februari + item.iuran.maret + item.iuran.april + item.iuran.mei + item.iuran.juni + item.iuran.juli + item.iuran.agustus
+          + item.iuran.september + item.iuran.oktober + item.iuran.november + item.iuran.desember,
         },
         totalIuran: item.totalIuran,
       }
@@ -596,9 +618,9 @@ export default {
       let bodyData = {
         idIuran: this.detailIuran.idIuran,
         idBiodata: this.detailIuran.idBiodata,
-        tahun: String(this.tahun.getFullYear()),
+        tahun: String(this.tahun),
         iuran: {
-          tahun: String(this.tahun.getFullYear()),
+          tahun: String(this.tahun),
           iuran: {
             januari: Number(this.detailIuran.iuran.januari),
             februari: Number(this.detailIuran.iuran.februari),
@@ -611,7 +633,8 @@ export default {
             september: Number(this.detailIuran.iuran.september),
             oktober: Number(this.detailIuran.iuran.oktober),
             november: Number(this.detailIuran.iuran.november),
-            desember: Number(this.detailIuran.iuran.desember)
+            desember: Number(this.detailIuran.iuran.desember),
+            total: Number(this.detailIuran.iuran.total),
           }
         }
       }
@@ -619,7 +642,7 @@ export default {
       this.$store.dispatch('user/postIuran', bodyData)
       .then((res) => {
         this.closeDialog()
-        this.getIuran({ komisaris_wilayah: this.komisaris_wilayah, tahun: this.tahun.getFullYear(), keyword: this.searchData })
+        this.getIuran({ komisaris_wilayah: this.komisaris_wilayah, tahun: this.tahun, keyword: this.searchData })
         this.notifikasi("success", res.data.message, "1")
 			})
 			.catch((err) => {
@@ -645,10 +668,13 @@ export default {
           september: 0,
           oktober: 0,
           november: 0,
-          desember: 0
+          desember: 0,
+          total: 0,
         },
         totalIuran: 0,
       }
+      this.totalKeseluruhanIuran = 0
+      this.totalKeseluruhanIuranPerTahun = 0
       this.DialogIuran = false
     },
     notifikasi(kode, text, proses){

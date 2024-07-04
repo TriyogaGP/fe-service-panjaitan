@@ -123,60 +123,6 @@
                 nama-button="Hapus"
                 @click="postRecord(item.raw, 'DELETEHARD', null)"
               />
-              <!-- <v-menu
-                open-on-click
-                rounded="t-xs b-lg"
-                offset-y
-                transition="slide-y-transition"
-                bottom
-              >
-                <template v-slot:activator="{ props }">
-                  <Button 
-                    v-bind="props"
-                    color-button="#bd3a07"
-                    icon-prepend-button="mdi mdi-delete"
-                    icon-append-button="mdi mdi-menu-down"
-                    size-button="x-small"
-                    nama-button="Hapus"
-                  />
-                </template>
-
-                <v-list
-                  :lines="false"
-                  density="comfortable"
-                  nav
-                  dense
-                  class="listDataHapus"
-                >
-                  <v-list-item
-                    @click="postRecord(item.raw, 'DELETESOFT', null)"
-                    class="SelectedMenu"
-                    active-class="SelectedMenu-active"
-                    title="Delete Soft"
-                    :disabled="item.raw.statusBiodata === false"
-                  >
-                    <template v-slot:prepend>
-                      <v-icon size="middle" icon="mdi mdi-delete" color="icon-white" />
-                    </template>
-                    <template v-slot:title>
-                      <span class="menufont">Delete Soft</span>
-                    </template>
-                  </v-list-item>
-                  <v-list-item
-                    @click="postRecord(item.raw, 'DELETEHARD', null)"
-                    class="SelectedMenu"
-                    active-class="SelectedMenu-active"
-                    title="Delete Hard"
-                  >
-                    <template v-slot:prepend>
-                      <v-icon size="middle" icon="mdi mdi-delete" color="icon-white" />
-                    </template>
-                    <template v-slot:title>
-                      <span class="menufont">Delete Hard</span>
-                    </template>
-                  </v-list-item>
-                </v-list>
-              </v-menu> -->
             </td>
           </tr>
           <tr>
@@ -199,20 +145,26 @@
                       @change="uploadFotoProfile($event, item.raw.idBiodata)"
                     >
                   </div>
-                  <Button 
-                    @click="statusData('STATUSMENINGGAL', 'SUAMI', item.raw.idBiodata, `${item.raw.statusSuami === 'Meninggal' ? 'Hidup' : 'Meninggal'}`)"
-                    :color-button="`${item.raw.statusSuami === 'Meninggal' ? '#0bd369' : '#c12626'}`"
-                    icon-prepend-button="mdi mdi-cross"
-                    :nama-button="`${item.raw.statusSuami === 'Meninggal' ? 'Hidup' : 'Meninggal'}`"
-                    size-button="x-small"
-                  />
-                  <Button 
-                    @click="statusData('STATUSMENINGGAL', 'ISTRI', item.raw.idBiodata, `${item.raw.statusIstri === 'Meninggal' ? 'Hidup' : 'Meninggal'}`)"
-                    :color-button="`${item.raw.statusIstri === 'Meninggal' ? '#0bd369' : '#c12626'}`"
-                    icon-prepend-button="mdi mdi-cross"
-                    :nama-button="`${item.raw.statusIstri === 'Meninggal' ? 'Hidup' : 'Meninggal'}`"
-                    size-button="x-small"
-                  />
+                  <span>
+                    <Button 
+                      @click="statusData('STATUSMENINGGAL', 'SUAMI', item.raw.idBiodata, `${item.raw.statusSuami === 'Meninggal' ? 'Hidup' : 'Meninggal'}`)"
+                      :color-button="`${item.raw.statusSuami === 'Meninggal' ? '#0bd369' : '#c12626'}`"
+                      icon-prepend-button="mdi mdi-cross"
+                      :nama-button="`${item.raw.statusSuami === 'Meninggal' ? 'Hidup' : 'Meninggal'}`"
+                      size-button="x-small"
+                    />
+  									<v-tooltip activator="parent" location="top">Suami</v-tooltip>
+                  </span>
+                  <span>
+                    <Button 
+                      @click="statusData('STATUSMENINGGAL', 'ISTRI', item.raw.idBiodata, `${item.raw.statusIstri === 'Meninggal' ? 'Hidup' : 'Meninggal'}`)"
+                      :color-button="`${item.raw.statusIstri === 'Meninggal' ? '#0bd369' : '#c12626'}`"
+                      icon-prepend-button="mdi mdi-cross"
+                      :nama-button="`${item.raw.statusIstri === 'Meninggal' ? 'Hidup' : 'Meninggal'}`"
+                      size-button="x-small"
+                    />
+  									<v-tooltip activator="parent" location="top">Istri</v-tooltip>
+                  </span>
                   <v-row no-gutters>
                     <v-col
                       cols="12"
@@ -220,6 +172,28 @@
                       class="pa-3 d-flex align-center font-weight-bold"
                     >
                       <h3>>> Data Pribadi</h3>
+                    </v-col>
+                  </v-row>
+                  <v-row no-gutters>
+                    <v-col
+                      cols="12"
+                      md="4"
+                      class="pt-2 d-flex align-center font-weight-bold"
+                    >
+                    Nama Suami
+                    </v-col>
+                    <v-col
+                      cols="12"
+                      md="8"
+                      class="pt-2"
+                    >
+                      : {{ item.raw.namaLengkap }}
+                      <v-tooltip v-if="item.raw.statusSuami === 'Meninggal'" location="top">
+                        <template v-slot:activator="{ props }">
+                          <v-icon v-bind="props" size="middle" icon="mdi mdi-cross" color="icon-red" />
+                        </template>
+                        <span>Meninggal</span>
+                      </v-tooltip>
                     </v-col>
                   </v-row>
                   <v-row no-gutters>
@@ -260,14 +234,14 @@
                       md="4"
                       class="pt-2 d-flex align-center font-weight-bold"
                     >
-                    Tanggal Lahir Suami
+                    Tempat Tanggal Lahir Suami
                     </v-col>
                     <v-col
                       cols="12"
                       md="8"
                       class="pt-2"
                     >
-                      : {{ convertDateForMonth(item.raw.tanggalLahirSuami) }}
+                      : {{ `${item.raw.tempatSuami ? item.raw.tempatSuami : '---'}, ${convertDateForMonth(item.raw.tanggalLahirSuami)}` }}
                     </v-col>
                   </v-row>
                   <v-row v-if="item.raw.statusSuami === 'Meninggal'" no-gutters>
@@ -305,7 +279,7 @@
                       md="8"
                       class="pt-2"
                     >
-                      : {{ item.raw.pekerjaanSuami }}
+                      : {{ item.raw.pekerjaanSuami ? item.raw.pekerjaanSuami : '---' }}
                     </v-col>
                   </v-row>
                   <v-row no-gutters>
@@ -345,14 +319,14 @@
                       md="4"
                       class="pt-2 d-flex align-center font-weight-bold"
                     >
-                    Tanggal Lahir Istri
+                      Tempat, Tanggal Lahir Istri
                     </v-col>
                     <v-col
                       cols="12"
                       md="8"
                       class="pt-2"
                     >
-                      : {{ convertDateForMonth(item.raw.tanggalLahirIstri) }}
+                      : {{ `${item.raw.tempatIstri ? item.raw.tempatIstri : '---'}, ${convertDateForMonth(item.raw.tanggalLahirIstri)}` }}
                     </v-col>
                   </v-row>
                   <v-row v-if="item.raw.statusIstri === 'Meninggal'" no-gutters>
@@ -390,7 +364,7 @@
                       md="8"
                       class="pt-2"
                     >
-                      : {{ item.raw.pekerjaanIstri }}
+                      : {{ item.raw.pekerjaanIstri ? item.raw.pekerjaanIstri : '---' }}
                     </v-col>
                   </v-row>
                   <v-row no-gutters>
@@ -1181,9 +1155,12 @@ export default {
     }
     if(this.kategori === 'all'){
       this.getKeanggotaan({page: this.page, limit: this.limit, keyword: this.searchData, filter: `${this.filterby}-${this.filterforby}`, sorting: this.kumpulSort});
-    }else{
+    }else if(this.kategori.length === 2){
       let getWilayah = this.wilayahpanjaitanOptions.filter(val => val.kode === this.kategori)
       this.searchData = getWilayah.length ? getWilayah[0].label : ''
+      this.getKeanggotaan({page: this.page, limit: this.limit, keyword: this.searchData, filter: `${this.filterby}-${this.filterforby}`, sorting: this.kumpulSort});
+    }else{
+      this.searchData = this.kategori
       this.getKeanggotaan({page: this.page, limit: this.limit, keyword: this.searchData, filter: `${this.filterby}-${this.filterforby}`, sorting: this.kumpulSort});
     }
 	},

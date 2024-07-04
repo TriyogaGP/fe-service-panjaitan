@@ -64,7 +64,7 @@
 							class="d-flex justify-center align-center"
 						>
 							<TextField
-								v-model="inputDataBiodata.tempat"
+								v-model="inputDataBiodata.tempat_suami"
 								label-tf="Tempat Lahir Suami"
 								:clearable-tf="true"
 							/>
@@ -112,7 +112,7 @@
 					md="4"
 					class="pt-2 d-flex align-center font-weight-bold"
 				>
-					Pekerjaan Suami *
+					Pekerjaan Suami
 				</v-col>
 				<v-col
 					cols="12"
@@ -123,6 +123,7 @@
 						v-model="inputDataBiodata.pekerjaan_suami"
 						label-tf="Pekerjaan Suami"
 						:clearable-tf="true"
+						:disabled-tf="inputDataBiodata.status_suami === 'Meninggal'"
 					/>
 				</v-col>
 			</v-row>
@@ -319,7 +320,7 @@ export default {
       id_biodata: '',
       nomor_induk: '',
       nama_lengkap: '',
-      tempat: '',
+      tempat_suami: '',
       tanggal_lahir_suami: '',
       alamat: '',
       provinsi: null,
@@ -381,8 +382,8 @@ export default {
 					this.inputDataBiodata.kode_pos = null
 				}
 				
-				if(value.nama_lengkap != '' && value.status_suami != null && value.tempat != '' && value.tanggal_lahir_suami != '' && value.pekerjaan_suami != '' && 
-				value.alamat != ''){
+				value.pekerjaan_suami = value.status_suami === 'Meninggal' ? '' : value.pekerjaan_suami 
+				if(value.nama_lengkap != '' && value.status_suami != null && value.tempat_suami != '' && value.tanggal_lahir_suami != '' && value.alamat != ''){
 					this.kondisiTombol = false
 				}else{
 					this.kondisiTombol = true
@@ -396,7 +397,7 @@ export default {
 				this.inputDataBiodata = {
 					id_biodata: value.id_biodata ? value.id_biodata : '',
 					nama_lengkap: value.nama_lengkap ? value.nama_lengkap : '',
-					tempat: value.tempat ? value.tempat : '',
+					tempat_suami: value.tempat_suami ? value.tempat_suami : '',
 					tanggal_lahir_suami: value.tanggal_lahir_suami ? value.tanggal_lahir_suami : '',
 					alamat: value.alamat ? value.alamat : '',
 					provinsi: value.provinsi ? value.provinsi.kode : null,

@@ -1,6 +1,24 @@
 <template>
   <div>
     <v-card class="mb-2 pa-1 rounded" variant="outlined" elevation="4">
+      <v-row no-gutters>
+        <v-col cols="12" md="8" />
+        <v-col cols="12" md="4" class="pr-2">
+          <TextField
+            v-model="searchData"
+            icon-prepend-tf="mdi mdi-magnify"
+            label-tf="Pencarian..."
+            :clearable-tf="true"
+            @click:clear="() => {
+              searchData = ''
+              getKomisarisWilayah({ keyword: searchData })
+            }"
+            @keyup.enter="() => {
+              getKomisarisWilayah({ keyword: searchData })
+            }"
+          />
+        </v-col>
+      </v-row>
       <v-container fluid>
         <v-row>
           <v-col
@@ -15,8 +33,19 @@
                 <v-card-title class="text-white"><h6>{{ hasil.kodeKomisarisWilayah }}</h6></v-card-title>
                 <v-divider :thickness="2" class="border-opacity-75" color="white"/>
               </v-sheet>
-              <v-card-actions style="display: flex; justify-content: center;">
+              <v-card-text style="display: flex; align-items: center; justify-content: center; padding: 5px; height: 30px;">
                 <span v-html="hasil.namaKomisaris" style="font-size: 9pt; font-weight: bold;"/>
+              </v-card-text>
+              <v-card-actions style="padding: 5px !important; min-height: 20px !important;">
+                <v-row no-gutters>
+                  <v-col
+                    class="d-flex align-center justify-center"
+                    cols="12"
+                    md="12"
+                  >
+                    <h3 style="font-size: 9pt; font-weight: bold;">{{ `${hasil.totalIuran === 0 ? 'Rp. 0' : `Rp. ${currencyDotFormatNumber(hasil.totalIuran)}`}` }}</h3>
+                  </v-col>
+                </v-row>
               </v-card-actions>
             </v-card>
           </v-col>
@@ -51,6 +80,7 @@ export default {
   data: () => ({
     roleID: '',
     BASE_URL: '',
+    searchData: '',
 
     //notifikasi
     dialogNotifikasi: false,
@@ -70,8 +100,7 @@ export default {
   },
   computed: {
 		...mapState({
-			wilayahpanjaitanOptions: store => store.setting.wilayahpanjaitanOptions,
-			komisariswilayahOptions: store => store.setting.komisariswilayahOptions,
+			komisariswilayahOptions: store => store.user.komisariswilayahOptions,
 		}),
     ...mapGetters({
     }),
@@ -86,12 +115,12 @@ export default {
     if(!localStorage.getItem('user_token')) return this.$router.push({name: 'LogIn'});
     this.roleID = localStorage.getItem('roleID')
     this.BASEURL = process.env.VUE_APP_BASE_URL
-		this.getKomisarisWilayah({ KodeWilayah: '' })
+		this.getKomisarisWilayah({ keyword: this.searchData })
 	},
 	methods: {
 		...mapActions({
       fetchData: 'fetchData',
-			getKomisarisWilayah: 'setting/getKomisarisWilayah',
+			getKomisarisWilayah: 'user/getKomisarisWilayah',
     }),
     LinkRouteKomisaris(kode){
       this.$router.push({name: "DataDetailIuran", params: { komisaris_wilayah: kode }});

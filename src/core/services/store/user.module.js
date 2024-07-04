@@ -4,6 +4,7 @@ const token = localStorage.getItem('user_token')
 const timeout = 2000
 // action types
 export const GET_DASHBOARD = "getDashboard";
+export const GET_DASHBOARDTWO = "getDashboardTwo";
 export const GET_ADMINISTRATOR = "getAdministrator";
 export const GET_ADMINISTRATOR_BY = "getAdministratorbyUID";
 export const POST_ADMINISTRATOR = "postAdministrator";
@@ -12,24 +13,32 @@ export const GET_KEANGGOTAAN_BY = "getKeanggotaanbyUID";
 export const POST_KEANGGOTAAN = "postKeanggotaan";
 export const GET_IURAN = "getIuran";
 export const POST_IURAN = "postIuran";
+export const GET_KOMISARISWILAYAH = "getKomisarisWilayah";
+export const GET_WILAYAHPANJAITAN = "getWilayahPanjaitan";
 
 // mutation types
 export const SET_LOADINGTABLE = "SET_LOADINGTABLE";
 export const SET_DASHBOARD = "SET_DASHBOARD";
+export const SET_DASHBOARDTWO = "SET_DASHBOARDTWO";
 export const SET_ADMINISTRATOR = "SET_ADMINISTRATOR";
 export const SET_ADMINISTRATORBY = "SET_ADMINISTRATORBY";
 export const SET_KEANGGOTAAN = "SET_KEANGGOTAAN";
 export const SET_KEANGGOTAANBY = "SET_KEANGGOTAANBY";
 export const SET_IURAN = "SET_IURAN";
+export const SET_KOMISARISWILAYAH = "SET_KOMISARISWILAYAH";
+export const SET_WILAYAHPANJAITAN = "SET_WILAYAHPANJAITAN";
 
 const state = {
   loadingtable: false,
   dataDashboard: [],
+  dataDashboardTwo: [],
   dataAdministrator: [],
   dataAdministratorBy: null,
   dataKeanggotaan: [],
   dataKeanggotaanBy: null,
   dataIuran: [],
+  komisariswilayahOptions: [],
+  wilayahpanjaitanOptions: [],
 }
 
 const mutations = {
@@ -38,6 +47,9 @@ const mutations = {
   },
   [SET_DASHBOARD](state, data) {
     state.dataDashboard = data
+  },
+  [SET_DASHBOARDTWO](state, data) {
+    state.dataDashboardTwo = data
   },
   [SET_ADMINISTRATOR](state, data) {
     state.dataAdministrator = data
@@ -53,6 +65,12 @@ const mutations = {
   },
   [SET_IURAN](state, data) {
     state.dataIuran = data
+  },
+  [SET_KOMISARISWILAYAH](state, data) {
+    state.komisariswilayahOptions = data
+  },
+  [SET_WILAYAHPANJAITAN](state, data) {
+    state.wilayahpanjaitanOptions = data
   },
 }
 
@@ -80,6 +98,18 @@ const actions = {
       ApiService.get(`user/dashboard`, token)
       .then((response) => {
         context.commit('SET_DASHBOARD', response.data.result)
+        resolve(response);
+      })
+      .catch((error) => {
+        reject(error);
+      })
+    });
+  },
+  [GET_DASHBOARDTWO](context, data) {
+    return new Promise((resolve, reject) => {
+      ApiService.get(`user/dashboardTwo`, token)
+      .then((response) => {
+        context.commit('SET_DASHBOARDTWO', response.data.result)
         resolve(response);
       })
       .catch((error) => {
@@ -187,6 +217,30 @@ const actions = {
       .catch((error) => {
         reject(error);
       })
+    });
+  },
+  [GET_KOMISARISWILAYAH](context, data) {
+    return new Promise((resolve, reject) => {
+      ApiService.get(`user/optionsKomisarisWilayah${data.keyword ? `?keyword=${data.keyword}` : ''}`, token)
+      .then((response) => {
+          context.commit('SET_KOMISARISWILAYAH', response.data.result)
+          resolve(response);
+        })
+        .catch((error) => {
+          reject(error);
+        })
+    });
+  },
+  [GET_WILAYAHPANJAITAN](context, data) {
+    return new Promise((resolve, reject) => {
+      ApiService.get(`user/optionsWilayahPanjaitan${data.keyword ? `?keyword=${data.keyword}` : ''}`, token)
+      .then((response) => {
+          context.commit('SET_WILAYAHPANJAITAN', response.data.result)
+          resolve(response);
+        })
+        .catch((error) => {
+          reject(error);
+        })
     });
   },
 }

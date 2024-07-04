@@ -37,7 +37,7 @@
 					md="8"
 					class="pt-2"
 				>
-					{{ DataStepOne.tempat }}, {{ convertDateForMonth(DataStepOne.tanggal_lahir_suami) }}
+					{{ DataStepOne.tempat_suami ? DataStepOne.tempat_suami : '---' }}, {{ convertDateForMonth(DataStepOne.tanggal_lahir_suami) }}
 				</v-col>
 			</v-row>
 			<v-row no-gutters>
@@ -165,7 +165,7 @@
 					md="8"
 					class="pt-2"
 				>
-          {{ DataStepOne.pekerjaan_suami }}
+          {{ DataStepOne.pekerjaan_suami ? DataStepOne.pekerjaan_suami : '-' }}
 				</v-col>
 			</v-row>
       <h2 class="subheading black--text pt-4"><u>>>Data Istri</u></h2>
@@ -197,14 +197,14 @@
 					md="4"
 					class="pt-2 d-flex align-center font-weight-bold"
 				>
-					Tanggal Lahir Istri
+					Tempat, Tanggal Lahir Istri
 				</v-col>
 				<v-col
 					cols="12"
 					md="8"
 					class="pt-2"
 				>
-					{{ convertDateForMonth(DataStepTwo.tanggal_lahir_istri) }}
+					{{ DataStepTwo.tempat_istri ? DataStepTwo.tempat_istri : '---' }}, {{ convertDateForMonth(DataStepTwo.tanggal_lahir_istri) }}
 				</v-col>
 			</v-row>
 			<v-row no-gutters>
@@ -220,7 +220,7 @@
 					md="8"
 					class="pt-2"
 				>
-          {{ DataStepTwo.pekerjaan_istri }}
+          {{ DataStepTwo.pekerjaan_istri ? DataStepTwo.pekerjaan_istri : '-' }}
 				</v-col>
 			</v-row>
       <h2 class="subheading black--text pt-4"><u>>>Data Tanggungan</u></h2>
@@ -576,7 +576,7 @@ export default {
 			  jenis: this.kondisi,
 			  idBiodata: this.DataStepOne.id_biodata,
         namaLengkap: this.DataStepOne.nama_lengkap,
-        tempat: this.DataStepOne.tempat,
+        tempatSuami: this.DataStepOne.tempat_suami,
         tanggalLahirSuami: this.convertDateToPicker2(this.DataStepOne.tanggal_lahir_suami),
         alamat: this.DataStepOne.alamat,
         provinsi: this.DataStepOne.provinsi,
@@ -587,6 +587,7 @@ export default {
         pekerjaanSuami: this.DataStepOne.pekerjaan_suami,
         telp: this.DataStepOne.telp,
         namaIstri: this.DataStepTwo.nama_istri,
+        tempatIstri: this.DataStepTwo.tempat_istri,
         tanggalLahirIstri: this.convertDateToPicker2(this.DataStepTwo.tanggal_lahir_istri),
         pekerjaanIstri: this.DataStepTwo.pekerjaan_istri,
         anak: anak[0].namaAnak === '' ? [] : anak,

@@ -102,7 +102,7 @@ export default {
     tampungStepOne: {
       id_biodata: '',
       nama_lengkap: '',
-      tempat: '',
+      tempatSuami: '',
       tanggal_lahir_suami: '',
       alamat: '',
       provinsi: null,
@@ -171,7 +171,7 @@ export default {
           this.tampungStepOne = {
             id_biodata: value.idBiodata ? value.idBiodata : '',
             nama_lengkap: value.namaLengkap ? value.namaLengkap : '',
-            tempat: value.tempat ? value.tempat : '',
+            tempat_suami: value.tempatSuami ? value.tempatSuami : '',
             tanggal_lahir_suami: value.tanggalLahirSuami ? value.tanggalLahirSuami : '',
             alamat: value.alamat ? value.alamat : '',
             provinsi: value.provinsi ? value.provinsi : null,
@@ -188,6 +188,7 @@ export default {
           this.tampungStepTwo = {
             id_biodata: value.idBiodata ? value.idBiodata : '',
             nama_istri: value.namaIstri ? value.namaIstri : '',
+            tempat_istri: value.tempatIstri ? value.tempatIstri : '',
             tanggal_lahir_istri: value.tanggalLahirIstri ? value.tanggalLahirIstri : '',
             pekerjaan_istri: value.pekerjaanIstri ? value.pekerjaanIstri : '',
 					  status_istri: value.statusIstri === 'Meninggal' ? 'Meninggal' : value.statusIstri === 'Hidup' ? 'Hidup' : null,

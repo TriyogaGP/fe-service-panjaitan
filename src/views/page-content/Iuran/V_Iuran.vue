@@ -1,10 +1,32 @@
 <template>
   <div>
     <v-card class="mb-2 pa-1 rounded" variant="outlined" elevation="4">
+      <v-row no-gutters>
+        <v-col cols="12" md="8" class="d-flex align-center pl-2">
+          <span v-if="roleID === '1' || roleID === '2'" style="font-size: 12pt; font-weight: bold;">
+            {{ `Total Iuran 12 Wilayah : ${WilayahPanjaitanTotalIuran === 0 ? 'Rp. 0' : `Rp. ${currencyDotFormatNumber(WilayahPanjaitanTotalIuran)}`}` }}
+          </span>
+        </v-col>
+        <v-col cols="12" md="4" class="pr-2">
+          <TextField
+            v-model="searchData"
+            icon-prepend-tf="mdi mdi-magnify"
+            label-tf="Pencarian..."
+            :clearable-tf="true"
+            @click:clear="() => {
+              searchData = ''
+              roleID === '1' || roleID === '2' ? getWilayahPanjaitan({ keyword: searchData }) : getKomisarisWilayah({ keyword: searchData })
+            }"
+            @keyup.enter="() => {
+              roleID === '1' || roleID === '2' ? getWilayahPanjaitan({ keyword: searchData }) : getKomisarisWilayah({ keyword: searchData })
+            }"
+          />
+        </v-col>
+      </v-row>
       <v-container fluid>
         <v-row v-if="roleID === '1' || roleID === '2'">
           <v-col
-            v-for="hasil in wilayahpanjaitanOptions"
+            v-for="hasil in DataWilayahPanjaitan"
             :key="hasil.kode"
             cols="12"
             lg="4"
@@ -15,12 +37,23 @@
                 <v-card-title class="text-white"><h6>{{ hasil.label }}</h6></v-card-title>
                 <v-divider :thickness="2" class="border-opacity-75" color="white"/>
               </v-sheet>
-              <v-card-actions>
+              <v-card-text style="display: flex; align-items: center; justify-content: center; padding: 5px; height: 100px;">
                 <v-img
                   :src="hasil.lambang"
                   :height="150"
                   aspect-ratio="16/9"
                 />
+              </v-card-text>
+              <v-card-actions style="padding: 5px !important; min-height: 20px !important;">
+                <v-row no-gutters>
+                  <v-col
+                    class="d-flex align-center justify-center"
+                    cols="12"
+                    md="12"
+                  >
+                    <h3 style="font-size: 9pt; font-weight: bold;">{{ `${hasil.totalIuran === 0 ? 'Rp. 0' : `Rp. ${currencyDotFormatNumber(hasil.totalIuran)}`}` }}</h3>
+                  </v-col>
+                </v-row>
               </v-card-actions>
             </v-card>
           </v-col>
@@ -38,8 +71,19 @@
                 <v-card-title class="text-white"><h6>{{ hasil.kodeKomisarisWilayah }}</h6></v-card-title>
                 <v-divider :thickness="2" class="border-opacity-75" color="white"/>
               </v-sheet>
-              <v-card-actions style="display: flex; justify-content: center;">
+              <v-card-text style="display: flex; align-items: center; justify-content: center; padding: 5px; height: 30px;">
                 <span v-html="hasil.namaKomisaris" style="font-size: 9pt; font-weight: bold;"/>
+              </v-card-text>
+              <v-card-actions style="padding: 5px !important; min-height: 20px !important;">
+                <v-row no-gutters>
+                  <v-col
+                    class="d-flex align-center justify-center"
+                    cols="12"
+                    md="12"
+                  >
+                    <h3 style="font-size: 9pt; font-weight: bold;">{{ `${hasil.totalIuran === 0 ? 'Rp. 0' : `Rp. ${currencyDotFormatNumber(hasil.totalIuran)}`}` }}</h3>
+                  </v-col>
+                </v-row>
               </v-card-actions>
             </v-card>
           </v-col>
@@ -74,6 +118,9 @@ export default {
   data: () => ({
     roleID: '',
     BASE_URL: '',
+    searchData: '',
+    DataWilayahPanjaitan: [],
+    WilayahPanjaitanTotalIuran: 0,
 
     //notifikasi
     dialogNotifikasi: false,
@@ -93,8 +140,8 @@ export default {
   },
   computed: {
 		...mapState({
-			wilayahpanjaitanOptions: store => store.setting.wilayahpanjaitanOptions,
-			komisariswilayahOptions: store => store.setting.komisariswilayahOptions,
+			wilayahpanjaitanOptions: store => store.user.wilayahpanjaitanOptions,
+			komisariswilayahOptions: store => store.user.komisariswilayahOptions,
 		}),
     ...mapGetters({
     }),
@@ -108,19 +155,26 @@ export default {
     },
   },
   watch: {
+    wilayahpanjaitanOptions: {
+			deep: true,
+			async handler(value) {
+        this.DataWilayahPanjaitan = value.result
+        this.WilayahPanjaitanTotalIuran = value.totalKeseluruhanIuranWilayah
+      }
+    },
   },
   mounted() {
     if(!localStorage.getItem('user_token')) return this.$router.push({name: 'LogIn'});
     this.roleID = localStorage.getItem('roleID')
     this.BASEURL = process.env.VUE_APP_BASE_URL
-		this.getWilayahPanjaitan()
-		this.getKomisarisWilayah({ KodeWilayah: '' })
+		this.getWilayahPanjaitan({ keyword: this.searchData })
+		this.getKomisarisWilayah({ keyword: this.searchData })
 	},
 	methods: {
 		...mapActions({
       fetchData: 'fetchData',
-			getWilayahPanjaitan: 'setting/getWilayahPanjaitan',
-			getKomisarisWilayah: 'setting/getKomisarisWilayah',
+			getWilayahPanjaitan: 'user/getWilayahPanjaitan',
+			getKomisarisWilayah: 'user/getKomisarisWilayah',
     }),
     LinkRoute(kode){
       this.$router.push({name: "DataKomisaris", params: { kode }});

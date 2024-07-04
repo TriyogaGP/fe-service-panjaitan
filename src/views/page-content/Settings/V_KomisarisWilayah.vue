@@ -44,6 +44,10 @@
         <template #[`item.wilayah`]="{ item }">
           <span>{{ `${item.raw.namaWilayah} (${item.raw.kodeWilayah})` }}</span>
         </template>
+        <template #[`item.statusKomisaris`]="{ item }">
+          <v-icon size="small" v-if="item.raw.statusKomisaris" color="green" icon="mdi mdi-check" />
+          <v-icon size="small" v-else color="red" icon="mdi mdi-close" />
+        </template>
         <template #expanded-row="{ columns, item }">
           <tr>
             <td :colspan="columns.length">
@@ -52,28 +56,24 @@
                 icon-prepend-button="mdi mdi-pencil"
                 nama-button="Ubah"
                 size-button="x-small"
+                :disabled-button="!item.raw.statusKomisaris"
                 @proses="openDialog(item.raw, 1)"
               />
-              <!-- <Button 
+              <Button
                 color-button="#0bd369"
-                :icon-prepend-button="item.raw.status === false ? 'mdi mdi-eye' : 'mdi mdi-eye-off'"
-                :nama-button="item.raw.status === false ? 'Active' : 'Non Active'"
+                :icon-prepend-button="item.raw.statusKomisaris ? 'mdi mdi-eye-off' : 'mdi mdi-eye'"
+                :nama-button="item.raw.statusKomisaris ? 'Non Active' : 'Active'"
                 size-button="x-small"
-                @proses="postRecord('STATUSRECORD', item.raw, !item.raw.status)"
+                @proses="postRecord('STATUSRECORD', item.raw, !item.raw.statusKomisaris)"
               />
               <Button 
                 color-button="#bd3a07"
                 icon-prepend-button="mdi mdi-delete"
+                size-button="x-small"
+                :disabled-button="!item.raw.statusKomisaris"
                 nama-button="Hapus"
-                :disabled-button="item.raw.idUser === idLog || item.raw.status === false"
-                @proses="postRecord('DELETE', item.raw, null)"
+                @click="postRecord('DELETE', item.raw, null)"
               />
-              <Button 
-                color-button="#04f7f7"
-                icon-prepend-button="mdi mdi-information"
-                nama-button="Detail"
-                @proses="openDialog(item.raw, 2)"
-              /> -->
             </td>
           </tr>
         </template>
@@ -326,6 +326,7 @@ export default {
       { title: "WILAYAH", key: "wilayah", sortable: true, width: "25%" },
       { title: "NAMA KOMISARIS", key: "namaKomisaris", sortable: true, width: "25%" },
       { title: "DAERAH", key: "daerah", sortable: true, width: "25%" },
+      { title: "STATUS", key: "statusKomisaris", sortable: true, width: "3%" },
     ],
     rowsPerPageItems: { "items-per-page-options": [5, 10, 25, 50] },
     totalItems: 0,
@@ -419,7 +420,7 @@ export default {
       getKomisarisWilayah: 'setting/getKomisaris',
 			getWilayahPanjaitan: 'setting/getWilayahPanjaitan',
     }),
-    postRecord(jenis, item = null, status) {
+    postRecord(jenis, item, status) {
       let bodyData = {
         ADDEDIT: {
           jenis: jenis,
@@ -429,8 +430,9 @@ export default {
           daerah: this.inputDataKomisarisWilayah.daerah,
         },
         DELETESTATUS: {
-        //   jenis: jenis,
-        //   id_komisaris: item.idKomisaris ? item.idKomisaris : null,
+          jenis: jenis,
+          id_komisaris: item.idKomisaris ? item.idKomisaris : null,
+          status,
         },
       }
       this.$store.dispatch('setting/postKomisaris', jenis === 'ADD' || jenis === 'EDIT' ? bodyData.ADDEDIT : bodyData.DELETESTATUS)
