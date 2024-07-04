@@ -332,6 +332,13 @@ export default {
 	mounted() {
 		this.inputDataIstri.id_biodata = this.$route.params.uid;
 		this.kondisi = this.$route.params.kondisi;
+		if(this.kondisi === 'ADD'){
+			this.inputDataAnak.anaklength = 1;
+			this.inputDataAnak.kategoriAnak.push(null);
+			this.inputDataAnak.namaAnak.push('');
+			this.inputDataAnak.tanggalLahir.push('');
+			this.inputDataAnak.statusAnak.push(null);
+		}
 	},
 	methods: {
 		...mapActions({
