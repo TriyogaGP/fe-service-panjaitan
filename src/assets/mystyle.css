@@ -8,6 +8,12 @@
   font-weight: 500 !important;
   color: #908d8d !important;
   font-family: "Roboto", sans-serif !important;
+  /* border-radius: 5px !important; */
+}
+.dp__disabled {
+  opacity: 0.4 !important;
+  font-weight: bold !important;
+  color: #000000 !important;
 }
 .v-dialog > .v-overlay__content > .v-card > .v-card-text, .v-dialog > .v-overlay__content > form > .v-card > .v-card-text {
   padding: 15px !important;

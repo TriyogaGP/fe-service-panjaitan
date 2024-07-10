@@ -63,16 +63,7 @@
         <template #[`item.number`]="{ item }">
           {{ page > 1 ? ((page - 1)*limit) + item.index + 1 : item.index + 1 }}
         </template>
-        <!-- <template #[`item.pilih`]="{ item }">
-          <v-checkbox
-            v-model="selectRecord"
-            color="red"
-            :value="item.raw.idBiodata"
-            hide-details
-          />
-        </template> -->
         <template #[`item.nama`]="{ item }">
-          <!-- uppercaseLetterFirst2() -->
           <span v-if="item.raw.statusSuami === 'Meninggal'">{{ `Nama Suami : ${item.raw.namaLengkap}` }}</span>
           <v-tooltip v-if="item.raw.statusSuami === 'Meninggal'" location="top">
             <template v-slot:activator="{ props }">
@@ -80,13 +71,21 @@
             </template>
             <span>Meninggal</span>
           </v-tooltip>
-          <span>{{ item.raw.statusSuami === 'Meninggal' ? `Nama Istri : ${item.raw.namaIstri}` : item.raw.namaLengkap }}</span>
+          <span v-else>{{ item.raw.namaLengkap }}</span>
+          <span v-if="item.raw.statusSuami === 'Meninggal'">{{ `Nama Istri : ${item.raw.namaIstri}` }}</span>
+          <v-tooltip v-if="item.raw.statusIstri === 'Meninggal'" location="top">
+            <template v-slot:activator="{ props }">
+              <v-icon v-bind="props" size="middle" icon="mdi mdi-cross" color="icon-red" /><br>
+            </template>
+            <span>Meninggal</span>
+          </v-tooltip>
         </template>
         <template #[`item.ompu`]="{ item }">
           <span v-html="item.raw.ompu.label" />
         </template>
         <template #[`item.wilayah`]="{ item }">
           <span>{{ `Wilayah : ${item.raw.wilayah.label} (${item.raw.wilayah.kode})` }}</span><br>
+          <span>{{ `Nama Ketua Wilayah : ${item.raw.wilayah.namaKetuaWilayah}` }}</span><br>
           <span>{{ `Nama Komisaris Wilayah : ${item.raw.komisarisWilayah.namaKomisaris}` }}</span>
         </template>
         <template #[`item.statusAktif`]="{ item }">
@@ -202,14 +201,14 @@
                       md="4"
                       class="pt-2 d-flex align-center font-weight-bold"
                     >
-                      Telepon
+                    Tempat Tanggal Lahir Suami
                     </v-col>
                     <v-col
                       cols="12"
                       md="8"
                       class="pt-2"
                     >
-                      : {{ item.raw.telp !== '' ? item.raw.telp : '-' }}
+                      : {{ `${item.raw.tempatSuami ? item.raw.tempatSuami : '-'}, ${item.raw.tanggalLahirSuami !== '0000-00-00' ? convertDateForMonth(item.raw.tanggalLahirSuami) : '-'}` }}
                     </v-col>
                   </v-row>
                   <v-row no-gutters>
@@ -234,14 +233,30 @@
                       md="4"
                       class="pt-2 d-flex align-center font-weight-bold"
                     >
-                    Tempat Tanggal Lahir Suami
+                      Telepon Suami
                     </v-col>
                     <v-col
                       cols="12"
                       md="8"
                       class="pt-2"
                     >
-                      : {{ `${item.raw.tempatSuami ? item.raw.tempatSuami : '---'}, ${convertDateForMonth(item.raw.tanggalLahirSuami)}` }}
+                      : {{ item.raw.telp ? item.raw.telp : '-' }}
+                    </v-col>
+                  </v-row>
+                  <v-row no-gutters>
+                    <v-col
+                      cols="12"
+                      md="4"
+                      class="pt-2 d-flex align-center font-weight-bold"
+                    >
+                    Pekerjaan Suami
+                    </v-col>
+                    <v-col
+                      cols="12"
+                      md="8"
+                      class="pt-2"
+                    >
+                      : {{ item.raw.pekerjaanSuami ? item.raw.pekerjaanSuami : '-' }}
                     </v-col>
                   </v-row>
                   <v-row v-if="item.raw.statusSuami === 'Meninggal'" no-gutters>
@@ -264,22 +279,6 @@
                         nama-button="Lihat Surat"
                         size-button="x-small"
                       />
-                    </v-col>
-                  </v-row>
-                  <v-row no-gutters>
-                    <v-col
-                      cols="12"
-                      md="4"
-                      class="pt-2 d-flex align-center font-weight-bold"
-                    >
-                    Pekerjaan Suami
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      md="8"
-                      class="pt-2"
-                    >
-                      : {{ item.raw.pekerjaanSuami ? item.raw.pekerjaanSuami : '---' }}
                     </v-col>
                   </v-row>
                   <v-row no-gutters>
@@ -326,7 +325,39 @@
                       md="8"
                       class="pt-2"
                     >
-                      : {{ `${item.raw.tempatIstri ? item.raw.tempatIstri : '---'}, ${convertDateForMonth(item.raw.tanggalLahirIstri)}` }}
+                      : {{ `${item.raw.tempatIstri ? item.raw.tempatIstri : '-'}, ${item.raw.tanggalLahirIstri !== '0000-00-00' ? convertDateForMonth(item.raw.tanggalLahirIstri) : '-'}` }}
+                    </v-col>
+                  </v-row>
+                  <v-row no-gutters>
+                    <v-col
+                      cols="12"
+                      md="4"
+                      class="pt-2 d-flex align-center font-weight-bold"
+                    >
+                      Telepon Istri
+                    </v-col>
+                    <v-col
+                      cols="12"
+                      md="8"
+                      class="pt-2"
+                    >
+                      : {{ item.raw.telpIstri ? item.raw.telpIstri : '-' }}
+                    </v-col>
+                  </v-row>
+                  <v-row no-gutters>
+                    <v-col
+                      cols="12"
+                      md="4"
+                      class="pt-2 d-flex align-center font-weight-bold"
+                    >
+                    Pekerjaan Istri
+                    </v-col>
+                    <v-col
+                      cols="12"
+                      md="8"
+                      class="pt-2"
+                    >
+                      : {{ item.raw.pekerjaanIstri ? item.raw.pekerjaanIstri : '-' }}
                     </v-col>
                   </v-row>
                   <v-row v-if="item.raw.statusIstri === 'Meninggal'" no-gutters>
@@ -349,22 +380,6 @@
                         nama-button="Lihat Surat"
                         size-button="x-small"
                       />
-                    </v-col>
-                  </v-row>
-                  <v-row no-gutters>
-                    <v-col
-                      cols="12"
-                      md="4"
-                      class="pt-2 d-flex align-center font-weight-bold"
-                    >
-                    Pekerjaan Istri
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      md="8"
-                      class="pt-2"
-                    >
-                      : {{ item.raw.pekerjaanIstri ? item.raw.pekerjaanIstri : '---' }}
                     </v-col>
                   </v-row>
                   <v-row no-gutters>
@@ -624,22 +639,6 @@
           <v-row no-gutters>
             <v-col cols="12" lg="10" class="pa-2 d-flex justify-start align-center">
               <span>Halaman <strong>{{ pageSummary.page ? pageSummary.page : 0 }}</strong> dari Total Halaman <strong>{{ pageSummary.totalPages ? pageSummary.totalPages : 0 }}</strong> (Records {{ pageSummary.total ? pageSummary.total : 0 }})</span>
-              <!-- <v-row no-gutters>
-                <v-col cols="12" lg="9" class="d-flex justify-start align-center">
-                  <span>Halaman <strong>{{ pageSummary.page ? pageSummary.page : 0 }}</strong> dari Total Halaman <strong>{{ pageSummary.totalPages ? pageSummary.totalPages : 0 }}</strong> (Records {{ pageSummary.total ? pageSummary.total : 0 }})</span>
-                </v-col>
-                <v-col cols="12" lg="3" class="d-flex justify-end align-center">
-                  <span style="padding-right: 5px;">Filter</span>
-                  <CascadeSelect 
-                    v-model="selectedFilter"
-                    :options="filterOptions"
-                    optionLabel="name"
-                    optionGroupLabel="name"
-                    :optionGroupChildren="['kategori']"
-                    style="padding: 5px;"
-                    placeholder="Pilih Filter" />
-                </v-col>
-              </v-row> -->
             </v-col>
             <v-col cols="12" lg="2" class="pa-2 text-right">
               <div class="d-flex justify-start align-center">
@@ -825,21 +824,6 @@
       </div>
     </v-overlay>
     <v-dialog
-      v-model="dialogNotifikasi"
-      transition="dialog-bottom-transition"
-      persistent
-      width="500px"
-    >
-      <PopUpNotifikasi
-        :notifikasi-kode="notifikasiKode"
-        :notifikasi-text="notifikasiText"
-        :notifikasi-button="notifikasiButton"
-        @download="getProses()"
-        @proses="goToProses()"
-        @cancel="dialogNotifikasi = false"
-      />
-    </v-dialog>
-    <v-dialog
       v-model="dialogQuestion"
       transition="dialog-bottom-transition"
       persistent
@@ -890,6 +874,88 @@
           </v-row>
         </v-card-actions>
       </v-card>
+    </v-dialog>
+    <v-dialog
+      v-model="dialogTanggalWafat"
+      transition="dialog-bottom-transition"
+      persistent
+      width="800px"
+    >
+      <v-card color="background-dialog-card">
+        <v-toolbar color="surface">
+          <v-toolbar-title>Ubah Tanggal Wafat {{ untuk }}</v-toolbar-title>
+          <v-spacer />
+          <v-toolbar-items>
+            <Button
+              variant="plain"
+              color-button="#FFFFFF"
+              icon-button="mdi mdi-close"
+              model-button="comfortable"
+              size-button="large"
+              @proses="() => { dialogTanggalWafat = false; }"
+            />
+          </v-toolbar-items>
+        </v-toolbar>
+        <v-card-text class="pt-4 v-dialog--custom">
+          <v-row no-gutters>
+            <v-col
+              cols="12"
+              md="4"
+              class="pt-2 d-flex align-center font-weight-bold"
+            >
+              Tanggal Wafat {{ untuk }}
+            </v-col>
+            <v-col
+              cols="12"
+              md="8"
+              class="pt-3"
+            >
+              <vue-date-picker
+                v-model="tanggal_wafat"
+                :placeholder="`Tanggal Wafat ${untuk}`"
+                format="dd-MM-yyyy"
+                :enable-time-picker="false"
+                teleport-center
+                :month-change-on-scroll="false"
+                auto-apply
+              />
+            </v-col>
+          </v-row>
+        </v-card-text>
+        <v-divider />
+        <v-card-actions>
+          <v-row 
+            no-gutters
+            class="mr-3"
+          >
+            <v-col
+              class="text-end"
+              cols="12"
+            >
+              <Button 
+                color-button="black"
+                nama-button="Request"
+                @proses="prosesStatusData(bodyData2)"
+              />
+            </v-col>
+          </v-row>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog
+      v-model="dialogNotifikasi"
+      transition="dialog-bottom-transition"
+      persistent
+      width="500px"
+    >
+      <PopUpNotifikasi
+        :notifikasi-kode="notifikasiKode"
+        :notifikasi-text="notifikasiText"
+        :notifikasi-button="notifikasiButton"
+        @download="getProses()"
+        @proses="goToProses()"
+        @cancel="dialogNotifikasi = false"
+      />
     </v-dialog>
   </div>
 </template>
@@ -948,33 +1014,6 @@ export default {
 			total: '',
 			totalPages: ''
 		},
-    // selectedFilter: '',
-    // filterOptions: [
-    //   {
-    //     name: 'Meninggal',
-    //     code: 'Meninggal',
-    //     kategori: [
-    //       { name: 'Status Suami', value: 'statussuami-true' },
-    //       { name: 'Status Istri', value: 'statusistri-true' },
-    //     ]
-    //   },
-    //   {
-    //     name: 'Validasi',
-    //     code: 'Validasi',
-    //     kategori: [
-    //       { name: 'Validasi Aktif', value: 'validasi-true' },
-    //       { name: 'Validasi Tidak Aktif', value: 'validasi-false' },
-    //     ]
-    //   },
-    //   {
-    //     name: 'Mutasi',
-    //     code: 'Mutasi',
-    //     kategori: [
-    //       { name: 'Mutasi Aktif', value: 'mutasi-true' },
-    //       { name: 'Mutasi Tidak Aktif', value: 'mutasi-false' },
-    //     ]
-    //   },
-    // ],
     filterOptions: [
       { text: 'Status', value: 'Status' },
       { text: 'Wilayah', value: 'Wilayah' },
@@ -989,7 +1028,7 @@ export default {
       { title: "#", key: "data-table-select", sortable: false, width: "3%" },
       { title: "No", key: "number", sortable: false, width: "3%" },
       { title: "#", key: "data-table-expand", sortable: false, width: "3%" },
-      { title: "NOMOR INDUK", key: "nik", sortable: true, width: "5%" },
+      { title: "NO. ANGGOTA", key: "nik", sortable: true, width: "5%" },
       { title: "NAMA", key: "nama", sortable: true, width: "15%" },
       { title: "WILAYAH", key: "wilayah", sortable: true, width: "20%" },
       { title: "OMPU", key: "ompu", sortable: true, width: "5%" },
@@ -1032,9 +1071,13 @@ export default {
       penColor: "#000",
     },
     bodyData: '',
+    bodyData2: '',
     reason: '',
+    untuk: '',
+    tanggal_wafat: '',
 
     //notifikasi
+    dialogTanggalWafat: false,
     dialogQuestion: false,
     dialogNotifikasi: false,
     notifikasiKode: '',
@@ -1200,16 +1243,25 @@ export default {
 			});
     },
     statusData(jenis, untuk, id, status){
-      let bodyData = {
+      this.bodyData2 = {
         jenis, untuk,
         statusMeninggal: status,
         idStatus: id,
       }
-      this.$store.dispatch('user/postKeanggotaan', bodyData)
+      this.untuk = this.uppercaseLetterFirst(untuk)
+      if(status === 'Meninggal') this.dialogTanggalWafat = true
+      if(status === 'Hidup') this.prosesStatusData(this.bodyData2)
+    },
+    prosesStatusData(bodyData){
+      this.$store.dispatch('user/postKeanggotaan', bodyData.statusMeninggal === 'Meninggal' ? { ...bodyData, tanggal_wafat: this.tanggal_wafat } : bodyData)
       .then((res) => {
         this.dialogQuestion = false;
+        this.dialogTanggalWafat = false;
         this.bodyData = ''
+        this.bodyData2 = ''
         this.reason = ''
+        this.untuk = ''
+        this.tanggal_wafat = ''
         this.getKeanggotaan({page: 1, limit: this.limit, keyword: this.searchData, filter: `${this.filterby}-${this.filterforby}`, sorting: this.kumpulSort})
         this.notifikasi("success", res.data.message, "1")
 			})
@@ -1311,7 +1363,7 @@ export default {
           const data = (nilai / this.dataJumlahImport) * 100
           this.progress = Math.ceil(data)
         }, 2000)
-      }, 2500)
+      }, 5000)
     },
     exportExcel(kategori) {
       let wilayah, namawilayah, nameFile, url;

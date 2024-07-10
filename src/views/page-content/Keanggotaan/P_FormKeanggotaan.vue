@@ -113,13 +113,16 @@ export default {
       pekerjaan_suami: '',
       telp: '',
       status_suami: null,
+      tanggal_wafat_istri: '',
     },
     tampungStepTwo: {
       id_biodata: '',
       nama_istri: '',
       tanggal_lahir_istri: '',
       pekerjaan_istri: '',
+      telp_istri: '',
       status_istri: null,
+      tanggal_wafat_istri: '',
     },
     tampungStepTwoAnak: {
       kategoriAnak: [],
@@ -182,6 +185,7 @@ export default {
             pekerjaan_suami: value.pekerjaanSuami ? value.pekerjaanSuami : '',
             telp: value.telp ? value.telp : '',
 					  status_suami: value.statusSuami === 'Meninggal' ? 'Meninggal' : value.statusSuami === 'Hidup' ? 'Hidup' : null,
+            tanggal_wafat_suami: value.tanggalWafatSuami ? value.tanggalWafatSuami : '',
           }
         }
         if(this.stepperVal === 2){
@@ -191,7 +195,9 @@ export default {
             tempat_istri: value.tempatIstri ? value.tempatIstri : '',
             tanggal_lahir_istri: value.tanggalLahirIstri ? value.tanggalLahirIstri : '',
             pekerjaan_istri: value.pekerjaanIstri ? value.pekerjaanIstri : '',
+            telp_istri: value.telpIstri ? value.telpIstri : '',
 					  status_istri: value.statusIstri === 'Meninggal' ? 'Meninggal' : value.statusIstri === 'Hidup' ? 'Hidup' : null,
+            tanggal_wafat_istri: value.tanggalWafatIstri ? value.tanggalWafatIstri : '',
           }
           this.tampungStepTwoAnak = {
             kategoriAnak: this.$route.params.kondisi === 'EDIT' ? value.anak.length ? value.anak.map(val => val.kategoriAnak) : [null] : [],

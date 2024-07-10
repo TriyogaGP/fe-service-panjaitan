@@ -37,7 +37,7 @@
 					md="8"
 					class="pt-2"
 				>
-					{{ DataStepOne.tempat_suami ? DataStepOne.tempat_suami : '---' }}, {{ convertDateForMonth(DataStepOne.tanggal_lahir_suami) }}
+					{{ DataStepOne.tempat_suami ? DataStepOne.tempat_suami : '-' }}, {{ DataStepOne.tanggal_lahir_suami ? convertDateForMonth(DataStepOne.tanggal_lahir_suami) : '-' }}
 				</v-col>
 			</v-row>
 			<v-row no-gutters>
@@ -142,14 +142,14 @@
 					md="4"
 					class="pt-2 d-flex align-center font-weight-bold"
 				>
-					Telepon
+					Telepon Suami
 				</v-col>
 				<v-col
 					cols="12"
 					md="8"
 					class="pt-2"
 				>
-					{{ DataStepOne.telp }}
+					{{ DataStepOne.telp ? DataStepOne.telp : '-' }}
 				</v-col>
 			</v-row>
 			<v-row no-gutters>
@@ -166,6 +166,22 @@
 					class="pt-2"
 				>
           {{ DataStepOne.pekerjaan_suami ? DataStepOne.pekerjaan_suami : '-' }}
+				</v-col>
+			</v-row>
+			<v-row no-gutters v-if="DataStepOne.status_suami === 'Meninggal'">
+				<v-col
+					cols="12"
+					md="4"
+					class="pt-2 d-flex align-center font-weight-bold"
+				>
+					Tanggal Wafat Suami
+				</v-col>
+				<v-col
+					cols="12"
+					md="8"
+					class="pt-3"
+				>
+					{{ DataStepOne.tanggal_wafat_suami ? convertDateForMonth(DataStepOne.tanggal_wafat_suami) : '-' }}
 				</v-col>
 			</v-row>
       <h2 class="subheading black--text pt-4"><u>>>Data Istri</u></h2>
@@ -204,7 +220,23 @@
 					md="8"
 					class="pt-2"
 				>
-					{{ DataStepTwo.tempat_istri ? DataStepTwo.tempat_istri : '---' }}, {{ convertDateForMonth(DataStepTwo.tanggal_lahir_istri) }}
+					{{ DataStepTwo.tempat_istri ? DataStepTwo.tempat_istri : '-' }}, {{ DataStepTwo.tanggal_lahir_istri ? convertDateForMonth(DataStepTwo.tanggal_lahir_istri) : '-' }}
+				</v-col>
+			</v-row>
+			<v-row no-gutters>
+				<v-col
+					cols="12"
+					md="4"
+					class="pt-2 d-flex align-center font-weight-bold"
+				>
+					Telepon Istri
+				</v-col>
+				<v-col
+					cols="12"
+					md="8"
+					class="pt-2"
+				>
+					{{ DataStepTwo.telp_istri ? DataStepTwo.telp_istri : '-' }}
 				</v-col>
 			</v-row>
 			<v-row no-gutters>
@@ -221,6 +253,22 @@
 					class="pt-2"
 				>
           {{ DataStepTwo.pekerjaan_istri ? DataStepTwo.pekerjaan_istri : '-' }}
+				</v-col>
+			</v-row>
+			<v-row no-gutters v-if="DataStepTwo.status_istri === 'Meninggal'">
+				<v-col
+					cols="12"
+					md="4"
+					class="pt-2 d-flex align-center font-weight-bold"
+				>
+					Tanggal Wafat Istri
+				</v-col>
+				<v-col
+					cols="12"
+					md="8"
+					class="pt-3"
+				>
+					{{ DataStepTwo.tanggal_wafat_istri ? convertDateForMonth(DataStepTwo.tanggal_wafat_istri) : '-' }}
 				</v-col>
 			</v-row>
       <h2 class="subheading black--text pt-4"><u>>>Data Tanggungan</u></h2>
@@ -577,7 +625,7 @@ export default {
 			  idBiodata: this.DataStepOne.id_biodata,
         namaLengkap: this.DataStepOne.nama_lengkap,
         tempatSuami: this.DataStepOne.tempat_suami,
-        tanggalLahirSuami: this.convertDateToPicker2(this.DataStepOne.tanggal_lahir_suami),
+        tanggalLahirSuami: this.DataStepOne.tanggal_lahir_suami ? this.convertDateToPicker2(this.DataStepOne.tanggal_lahir_suami) : '',
         alamat: this.DataStepOne.alamat,
         provinsi: this.DataStepOne.provinsi,
         kabKota: this.DataStepOne.kabkota,
@@ -588,8 +636,9 @@ export default {
         telp: this.DataStepOne.telp,
         namaIstri: this.DataStepTwo.nama_istri,
         tempatIstri: this.DataStepTwo.tempat_istri,
-        tanggalLahirIstri: this.convertDateToPicker2(this.DataStepTwo.tanggal_lahir_istri),
+        tanggalLahirIstri: this.DataStepTwo.tanggal_lahir_istri ? this.convertDateToPicker2(this.DataStepTwo.tanggal_lahir_istri) : '',
         pekerjaanIstri: this.DataStepTwo.pekerjaan_istri,
+        telpIstri: this.DataStepTwo.telp_istri,
         anak: anak[0].namaAnak === '' ? [] : anak,
         jabatanPengurus: this.DataStepThree.jabatan_pengurus,
         wilayah: this.DataStepThree.wilayah,
@@ -597,7 +646,9 @@ export default {
         ompu: this.DataStepThree.ompu,
         generasi: this.DataStepThree.generasi,
         statusSuami: this.DataStepOne.status_suami,
+				tanggalWafatSuami: this.DataStepOne.tanggal_wafat_suami ? this.convertDateToPicker2(this.DataStepOne.tanggal_wafat_suami) : null,
         statusIstri: this.DataStepTwo.status_istri,
+				tanggalWafatIstri: this.DataStepTwo.tanggal_wafat_istri ? this.convertDateToPicker2(this.DataStepTwo.tanggal_wafat_istri) : null,
         reason: this.reason,
       }
 

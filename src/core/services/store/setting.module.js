@@ -16,6 +16,8 @@ export const GET_CMS_SETTINGS = "getCMSSettings";
 export const POST_CMS_SETTINGS = "postCMSSettings";
 export const GET_KOMISARIS_WILAYAH = "getKomisaris";
 export const POST_KOMISARIS_WILAYAH = "postKomisaris";
+export const GET_WILAYAH_PANJAITAN = "getWilayahPanjaitans";
+export const POST_WILAYAH_PANJAITAN = "postWilayahPanjaitans";
 export const GET_ROLE = "getRole";
 export const POST_ROLE = "postRole";
 export const GET_MENUDATA = "getMenuData";
@@ -46,6 +48,7 @@ export const SET_MENU = "SET_MENU";
 export const SET_UID = "SET_UID";
 export const SET_CMSSETTINGS = "SET_CMSSETTINGS";
 export const SET_KOMISARIS_WILAYAH = "SET_KOMISARIS_WILAYAH";
+export const SET_WILAYAH_PANJAITAN = "SET_WILAYAH_PANJAITAN";
 export const SET_ROLE = "SET_ROLE";
 export const SET_MENUDATA = "SET_MENUDATA";
 export const SET_SEQUENCEMENU = "SET_SEQUENCEMENU";
@@ -75,6 +78,7 @@ const state = {
 
   dataAnak: [],
   dataKomisarisWilayah: [],
+  dataWilayahPanjaitan: [],
   dataRole: [],
   dataMenu: [],
   dataSequenceMenu: [],
@@ -139,6 +143,9 @@ const mutations = {
   [SET_KOMISARIS_WILAYAH](state, data) {
     state.dataKomisarisWilayah = data
   },
+  [SET_WILAYAH_PANJAITAN](state, data) {
+    state.dataWilayahPanjaitan = data
+  },
   [SET_MENU](state, data) {
     state.menuOptions = data
   },
@@ -180,6 +187,9 @@ const getters = {
   },
   komisariswilayahAll(state) {
     return state.dataKomisarisWilayah;
+  },
+  wilayahpanjaitanAll(state) {
+    return state.dataWilayahPanjaitan;
   },
   roleAll(state) {
     return state.dataRole;
@@ -361,6 +371,32 @@ const actions = {
   [POST_KOMISARIS_WILAYAH](context, bodyData) {
     return new Promise((resolve, reject) => {
       ApiService.post(`settings/KomisarisWilayah`, token, bodyData)
+      .then((response) => {
+        resolve(response);
+      })
+      .catch((error) => {
+        reject(error);
+      })
+    });
+  },
+  [GET_WILAYAH_PANJAITAN](context, data) {
+    return new Promise((resolve, reject) => {
+      context.commit('SET_LOADINGTABLE', true)
+      ApiService.get(`settings/WilayahPanjaitan?page=${data.page}&limit=${data.limit}${data.keyword ? `&keyword=${data.keyword}` : ''}${data.sorting !== '' ? `&sort=${data.sorting}` : ''}`, token)
+      .then((response) => {
+        context.commit('SET_LOADINGTABLE', false)
+        context.commit('SET_WILAYAH_PANJAITAN', response.data.result)
+        resolve(response);
+      })
+      .catch((error) => {
+        context.commit('SET_LOADINGTABLE', false)
+        reject(error);
+      })
+    });
+  },
+  [POST_WILAYAH_PANJAITAN](context, bodyData) {
+    return new Promise((resolve, reject) => {
+      ApiService.post(`settings/WilayahPanjaitan`, token, bodyData)
       .then((response) => {
         resolve(response);
       })

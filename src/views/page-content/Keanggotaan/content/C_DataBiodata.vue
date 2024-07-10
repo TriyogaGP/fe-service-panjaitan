@@ -50,7 +50,7 @@
 					md="4"
 					class="pt-2 d-flex align-center font-weight-bold"
 				>
-					Tempat, Tanggal Lahir Suami *
+					Tempat, Tanggal Lahir Suami{{ `${inputDataBiodata.status_suami === 'Meninggal' ? '' : ' *'}` }}
 				</v-col>
 				<v-col
 					cols="12"
@@ -67,6 +67,7 @@
 								v-model="inputDataBiodata.tempat_suami"
 								label-tf="Tempat Lahir Suami"
 								:clearable-tf="true"
+								:disabled-tf="inputDataBiodata.status_suami === 'Meninggal'"
 							/>
 						</v-col>
 						<v-col
@@ -76,10 +77,14 @@
 						>
 							<vue-date-picker
 								v-model="inputDataBiodata.tanggal_lahir_suami"
-								placeholder="Tanggal Lahir"
+								placeholder="Tanggal Lahir Suami"
 								format="dd-MM-yyyy"
-								:enable-time-picker="false"
-								auto-apply
+                :enable-time-picker="false"
+                :auto-position="false"
+								position="right"
+                :month-change-on-scroll="false"
+                auto-apply
+								:disabled="inputDataBiodata.status_suami === 'Meninggal'"
 							/>
 						</v-col>
 					</v-row>
@@ -91,7 +96,7 @@
 					md="4"
 					class="pt-2 d-flex align-center font-weight-bold"
 				>
-					Telepon
+					Telepon Suami
 				</v-col>
 				<v-col
 					cols="12"
@@ -100,8 +105,9 @@
 				>
 					<TextField
 						v-model="inputDataBiodata.telp"
-						label-tf="Telepon"
+						label-tf="Telepon Suami"
 						:clearable-tf="true"
+						:disabled-tf="inputDataBiodata.status_suami === 'Meninggal'"
 						@keypress="onlyNumber($event, 15, inputDataBiodata.telp)"
 					/>
 				</v-col>
@@ -124,6 +130,31 @@
 						label-tf="Pekerjaan Suami"
 						:clearable-tf="true"
 						:disabled-tf="inputDataBiodata.status_suami === 'Meninggal'"
+					/>
+				</v-col>
+			</v-row>
+			<v-row no-gutters v-if="inputDataBiodata.status_suami === 'Meninggal'">
+				<v-col
+					cols="12"
+					md="4"
+					class="pt-2 d-flex align-center font-weight-bold"
+				>
+					Tanggal Wafat Suami *
+				</v-col>
+				<v-col
+					cols="12"
+					md="8"
+					class="pt-3"
+				>
+					<vue-date-picker
+						v-model="inputDataBiodata.tanggal_wafat_suami"
+						placeholder="Tanggal Wafat Suami"
+						format="dd-MM-yyyy"
+						:enable-time-picker="false"
+						:auto-position="false"
+						position="left"
+						:month-change-on-scroll="false"
+						auto-apply
 					/>
 				</v-col>
 			</v-row>
@@ -331,6 +362,7 @@ export default {
       pekerjaan_suami: '',
       telp: '',
       status_suami: null,
+      tanggal_wafat_suami: '',
     },
 		statusOptions: [
 			{ title: 'Hidup', value: 'Hidup' },
@@ -383,10 +415,21 @@ export default {
 				}
 				
 				value.pekerjaan_suami = value.status_suami === 'Meninggal' ? '' : value.pekerjaan_suami 
-				if(value.nama_lengkap != '' && value.status_suami != null && value.tempat_suami != '' && value.tanggal_lahir_suami != '' && value.alamat != ''){
-					this.kondisiTombol = false
+				value.tempat_suami = value.status_suami === 'Meninggal' ? '' : value.tempat_suami
+				value.tanggal_lahir_suami = value.status_suami === 'Meninggal' ? '' : value.tanggal_lahir_suami
+				value.telp = value.status_suami === 'Meninggal' ? '' : value.telp
+				if(value.status_suami === 'Hidup'){
+					if(value.nama_lengkap != '' && value.status_suami != null && value.tempat_suami != '' && value.tanggal_lahir_suami != '' && value.alamat != ''){
+						this.kondisiTombol = false
+					}else{
+						this.kondisiTombol = true
+					}
 				}else{
-					this.kondisiTombol = true
+					if(value.nama_lengkap != '' && value.tanggal_wafat_suami != '' && value.alamat != ''){
+						this.kondisiTombol = false
+					}else{
+						this.kondisiTombol = true
+					}
 				}
 				localStorage.setItem('stepOne', JSON.stringify(value))
 			}
@@ -408,6 +451,7 @@ export default {
 					pekerjaan_suami: value.pekerjaan_suami ? value.pekerjaan_suami : '',
 					telp: value.telp ? value.telp : '',
 					status_suami: value.status_suami === 'Meninggal' ? 'Meninggal' : value.status_suami === 'Hidup' ? 'Hidup' : null,
+					tanggal_wafat_suami: value.tanggal_wafat_suami ? value.tanggal_wafat_suami : '',
 				}
 
 				this.getWilayah2023({ bagian: 'kabkota', KodeWilayah: this.inputDataBiodata.provinsi })

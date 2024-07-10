@@ -50,7 +50,7 @@
 					md="4"
 					class="pt-2 d-flex align-center font-weight-bold"
 				>
-					Tempat, Tanggal Lahir Istri *
+					Tempat, Tanggal Lahir Istri{{ `${inputDataIstri.status_istri === 'Meninggal' ? '' : ' *'}` }}
 				</v-col>
 				<v-col
 					cols="12"
@@ -67,6 +67,7 @@
 								v-model="inputDataIstri.tempat_istri"
 								label-tf="Tempat Lahir Istri"
 								:clearable-tf="true"
+								:disabled-tf="inputDataIstri.status_istri === 'Meninggal'"
 							/>
 						</v-col>
 						<v-col
@@ -78,11 +79,37 @@
 								v-model="inputDataIstri.tanggal_lahir_istri"
 								placeholder="Tanggal Lahir"
 								format="dd-MM-yyyy"
-								:enable-time-picker="false"
-								auto-apply
+                :enable-time-picker="false"
+                :auto-position="false"
+								position="right"
+                :month-change-on-scroll="false"
+                auto-apply
+								:disabled="inputDataIstri.status_istri === 'Meninggal'"
 							/>
 						</v-col>
 					</v-row>
+				</v-col>
+			</v-row>
+			<v-row no-gutters>
+				<v-col
+					cols="12"
+					md="4"
+					class="pt-2 d-flex align-center font-weight-bold"
+				>
+					Telepon Istri
+				</v-col>
+				<v-col
+					cols="12"
+					md="8"
+					class="pt-3"
+				>
+					<TextField
+						v-model="inputDataIstri.telp_istri"
+						label-tf="Telepon Istri"
+						:clearable-tf="true"
+						:disabled-tf="inputDataIstri.status_istri === 'Meninggal'"
+						@keypress="onlyNumber($event, 15, inputDataIstri.telp_istri)"
+					/>
 				</v-col>
 			</v-row>
 			<v-row no-gutters>
@@ -103,6 +130,30 @@
 						label-tf="Pekerjaan Istri"
 						:clearable-tf="true"
 						:disabled-tf="inputDataIstri.status_istri === 'Meninggal'"
+					/>
+				</v-col>
+			</v-row>
+			<v-row no-gutters v-if="inputDataIstri.status_istri === 'Meninggal'">
+				<v-col
+					cols="12"
+					md="4"
+					class="pt-2 d-flex align-center font-weight-bold"
+				>
+					Tanggal Wafat Istri *
+				</v-col>
+				<v-col
+					cols="12"
+					md="8"
+					class="pt-3"
+				>
+					<vue-date-picker
+						v-model="inputDataIstri.tanggal_wafat_istri"
+						placeholder="Tanggal Wafat Istri"
+						format="dd-MM-yyyy"
+						:enable-time-picker="false"
+						position="left"
+						:month-change-on-scroll="false"
+						auto-apply
 					/>
 				</v-col>
 			</v-row>
@@ -174,6 +225,8 @@
 									placeholder="Tanggal Lahir"
 									format="dd-MM-yyyy"
 									:enable-time-picker="false"
+									position="right"
+									:month-change-on-scroll="false"
 									auto-apply
 								/>
 								<span>
@@ -259,7 +312,9 @@ export default {
       tempat_istri: '',
       tanggal_lahir_istri: '',
       pekerjaan_istri: '',
+      telp_istri: '',
       status_istri: null,
+      tanggal_wafat_istri: '',
     },
 		inputDataAnak: {
 			kategoriAnak: [],
@@ -289,10 +344,20 @@ export default {
 			deep: true,
 			handler(value) {
 				value.pekerjaan_istri = value.status_istri === 'Meninggal' ? '' : value.pekerjaan_istri 
-				if(value.nama_istri != '' && value.status_istri != null && value.tempat_istri != '' && value.tanggal_lahir_istri != ''){
-					this.kondisiTombol = false
+				value.tempat_istri = value.status_istri === 'Meninggal' ? '' : value.tempat_istri 
+				value.tanggal_lahir_istri = value.status_istri === 'Meninggal' ? '' : value.tanggal_lahir_istri 
+				if(value.status_istri === 'Hidup'){
+					if(value.nama_istri != '' && value.status_istri != null && value.tempat_istri != '' && value.tanggal_lahir_istri != ''){
+						this.kondisiTombol = false
+					}else{
+						this.kondisiTombol = true
+					}
 				}else{
-					this.kondisiTombol = true
+					if(value.nama_istri != ''){
+						this.kondisiTombol = false
+					}else{
+						this.kondisiTombol = true
+					}
 				}
 				localStorage.setItem('stepTwo', JSON.stringify(value))
 			}
@@ -312,7 +377,9 @@ export default {
 					tempat_istri: value.tempat_istri ? value.tempat_istri : '',
 					tanggal_lahir_istri: value.tanggal_lahir_istri ? value.tanggal_lahir_istri : '',
 					pekerjaan_istri: value.pekerjaan_istri ? value.pekerjaan_istri : '',
+					telp_istri: value.telp_istri ? value.telp_istri : '',
 					status_istri: value.status_istri === 'Meninggal' ? 'Meninggal' : value.status_istri === 'Hidup' ? 'Hidup' : null,
+					tanggal_wafat_istri: value.tanggal_wafat_istri ? value.tanggal_wafat_istri : '',
 				}
 			}
 		},

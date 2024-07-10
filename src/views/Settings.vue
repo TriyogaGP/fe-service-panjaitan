@@ -30,8 +30,9 @@
 			<V_Menu v-if="settingPanel == 3" />
 			<V_HakAksesMenu v-if="settingPanel == 4" />
 			<V_KomisarisWilayah v-if="settingPanel == 5" />
+			<V_WilayahPanjaitan v-if="settingPanel == 6" />
+			<V_Wilayah2023 v-if="settingPanel == 7" />
 			<!-- <V_Wilayah v-if="settingPanel == 6" /> -->
-			<V_Wilayah2023 v-if="settingPanel == 6" />
 			<!-- <V_MapWilayah v-if="settingPanel == 8" /> -->
 		</v-card>
   </div>
@@ -44,13 +45,14 @@ import V_HakAkses from './page-content/Settings/V_HakAkses.vue'
 import V_Menu from './page-content/Settings/V_Menu.vue'
 import V_HakAksesMenu from './page-content/Settings/V_HakAksesMenu.vue'
 import V_KomisarisWilayah from './page-content/Settings/V_KomisarisWilayah.vue'
+import V_WilayahPanjaitan from './page-content/Settings/V_WilayahPanjaitan.vue'
 import V_Wilayah from './page-content/Settings/V_Wilayah.vue'
 import V_Wilayah2023 from './page-content/Settings/V_Wilayah2023.vue'
 import V_MapWilayah from './page-content/Settings/V_MapWilayah.vue'
 
 export default {
 	name: "Pengaturan",
-	components: { V_GeneralCMS, V_HakAkses, V_Menu, V_HakAksesMenu, V_KomisarisWilayah, V_Wilayah, V_Wilayah2023, V_MapWilayah },
+	components: { V_GeneralCMS, V_HakAkses, V_Menu, V_HakAksesMenu, V_KomisarisWilayah, V_WilayahPanjaitan, V_Wilayah, V_Wilayah2023, V_MapWilayah },
 	data: () => ({
 		settingPanel: 0,
     pengaturan: [
@@ -59,7 +61,8 @@ export default {
       { title: 'Menu', icon: 'mdi mdi-view-list', link: 3 },
       { title: 'Hak Akses Menu', icon: 'mdi mdi-shield-account-variant', link: 4 },
       { title: 'Komisaris Wilayah', icon: 'mdi mdi-account-group', link: 5 },
-      { title: 'Wilayah', icon: 'mdi mdi-map', link: 6 },
+      { title: 'Wilayah Panjaitan', icon: 'mdi mdi-map', link: 6 },
+      { title: 'Wilayah', icon: 'mdi mdi-map', link: 7 },
       // { title: 'Map Wilayah', icon: 'mdi mdi-map', link: 8 },
     ]
 	}),
