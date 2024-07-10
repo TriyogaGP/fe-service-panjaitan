@@ -139,7 +139,7 @@
 					md="4"
 					class="pt-2 d-flex align-center font-weight-bold"
 				>
-					Tanggal Wafat Suami *
+					Tanggal Wafat Suami
 				</v-col>
 				<v-col
 					cols="12"
@@ -425,7 +425,7 @@ export default {
 						this.kondisiTombol = true
 					}
 				}else{
-					if(value.nama_lengkap != '' && value.tanggal_wafat_suami != '' && value.alamat != ''){
+					if(value.nama_lengkap != '' && value.alamat != ''){
 						this.kondisiTombol = false
 					}else{
 						this.kondisiTombol = true

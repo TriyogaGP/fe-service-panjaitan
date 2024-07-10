@@ -64,21 +64,25 @@
           {{ page > 1 ? ((page - 1)*limit) + item.index + 1 : item.index + 1 }}
         </template>
         <template #[`item.nama`]="{ item }">
-          <span v-if="item.raw.statusSuami === 'Meninggal'">{{ `Nama Suami : ${item.raw.namaLengkap}` }}</span>
-          <v-tooltip v-if="item.raw.statusSuami === 'Meninggal'" location="top">
-            <template v-slot:activator="{ props }">
-              <v-icon v-bind="props" size="middle" icon="mdi mdi-cross" color="icon-red" /><br>
-            </template>
-            <span>Meninggal</span>
-          </v-tooltip>
+          <span v-if="item.raw.statusSuami === 'Meninggal'">
+            {{ `Nama Suami : ${item.raw.namaLengkap}` }}
+            <v-tooltip v-if="item.raw.statusSuami === 'Meninggal'" location="top">
+              <template v-slot:activator="{ props }">
+                <v-icon v-bind="props" size="middle" icon="mdi mdi-cross" color="icon-red" /><br>
+              </template>
+              <span>Meninggal</span>
+            </v-tooltip>
+            <span v-if="item.raw.statusSuami === 'Meninggal'">
+              {{ `Nama Istri : ${item.raw.namaIstri}` }}
+              <v-tooltip v-if="item.raw.statusIstri === 'Meninggal'" location="top">
+                <template v-slot:activator="{ props }">
+                  <v-icon v-bind="props" size="middle" icon="mdi mdi-cross" color="icon-red" /><br>
+                </template>
+                <span>Meninggal</span>
+              </v-tooltip>
+            </span>
+          </span>
           <span v-else>{{ item.raw.namaLengkap }}</span>
-          <span v-if="item.raw.statusSuami === 'Meninggal'">{{ `Nama Istri : ${item.raw.namaIstri}` }}</span>
-          <v-tooltip v-if="item.raw.statusIstri === 'Meninggal'" location="top">
-            <template v-slot:activator="{ props }">
-              <v-icon v-bind="props" size="middle" icon="mdi mdi-cross" color="icon-red" /><br>
-            </template>
-            <span>Meninggal</span>
-          </v-tooltip>
         </template>
         <template #[`item.ompu`]="{ item }">
           <span v-html="item.raw.ompu.label" />
@@ -272,7 +276,7 @@
                       md="8"
                       class="pt-2"
                     >
-                      : {{ convertDateForMonth(item.raw.tanggalWafatSuami) }}
+                      : {{ item.raw.tanggalWafatSuami ? convertDateForMonth(item.raw.tanggalWafatSuami) : '-' }}
                       <Button 
                         color-button="light-blue darken-3"
                         icon-prepend-button="mdi mdi-eye"
@@ -373,7 +377,7 @@
                       md="8"
                       class="pt-2"
                     >
-                      : {{ convertDateForMonth(item.raw.tanggalWafatIstri) }}
+                      : {{ item.raw.tanggalWafatIstri ? convertDateForMonth(item.raw.tanggalWafatIstri) : '-' }}
                       <Button 
                         color-button="light-blue darken-3"
                         icon-prepend-button="mdi mdi-eye"

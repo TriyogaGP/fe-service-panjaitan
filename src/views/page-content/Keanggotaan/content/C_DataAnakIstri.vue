@@ -139,7 +139,7 @@
 					md="4"
 					class="pt-2 d-flex align-center font-weight-bold"
 				>
-					Tanggal Wafat Istri *
+					Tanggal Wafat Istri
 				</v-col>
 				<v-col
 					cols="12"
