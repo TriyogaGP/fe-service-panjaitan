@@ -394,7 +394,7 @@ export default {
         },
         DELETESTATUS: {
           jenis: jenis,
-          id: item ? item.id : '',
+          id: item?.id,
           status,
         },
       }

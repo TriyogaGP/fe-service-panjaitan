@@ -431,7 +431,7 @@ export default {
         },
         DELETESTATUS: {
           jenis: jenis,
-          id_komisaris: item.idKomisaris ? item.idKomisaris : null,
+          id_komisaris: item?.idKomisaris,
           status,
         },
       }

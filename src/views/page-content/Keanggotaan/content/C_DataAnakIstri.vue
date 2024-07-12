@@ -346,6 +346,7 @@ export default {
 				value.pekerjaan_istri = value.status_istri === 'Meninggal' ? '' : value.pekerjaan_istri 
 				value.tempat_istri = value.status_istri === 'Meninggal' ? '' : value.tempat_istri 
 				value.tanggal_lahir_istri = value.status_istri === 'Meninggal' ? '' : value.tanggal_lahir_istri 
+				value.telp_istri = value.status_istri === 'Meninggal' ? '' : value.telp_istri 
 				if(value.status_istri === 'Hidup'){
 					if(value.nama_istri != '' && value.status_istri != null && value.tempat_istri != '' && value.tanggal_lahir_istri != ''){
 						this.kondisiTombol = false
