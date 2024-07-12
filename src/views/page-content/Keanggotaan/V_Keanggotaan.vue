@@ -212,7 +212,7 @@
                       md="8"
                       class="pt-2"
                     >
-                      : {{ `${item.raw.tempatSuami ? item.raw.tempatSuami : '-'}, ${item.raw.tanggalLahirSuami !== '0000-00-00' ? convertDateForMonth(item.raw.tanggalLahirSuami) : '-'}` }}
+                      : {{ `${item.raw.tempatSuami ? item.raw.tempatSuami : '-'}, ${item.raw.tanggalLahirSuami ? convertDateForMonth(item.raw.tanggalLahirSuami) : '-'}` }}
                     </v-col>
                   </v-row>
                   <v-row no-gutters>
@@ -329,7 +329,7 @@
                       md="8"
                       class="pt-2"
                     >
-                      : {{ `${item.raw.tempatIstri ? item.raw.tempatIstri : '-'}, ${item.raw.tanggalLahirIstri !== '0000-00-00' ? convertDateForMonth(item.raw.tanggalLahirIstri) : '-'}` }}
+                      : {{ `${item.raw.tempatIstri ? item.raw.tempatIstri : '-'}, ${item.raw.tanggalLahirIstri ? convertDateForMonth(item.raw.tanggalLahirIstri) : '-'}` }}
                     </v-col>
                   </v-row>
                   <v-row no-gutters>
@@ -1257,7 +1257,7 @@ export default {
       if(status === 'Hidup') this.prosesStatusData(this.bodyData2)
     },
     prosesStatusData(bodyData){
-      this.$store.dispatch('user/postKeanggotaan', bodyData.statusMeninggal === 'Meninggal' ? { ...bodyData, tanggal_wafat: this.tanggal_wafat } : bodyData)
+      this.$store.dispatch('user/postKeanggotaan', bodyData.statusMeninggal === 'Meninggal' ? { ...bodyData, tanggal_wafat: this.tanggal_wafat ? this.tanggal_wafat : null } : bodyData)
       .then((res) => {
         this.dialogQuestion = false;
         this.dialogTanggalWafat = false;
