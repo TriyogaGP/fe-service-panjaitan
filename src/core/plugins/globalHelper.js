@@ -229,6 +229,12 @@ const myPlugin = {
 			const [year, month, day] = data.split("-");
 			return `${year}${month}${day}`;
 		},
+		app.config.globalProperties.convertDateForDay = (str) => {
+			const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+			let date = new Date(str)
+			const valueConvertDate = days[date.getDay()];
+			return valueConvertDate
+		},
 		app.config.globalProperties.convertDateForMonth = (str) => {
 			const bulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']
 			let date = new Date(str),

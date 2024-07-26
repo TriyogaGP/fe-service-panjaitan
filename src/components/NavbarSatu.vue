@@ -257,7 +257,7 @@ export default {
         //   return this.menuOptions.filter(el => { return this.wali_kelas === '' ? el.menuText != "Wali Kelas" && el.menuText != "Guru" && el.menuText != "Siswa Siswi" && el.menuText != "Jadwal Mengajar" : el.menuText != "Guru" && el.menuText != "Siswa Siswi" && el.menuText != "Jadwal Mengajar"; })
 				// }
 				return this.menuOptions
-			}else if(this.roleID === '1' || this.roleID === '2'){
+			}else{
 				return this.menuOptions
 			}
 		},
@@ -273,7 +273,9 @@ export default {
 		this.Navbar()
 		this.getCMSSettings()
 		let path = this.$route.path.substring(1).split('/');
-		if(path[0] === 'settings' || path[0] === 'profile' || path[0] === 'notifikasi' || path[0] === 'data-detail-iuran'){
+		if(path[0] === 'settings' || path[0] === 'profile' || path[0] === 'notifikasi' || path[0] === 'data-detail-iuran' ||
+		path[0] === 'rekap-menikah' || path[0] === 'rekap-meninggal' || path[0] === 'rekap-penanggung-jawab' ||
+		path[0] === 'rekap-tugas'){
 			this.drawer = false;
 			return this.drawer;
 		}

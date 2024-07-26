@@ -173,6 +173,7 @@ export default {
 			{ title: 'Super Administrator', value: 1 },
 			{ title: 'Administrator Pusat', value: 2 },
 			{ title: 'Administrator Wilayah', value: 3 },
+			{ title: 'Administrator Bidang', value: 4 },
 		],
     passType: '',
     endecryptType: '',

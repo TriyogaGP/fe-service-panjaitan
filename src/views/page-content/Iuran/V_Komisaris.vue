@@ -90,7 +90,7 @@ export default {
   }),
   setup() {
     useMeta({
-      title: "Data Iuran",
+      title: "Data Komisaris",
       htmlAttrs: {
         lang: "id",
         amp: true,

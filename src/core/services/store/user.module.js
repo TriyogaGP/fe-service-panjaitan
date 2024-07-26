@@ -13,6 +13,14 @@ export const GET_KEANGGOTAAN_BY = "getKeanggotaanbyUID";
 export const POST_KEANGGOTAAN = "postKeanggotaan";
 export const GET_IURAN = "getIuran";
 export const POST_IURAN = "postIuran";
+export const GET_REKAP_MENIKAH = "getRekapMenikah";
+export const POST_REKAP_MENIKAH = "postRekapMenikah";
+export const GET_REKAP_MENINGGAL = "getRekapMeninggal";
+export const POST_REKAP_MENINGGAL = "postRekapMeninggal";
+export const GET_REKAP_PENANGGUNGJAWAB = "getRekapPenanggungJawab";
+export const POST_REKAP_PENANGGUNGJAWAB = "postRekapPenanggungJawab";
+export const GET_REKAP_TUGAS = "getRekapTugas";
+export const POST_REKAP_TUGAS = "postRekapTugas";
 export const GET_KOMISARISWILAYAH = "getKomisarisWilayah";
 export const GET_WILAYAHPANJAITAN = "getWilayahPanjaitan";
 
@@ -25,6 +33,10 @@ export const SET_ADMINISTRATORBY = "SET_ADMINISTRATORBY";
 export const SET_KEANGGOTAAN = "SET_KEANGGOTAAN";
 export const SET_KEANGGOTAANBY = "SET_KEANGGOTAANBY";
 export const SET_IURAN = "SET_IURAN";
+export const SET_REKAP_MENIKAH = "SET_REKAP_MENIKAH";
+export const SET_REKAP_MENINGGAL = "SET_REKAP_MENINGGAL";
+export const SET_REKAP_PENANGGUNGJAWAB = "SET_REKAP_PENANGGUNGJAWAB";
+export const SET_REKAP_TUGAS = "SET_REKAP_TUGAS";
 export const SET_KOMISARISWILAYAH = "SET_KOMISARISWILAYAH";
 export const SET_WILAYAHPANJAITAN = "SET_WILAYAHPANJAITAN";
 
@@ -37,6 +49,10 @@ const state = {
   dataKeanggotaan: [],
   dataKeanggotaanBy: null,
   dataIuran: [],
+  dataRekapMenikah: [],
+  dataRekapMeninggal: [],
+  dataRekapPenanggungJawab: [],
+  dataRekapTugas: [],
   komisariswilayahOptions: [],
   wilayahpanjaitanOptions: [],
 }
@@ -66,6 +82,18 @@ const mutations = {
   [SET_IURAN](state, data) {
     state.dataIuran = data
   },
+  [SET_REKAP_MENIKAH](state, data) {
+    state.dataRekapMenikah = data
+  },
+  [SET_REKAP_MENINGGAL](state, data) {
+    state.dataRekapMeninggal = data
+  },
+  [SET_REKAP_PENANGGUNGJAWAB](state, data) {
+    state.dataRekapPenanggungJawab = data
+  },
+  [SET_REKAP_TUGAS](state, data) {
+    state.dataRekapTugas = data
+  },
   [SET_KOMISARISWILAYAH](state, data) {
     state.komisariswilayahOptions = data
   },
@@ -90,7 +118,31 @@ const getters = {
   iuranAll(state) {
     return state.dataIuran;
   },
+  rekapmenikahAll(state) {
+    return state.dataRekapMenikah;
+  },
+  rekapmeninggalAll(state) {
+    return state.dataRekapMeninggal;
+  },
+  rekappenanggungjawabAll(state) {
+    return state.dataRekapPenanggungJawab;
+  },
+  rekaptugasAll(state) {
+    return state.dataRekapTugas;
+  },
 }
+
+const convertDate = (data) => {
+  if (data == null) {
+    return this.$moment().format("YYYY-MM-DD");
+  } else {
+    let date = new Date(data),
+    mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+    day = ("0" + date.getDate()).slice(-2);
+    const valueConvert = [date.getFullYear(), mnth, day].join("-");
+    return valueConvert
+  }
+} 
 
 const actions = {
   [GET_DASHBOARD](context, data) {
@@ -211,6 +263,112 @@ const actions = {
   [POST_IURAN](context, bodyData) {
     return new Promise((resolve, reject) => {
       ApiService.post(`user/iuran`, token, bodyData)
+      .then((response) => {
+        resolve(response);
+      })
+      .catch((error) => {
+        reject(error);
+      })
+    });
+  },
+  [GET_REKAP_MENIKAH](context, data) {
+    return new Promise((resolve, reject) => {
+      context.commit('SET_LOADINGTABLE', true)
+      // if(data.tanggal === null) data.tanggal = []
+      ApiService.get(`user/data-menikah?page=${data.page}&limit=${data.limit}${data.keyword ? `&keyword=${data.keyword}` : ''}${data.sorting !== '' ? `&sort=${data.sorting}` : ''}${data.tanggal.length ? `&startdate=${convertDate(data.tanggal[0])}&enddate=${convertDate(data.tanggal[1])}` : ''}`, token)
+      .then((response) => {
+        context.commit('SET_LOADINGTABLE', false)
+        context.commit('SET_REKAP_MENIKAH', response.data.result)
+        resolve(response);
+      })
+      .catch((error) => {
+        context.commit('SET_LOADINGTABLE', false)
+        reject(error);
+      })
+    });
+  },
+  [POST_REKAP_MENIKAH](context, bodyData) {
+    return new Promise((resolve, reject) => {
+      ApiService.post(`user/data-menikah`, token, bodyData)
+      .then((response) => {
+        resolve(response);
+      })
+      .catch((error) => {
+        reject(error);
+      })
+    });
+  },
+  [GET_REKAP_MENINGGAL](context, data) {
+    return new Promise((resolve, reject) => {
+      context.commit('SET_LOADINGTABLE', true)
+      // if(data.tanggal === null) data.tanggal = []
+      ApiService.get(`user/data-meninggal?page=${data.page}&limit=${data.limit}${data.keyword ? `&keyword=${data.keyword}` : ''}${data.sorting !== '' ? `&sort=${data.sorting}` : ''}${data.tanggal.length ? `&startdate=${convertDate(data.tanggal[0])}&enddate=${convertDate(data.tanggal[1])}` : ''}`, token)
+      .then((response) => {
+        context.commit('SET_LOADINGTABLE', false)
+        context.commit('SET_REKAP_MENINGGAL', response.data.result)
+        resolve(response);
+      })
+      .catch((error) => {
+        context.commit('SET_LOADINGTABLE', false)
+        reject(error);
+      })
+    });
+  },
+  [POST_REKAP_MENINGGAL](context, bodyData) {
+    return new Promise((resolve, reject) => {
+      ApiService.post(`user/data-meninggal`, token, bodyData)
+      .then((response) => {
+        resolve(response);
+      })
+      .catch((error) => {
+        reject(error);
+      })
+    });
+  },
+  [GET_REKAP_PENANGGUNGJAWAB](context, data) {
+    return new Promise((resolve, reject) => {
+      context.commit('SET_LOADINGTABLE', true)
+      ApiService.get(`user/data-penanggungjawab?kategori=${data.kategori}&tahun=${data.tahun}${data.keyword ? `&keyword=${data.keyword}` : ''}`, token)
+      .then((response) => {
+        context.commit('SET_LOADINGTABLE', false)
+        context.commit('SET_REKAP_PENANGGUNGJAWAB', response.data.result)
+        resolve(response);
+      })
+      .catch((error) => {
+        context.commit('SET_LOADINGTABLE', false)
+        reject(error);
+      })
+    });
+  },
+  [POST_REKAP_PENANGGUNGJAWAB](context, bodyData) {
+    return new Promise((resolve, reject) => {
+      ApiService.post(`user/data-penanggungjawab`, token, bodyData)
+      .then((response) => {
+        resolve(response);
+      })
+      .catch((error) => {
+        reject(error);
+      })
+    });
+  },
+  [GET_REKAP_TUGAS](context, data) {
+    return new Promise((resolve, reject) => {
+      context.commit('SET_LOADINGTABLE', true)
+      ApiService.get(`user/data-tugas?tahun=${data.tahun}&bulan=${data.bulan}${data.keyword ? `&keyword=${data.keyword}` : ''}`, token)
+      .then((response) => {
+        context.commit('SET_LOADINGTABLE', false)
+        context.commit('SET_REKAP_TUGAS', response.data.result)
+        resolve(response);
+      })
+      .catch((error) => {
+        context.commit('SET_LOADINGTABLE', false)
+        reject(error);
+      })
+    });
+  },
+  [POST_REKAP_TUGAS](context, bodyData) {
+    return new Promise((resolve, reject) => {
+      ApiService.post(`user/data-tugas`, token, bodyData)
       .then((response) => {
         resolve(response);
       })

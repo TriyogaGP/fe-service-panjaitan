@@ -141,6 +141,7 @@ export default {
 			{ title: 'Super Administrator', value: 1 },
 			{ title: 'Administrator Pusat', value: 2 },
 			{ title: 'Administrator Wilayah', value: 3 },
+			{ title: 'Administrator Bidang', value: 4 },
 		],
 
     //notifikasi
@@ -158,7 +159,8 @@ export default {
 			wilayahpanjaitanOptions: store => store.setting.wilayahpanjaitanOptions,
     }),
 		wilayahPanjaitanText(){
-			return this.DataStepOne.wilayah === null ? '00' : this.wilayahpanjaitanOptions.filter(str => str.kode === this.DataStepOne.wilayah)[0].label
+			let data = this.wilayahpanjaitanOptions.filter(str => str.kode === this.DataStepOne.wilayah)
+			return this.DataStepOne.wilayah === '00' || this.DataStepOne.wilayah === null ? '00' : data.length ? data[0].label : null
 		},
   },
 	watch: {

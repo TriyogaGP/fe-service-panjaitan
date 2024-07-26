@@ -460,13 +460,14 @@ export default {
       let bodyData = {
         jenis,
         idTemporaryData: this.detailData.idTemporaryData,
+        dataTemporary: this.detailData.dataTemporary,
         statusExecute: status,
       }
       this.$store.dispatch('setting/postNotifikasi', bodyData)
       .then((res) => {
         this.DialogNotifikasi = false
         this.muatulang()
-        this.getNotifikasi({kategori: this.kodeKategori, page: this.page, limit: this.limit})
+        // this.getNotifikasi({kategori: this.kodeKategori, page: this.page, limit: this.limit})
 			})
 			.catch((err) => {
         this.notifikasi("error", err.response.data.message, "1")

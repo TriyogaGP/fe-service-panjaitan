@@ -97,6 +97,26 @@ const routes = [
         props: true,
         component: () => import('@/views/page-content/Iuran/V_DetailIuran.vue')
       },
+      {
+        path: '/rekap-menikah',
+        name: 'RekapMenikah',
+        component: () => import('@/views/page-content/Rekapitulasi/V_RekapMenikah.vue')
+      },
+      {
+        path: '/rekap-meninggal',
+        name: 'RekapMeninggal',
+        component: () => import('@/views/page-content/Rekapitulasi/V_RekapMeninggal.vue')
+      },
+      {
+        path: '/rekap-penanggung-jawab',
+        name: 'RekapPenanggungJawab',
+        component: () => import('@/views/page-content/Rekapitulasi/V_RekapPenanggungJawab.vue')
+      },
+      {
+        path: '/rekap-tugas',
+        name: 'RekapTugas',
+        component: () => import('@/views/page-content/Rekapitulasi/V_RekapTugas.vue')
+      },
       
       {
         path: '/:pathMatch(.*)*',

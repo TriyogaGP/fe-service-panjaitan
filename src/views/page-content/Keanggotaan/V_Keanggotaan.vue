@@ -17,7 +17,7 @@
             <li v-if="roleID === '1' || roleID === '2'">- Tombol Export Data Excel By Filter digunakan untuk export data berupa excel by wilyah tetapi harus memilih filter category ke Wilayah lalu pilih Filter By Wilayah Panjaitan.</li>
             <li>- Jika Admin Wilayah yang meminta untuk perubahan data akan menunggu verifikasi dari Admin Pusat.</li>
             <li>- Tombol Hapus akan menghapus data dari database secara permanen, tetapi jika Admin Wilayah yang meminta untuk menghapus data akan menunggu verifikasi dari Admin Pusat ditandai dengan flag berwarna merah serta status tanda silang.</li>
-            <li>- Mengurutkan data berdasarkan NOMOR INDUK, NAMA, WILYAH, OMPU, STATUS.</li>
+            <li>- Mengurutkan data berdasarkan NO. ANGGOTA, NAMA, WILYAH, OMPU, STATUS.</li>
           </ul>
         </template>
       </v-alert>
@@ -172,16 +172,16 @@
                     <v-col
                       cols="12"
                       md="12"
-                      class="pa-3 d-flex align-center font-weight-bold"
+                      class="pa-3 d-flex align-center font-weight-bold text-h6"
                     >
-                      <h3>>> Data Pribadi</h3>
+                      >> Data Pribadi
                     </v-col>
                   </v-row>
                   <v-row no-gutters>
                     <v-col
                       cols="12"
                       md="4"
-                      class="pt-2 d-flex align-center font-weight-bold"
+                      class="pt-2 d-flex align-center font-weight-bold text-caption"
                     >
                     Nama Suami
                     </v-col>
@@ -203,7 +203,7 @@
                     <v-col
                       cols="12"
                       md="4"
-                      class="pt-2 d-flex align-center font-weight-bold"
+                      class="pt-2 d-flex align-center font-weight-bold text-caption"
                     >
                     Tempat Tanggal Lahir Suami
                     </v-col>
@@ -219,7 +219,7 @@
                     <v-col
                       cols="12"
                       md="4"
-                      class="pt-2 d-flex align-center font-weight-bold"
+                      class="pt-2 d-flex align-center font-weight-bold text-caption"
                     >
                       Alamat
                     </v-col>
@@ -235,7 +235,7 @@
                     <v-col
                       cols="12"
                       md="4"
-                      class="pt-2 d-flex align-center font-weight-bold"
+                      class="pt-2 d-flex align-center font-weight-bold text-caption"
                     >
                       Telepon Suami
                     </v-col>
@@ -251,7 +251,7 @@
                     <v-col
                       cols="12"
                       md="4"
-                      class="pt-2 d-flex align-center font-weight-bold"
+                      class="pt-2 d-flex align-center font-weight-bold text-caption"
                     >
                     Pekerjaan Suami
                     </v-col>
@@ -267,7 +267,7 @@
                     <v-col
                       cols="12"
                       md="4"
-                      class="pt-2 d-flex align-center font-weight-bold"
+                      class="pt-2 d-flex align-center font-weight-bold text-caption"
                     >
                     Tanggal Wafat Suami
                     </v-col>
@@ -289,16 +289,16 @@
                     <v-col
                       cols="12"
                       md="12"
-                      class="pa-3 d-flex align-center font-weight-bold"
+                      class="pa-3 d-flex align-center font-weight-bold text-h6"
                     >
-                      <h3>>> Data Istri</h3>
+                      >> Data Istri
                     </v-col>
                   </v-row>
                   <v-row no-gutters>
                     <v-col
                       cols="12"
                       md="4"
-                      class="pt-2 d-flex align-center font-weight-bold"
+                      class="pt-2 d-flex align-center font-weight-bold text-caption"
                     >
                     Nama Istri
                     </v-col>
@@ -320,7 +320,7 @@
                     <v-col
                       cols="12"
                       md="4"
-                      class="pt-2 d-flex align-center font-weight-bold"
+                      class="pt-2 d-flex align-center font-weight-bold text-caption"
                     >
                       Tempat, Tanggal Lahir Istri
                     </v-col>
@@ -336,7 +336,7 @@
                     <v-col
                       cols="12"
                       md="4"
-                      class="pt-2 d-flex align-center font-weight-bold"
+                      class="pt-2 d-flex align-center font-weight-bold text-caption"
                     >
                       Telepon Istri
                     </v-col>
@@ -352,7 +352,7 @@
                     <v-col
                       cols="12"
                       md="4"
-                      class="pt-2 d-flex align-center font-weight-bold"
+                      class="pt-2 d-flex align-center font-weight-bold text-caption"
                     >
                     Pekerjaan Istri
                     </v-col>
@@ -368,7 +368,7 @@
                     <v-col
                       cols="12"
                       md="4"
-                      class="pt-2 d-flex align-center font-weight-bold"
+                      class="pt-2 d-flex align-center font-weight-bold text-caption"
                     >
                     Tanggal Wafat Istri
                     </v-col>
@@ -390,16 +390,16 @@
                     <v-col
                       cols="12"
                       md="12"
-                      class="pa-3 d-flex align-center font-weight-bold"
+                      class="pa-3 d-flex align-center font-weight-bold text-h6"
                     >
-                      <h3>>> Data Tanggungan</h3>
+                      >> Data Tanggungan
                     </v-col>
                   </v-row>
                   <v-row no-gutters>
                     <v-col
                       cols="12"
                       md="12"
-                      class="d-flex align-center font-weight-bold"
+                      class="d-flex align-center font-weight-bold text-caption"
                     >
                       <table border="1" cellspacing="0" cellpadding="0" width="100%" style="background-color: #272727; border: #FFF;">
                         <tr class="table-header">
@@ -905,7 +905,7 @@
             <v-col
               cols="12"
               md="4"
-              class="pt-2 d-flex align-center font-weight-bold"
+              class="pt-2 d-flex align-center font-weight-bold text-caption"
             >
               Tanggal Wafat {{ untuk }}
             </v-col>
@@ -1168,10 +1168,10 @@ export default {
 			deep: true,
 			handler(value, oldValue) {
         if(oldValue === null || oldValue !== value){
-          if(this.kategori === 'all') {
+          // if(this.kategori === 'all') {
             this.filterByOptions = []
             this.filterforby = null
-          }
+          // }
         }
         if(value === 'Status'){
           this.filterByOptions.push(
@@ -1230,11 +1230,13 @@ export default {
         kondisi: kondisi,
         reason: this.reason,
       }
-      if(this.roleID === '1' || this.roleID === '2') this.kirimData(this.bodyData);
-      if(this.roleID === '3') this.dialogQuestion = true;
+      if(localStorage.getItem('roleID') === '1' || localStorage.getItem('roleID') === '2') return this.kirimData(this.bodyData);
+      if(localStorage.getItem('roleID') === '3') return this.dialogQuestion = true;
     },
     kirimData(bodyData){
-      this.$store.dispatch('user/postKeanggotaan', { ...bodyData, reason: this.reason })
+      bodyData.reason = this.reason
+      // return console.log(bodyData)
+      this.$store.dispatch('user/postKeanggotaan', bodyData)
       .then((res) => {
         this.dialogQuestion = false;
         this.bodyData = ''

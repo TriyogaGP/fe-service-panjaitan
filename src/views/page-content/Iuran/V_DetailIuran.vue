@@ -18,7 +18,7 @@
         <!-- header -->
         <template #headers="{  }">
           <tr>
-            <td rowspan="2" class="tableHeader">Nomor Induk</td>
+            <td rowspan="2" class="tableHeader">No. Anggota</td>
             <td rowspan="2" class="tableHeader">Nama Lengkap</td>
             <td :colspan="(Number(jumlahBulanTemp) + 1)" class="tableHeader" style="text-align: center;">{{ `Bulan Per Tahun ${tahun}` }}</td>
             <!-- <td rowspan="2" class="tableHeader">TOTAL</td> -->
@@ -481,7 +481,7 @@ export default {
     totalKeseluruhanIuranPerTahun: 0,
     DialogIuran: false,
     headers: [
-      { title: "NOMOR INDUK", key: "nik", sortable: false, width: "20%" },
+      { title: "NO. ANGGOTA", key: "nik", sortable: false, width: "20%" },
       { title: "NAMA LENGKAP", key: "namaLengkap", sortable: false, width: "20%" },
       { title: "BULAN1", key: "bulan1", sortable: false, width: "60%" },
       { title: "BULAN2", key: "bulan2", sortable: false, width: "60%" },
@@ -507,7 +507,7 @@ export default {
   }),
   setup() {
     useMeta({
-      title: "Data Administrator",
+      title: "Detail Iuran Keanggotaan",
       htmlAttrs: {
         lang: "id",
         amp: true,
