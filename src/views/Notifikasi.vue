@@ -461,6 +461,7 @@ export default {
         jenis,
         idTemporaryData: this.detailData.idTemporaryData,
         dataTemporary: this.detailData.dataTemporary,
+        jenisNotif: this.detailData.jenis,
         statusExecute: status,
       }
       this.$store.dispatch('setting/postNotifikasi', bodyData)

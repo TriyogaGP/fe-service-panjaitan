@@ -17,6 +17,7 @@ export const GET_REKAP_MENIKAH = "getRekapMenikah";
 export const POST_REKAP_MENIKAH = "postRekapMenikah";
 export const GET_REKAP_MENINGGAL = "getRekapMeninggal";
 export const POST_REKAP_MENINGGAL = "postRekapMeninggal";
+export const GET_MANAGE_PENANGGUNGJAWAB = "getManagePenanggungJawab";
 export const GET_REKAP_PENANGGUNGJAWAB = "getRekapPenanggungJawab";
 export const POST_REKAP_PENANGGUNGJAWAB = "postRekapPenanggungJawab";
 export const GET_REKAP_TUGAS = "getRekapTugas";
@@ -35,6 +36,7 @@ export const SET_KEANGGOTAANBY = "SET_KEANGGOTAANBY";
 export const SET_IURAN = "SET_IURAN";
 export const SET_REKAP_MENIKAH = "SET_REKAP_MENIKAH";
 export const SET_REKAP_MENINGGAL = "SET_REKAP_MENINGGAL";
+export const SET_MANAGE_PENANGGUNGJAWAB = "SET_MANAGE_PENANGGUNGJAWAB";
 export const SET_REKAP_PENANGGUNGJAWAB = "SET_REKAP_PENANGGUNGJAWAB";
 export const SET_REKAP_TUGAS = "SET_REKAP_TUGAS";
 export const SET_KOMISARISWILAYAH = "SET_KOMISARISWILAYAH";
@@ -51,6 +53,7 @@ const state = {
   dataIuran: [],
   dataRekapMenikah: [],
   dataRekapMeninggal: [],
+  dataManagePenanggungJawab: [],
   dataRekapPenanggungJawab: [],
   dataRekapTugas: [],
   komisariswilayahOptions: [],
@@ -91,6 +94,9 @@ const mutations = {
   [SET_REKAP_PENANGGUNGJAWAB](state, data) {
     state.dataRekapPenanggungJawab = data
   },
+  [SET_MANAGE_PENANGGUNGJAWAB](state, data) {
+    state.dataManagePenanggungJawab = data
+  },
   [SET_REKAP_TUGAS](state, data) {
     state.dataRekapTugas = data
   },
@@ -126,6 +132,9 @@ const getters = {
   },
   rekappenanggungjawabAll(state) {
     return state.dataRekapPenanggungJawab;
+  },
+  managepenanggungjawabAll(state) {
+    return state.dataManagePenanggungJawab;
   },
   rekaptugasAll(state) {
     return state.dataRekapTugas;
@@ -332,6 +341,21 @@ const actions = {
       .then((response) => {
         context.commit('SET_LOADINGTABLE', false)
         context.commit('SET_REKAP_PENANGGUNGJAWAB', response.data.result)
+        resolve(response);
+      })
+      .catch((error) => {
+        context.commit('SET_LOADINGTABLE', false)
+        reject(error);
+      })
+    });
+  },
+  [GET_MANAGE_PENANGGUNGJAWAB](context, data) {
+    return new Promise((resolve, reject) => {
+      context.commit('SET_LOADINGTABLE', true)
+      ApiService.get(`user/manage-penanggungjawab?page=${data.page}&limit=${data.limit}${data.keyword ? `&keyword=${data.keyword}` : ''}`, token)
+      .then((response) => {
+        context.commit('SET_LOADINGTABLE', false)
+        context.commit('SET_MANAGE_PENANGGUNGJAWAB', response.data.result)
         resolve(response);
       })
       .catch((error) => {

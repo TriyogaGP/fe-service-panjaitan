@@ -635,7 +635,7 @@
                 nama-button="Hapus Record Selected"
                 size-button="x-small"
                 :disabled-button="!DataKeanggotaan.length"
-                @proses="hapusAllRecord()"
+                @proses="postHapusRecord()"
               />
             </v-col>
           </v-row>
@@ -872,7 +872,7 @@
               <Button 
                 color-button="black"
                 nama-button="Request"
-                @proses="kirimData(bodyData)"
+                @proses="flag === 'updateordelete' ? kirimData(bodyData) : hapusAllRecord()"
               />
             </v-col>
           </v-row>
@@ -1028,6 +1028,7 @@ export default {
     filterByOptions: [],
     sortBy: [],
 		kumpulSort: '',
+		flag: '',
 		headers: [
       { title: "#", key: "data-table-select", sortable: false, width: "3%" },
       { title: "No", key: "number", sortable: false, width: "3%" },
@@ -1231,7 +1232,10 @@ export default {
         reason: this.reason,
       }
       if(localStorage.getItem('roleID') === '1' || localStorage.getItem('roleID') === '2') return this.kirimData(this.bodyData);
-      if(localStorage.getItem('roleID') === '3') return this.dialogQuestion = true;
+      if(localStorage.getItem('roleID') === '3') {
+        this.flag = 'updateordelete';
+        this.dialogQuestion = true;
+      }
     },
     kirimData(bodyData){
       bodyData.reason = this.reason
@@ -1241,6 +1245,7 @@ export default {
         this.dialogQuestion = false;
         this.bodyData = ''
         this.reason = ''
+        this.flag = ''
         this.getKeanggotaan({page: 1, limit: this.limit, keyword: this.searchData, filter: `${this.filterby}-${this.filterforby}`, sorting: this.kumpulSort})
         this.notifikasi("success", res.data.message, "1")
 			})
@@ -1286,15 +1291,28 @@ export default {
         }
       })
     },
-    hapusAllRecord() {
+    postHapusRecord() {
       if(!this.selectRecord.length) return this.notifikasi("warning", "Belum ada record yang di pilih!", "1")
+      
+      if(localStorage.getItem('roleID') === '1' || localStorage.getItem('roleID') === '2') return this.hapusAllRecord();
+      if(localStorage.getItem('roleID') === '3') {
+        this.flag = 'deleteselected';
+        this.dialogQuestion = true;
+      }
+    },
+    hapusAllRecord() {
+      // if(!this.selectRecord.length) return this.notifikasi("warning", "Belum ada record yang di pilih!", "1")
       let bodyData = {
         jenis: 'DELETESELECTEDHARD',
         idBiodata: this.selectRecord,
+        reason: this.reason,
       }
       this.$store.dispatch('user/postKeanggotaan', bodyData)
       .then((res) => {
+        this.dialogQuestion = false;
         this.selectRecord = []
+        this.reason = ''
+        this.flag = ''
         this.getKeanggotaan({page: this.page, limit: this.limit, keyword: this.searchData, filter: `${this.filterby}-${this.filterforby}`, sorting: this.kumpulSort});
         this.notifikasi("success", res.data.message, "1")
 			})
