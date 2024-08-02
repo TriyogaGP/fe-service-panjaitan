@@ -28,11 +28,6 @@
         />
       </div>
       <v-row no-gutters>
-        <!-- <v-col cols="12" lg="3" class="d-flex flex-row justify-center" style="border-right: 2px solid #000;">
-          <div class="wadah-kategori d-flex flex-column justify-start">
-            
-          </div>
-        </v-col> -->
         <v-col cols="12" lg="12">
           <div v-if="dataNotifikasi.length" class="wadah-notif">
             <div class="wadah-notif-scroll">
@@ -43,7 +38,6 @@
                       cols="12"
                       md="6"
                     >
-                      <!-- <span class="box fourcorners" style="background-color: rgba(8, 42, 128, 0.822);">{{notif.type}}</span> -->
                       <span class="box fourcorners" :style="notif.jenis === 'Update' ? `background-color: rgba(4, 76, 4, 0.822);` : `background-color: rgba(8, 42, 128, 0.822);`">{{notif.jenis === 'Update' ? 'Perubahan Data' : 'Penghapusan Data'}}</span>
                     </v-col>
                     <v-col
@@ -56,19 +50,8 @@
                     </v-col>
                   </v-row>
                   <p class="judulNotif">{{notif.pesan.title}}</p>
-                  <!-- <p class="pesanNotif">{{ (notif.pesan || '').length > 60 ? `${notif.pesan.substring(0, 60)}...` : notif.pesan }}</p> -->
-                  <!-- <p class="pesanNotif">{{ notif.pesan }}</p> -->
-                  <span class="pesanNotif" v-html="notif.pesan.message" /><br>
+                  <span class="pesanNotif" v-html="notif.pesan.message" />
                   <span class="pesanNotif">Alasan : {{ notif.pesan.reason }}</span>
-                  <!-- <span v-if="notif.pesan.payload != 'null'" class="pesanNotif">{{ `payload: ${notif.pesan.payload}` }}</span> -->
-                  <!-- <JsonViewer
-                    v-if="notif.pesan.payload != 'null'"
-                    :value="JSON.parse(notif.pesan.payload)"
-                    :expand-depth=5
-                    copyable
-                    boxed
-                    sort>
-                  </JsonViewer> -->
                   <p class="tanggalNotif" v-html="notif.dikirim" />
                   <p class="tanggalNotif">{{notif.createdAt}}</p>
                 </div>
@@ -78,17 +61,6 @@
               </v-infinite-scroll>
             </div>
           </div>
-          <!-- <div v-if="dataNotifikasi.length" class="wadah-kategori">
-            <Button
-              class="kotak-type"
-              nama-button="Tampilkan lebih banyak lagi"
-              :disabled-button="!pageSummary.hasNext"
-              @proses="() => {
-                getNotifikasi({kategori: kodeKategori, page: pageSummary.page + 1, limit: limit})
-                page = pageSummary.page + 1
-              }"
-            />
-          </div> -->
           <div v-else class="wadah-notif2">
             <span>Tidak ada notifikasi</span>
           </div>
@@ -203,8 +175,6 @@
                 boxed
                 sort>
               </JsonViewer>
-              <!-- <span v-if="detailData.pesan.payload != 'null'" class="pesanNotif">payload: </span>
-              <span v-if="detailData.pesan.payload != 'null'" class="pesanNotif" v-html="detailData.pesan.payload" /> -->
             </v-col>
           </v-row>
           <v-row no-gutters>
@@ -468,7 +438,6 @@ export default {
       .then((res) => {
         this.DialogNotifikasi = false
         this.muatulang()
-        // this.getNotifikasi({kategori: this.kodeKategori, page: this.page, limit: this.limit})
 			})
 			.catch((err) => {
         this.notifikasi("error", err.response.data.message, "1")
@@ -565,9 +534,6 @@ export default {
   background-color: white;
   font-size: 8pt;
   align-items: center;
-  /* display: flex; */
-  /* justify-content: center; */
-  /* line-height: normal; */
   position: relative;
   text-align: center;
 }

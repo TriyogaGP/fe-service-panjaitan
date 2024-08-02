@@ -702,7 +702,6 @@
         <v-card-text class="pt-4">
           <v-card class="pa-2 d-flex justify-center align-center" elevation="1" outlined>
             <div class="kotak" @click="$refs.inputExcel.click()">
-              <!-- @click="pilihFile('excel')" -->
               <v-icon size="large" icon="mdi mdi-file-excel" color="black" />
               <div style="font-weight: bold;">Upload File</div>
             </div>
@@ -752,7 +751,6 @@
             :src="image.src"
             :stencil-component="RectangleStencil"
           />
-            <!-- :stencil-component="$options.components.Stencil" -->
         </v-card-text>
         <v-divider />
         <v-card-actions>
@@ -1185,7 +1183,7 @@ export default {
           })
         }else if(value === 'Komisaris'){
           this.komisariswilayahOptions.map(val => {
-            this.filterByOptions.push({ text: val.namaKomisaris, value: val.namaKomisaris })
+            this.filterByOptions.push({ text: val.namaKomisaris, value: val.kodeKomisarisWilayah })
           })
         }
 			}
@@ -1239,7 +1237,6 @@ export default {
     },
     kirimData(bodyData){
       bodyData.reason = this.reason
-      // return console.log(bodyData)
       this.$store.dispatch('user/postKeanggotaan', bodyData)
       .then((res) => {
         this.dialogQuestion = false;
@@ -1301,7 +1298,6 @@ export default {
       }
     },
     hapusAllRecord() {
-      // if(!this.selectRecord.length) return this.notifikasi("warning", "Belum ada record yang di pilih!", "1")
       let bodyData = {
         jenis: 'DELETESELECTEDHARD',
         idBiodata: this.selectRecord,
@@ -1331,7 +1327,6 @@ export default {
 					files: files,
 				};
 				try {
-          // this.isLoadingImport = true
           this.isProcessing = true
           this.query = true
           this.show = true
@@ -1346,7 +1341,6 @@ export default {
             this.queryAndIndeterminate(1)
           })
         } catch (err) {
-          // this.isLoadingImport = false
           this.isProcessing = false
           this.query = false
           this.show = false
@@ -1356,7 +1350,6 @@ export default {
           this.notifikasi("error", "Gagal Import Data Keanggotaan", "1")
 				}
 			}else{
-        // this.isLoadingImport = false
         this.isProcessing = false
         this.query = false
         this.show = false
@@ -1402,7 +1395,8 @@ export default {
           const totalPages = Math.ceil(this.pageSummary.total / limit)
           let getdata = this.wilayahpanjaitanOptions.filter(val => val.kode === localStorage.getItem('wilayah'))
           wilayah = getdata.length ? getdata[0].kode : '-'
-          nameFile = `Data Keanggotaan Wilayah ${this.namawilayah}`;
+          namawilayah = getdata.length ? getdata[0].label : ''
+          nameFile = `Data Keanggotaan Wilayah ${namawilayah}`;
           url = `?kategori=by&wilayah=${wilayah}&totalPages=${totalPages}&limit=${limit}`
         }
       }else if(kategori === 'by'){

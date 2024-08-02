@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- <v-card class="pa-1 rounded" style="border: 1px solid #000; border-radius: 5px;"> -->
       <v-card class="pa-1 rounded" variant="outlined" elevation="4">
         <v-row class="ma-1 tampilView">
           <v-col cols="8" class="kotakleft">
@@ -272,7 +271,6 @@
             :src="image.src"
             :stencil-component="$options.components.Stencil"
           />
-            <!-- :stencil-component="CircleStencil" -->
         </v-card-text>
         <v-divider />
         <v-card-actions>
@@ -499,7 +497,6 @@ export default {
     this.passTypeBaru = false
     this.passTypeConfBaru = false
 		this.getWilayahPanjaitan()
-    // this.getProfile(localStorage.getItem("idLogin"))
   },
   methods: {
     ...mapActions({
@@ -520,9 +517,6 @@ export default {
       .then((res) => {
         this.kondisiForm = true
         localStorage.setItem('nama', this.inputAdministrator.nama);
-        // localStorage.setItem('nama_role', this.levelOptions.filter(str => str.value === this.inputAdministrator.level)[0].title);
-        // localStorage.setItem('roleID', this.inputAdministrator.level);
-        // localStorage.setItem('wilayah', this.inputAdministrator.level === 3 ? this.inputAdministrator.wilayah : '00');
         this.clearForm()
         this.getProfile(localStorage.getItem('idLogin'))
         this.notifikasi("success", res.data.message, "2")
@@ -694,7 +688,6 @@ export default {
   color: #FFF;
 }
 .tableClass {
-  /* width: 50%; */
   width: 100%;
   border-collapse: collapse;
 }

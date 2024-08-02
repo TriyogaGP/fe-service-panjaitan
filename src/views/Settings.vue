@@ -32,8 +32,6 @@
 			<V_KomisarisWilayah v-if="settingPanel == 5" />
 			<V_WilayahPanjaitan v-if="settingPanel == 6" />
 			<V_Wilayah2023 v-if="settingPanel == 7" />
-			<!-- <V_Wilayah v-if="settingPanel == 6" /> -->
-			<!-- <V_MapWilayah v-if="settingPanel == 8" /> -->
 		</v-card>
   </div>
 </template>
@@ -63,7 +61,6 @@ export default {
       { title: 'Komisaris Wilayah', icon: 'mdi mdi-account-group', link: 5 },
       { title: 'Wilayah Panjaitan', icon: 'mdi mdi-map', link: 6 },
       { title: 'Wilayah', icon: 'mdi mdi-map', link: 7 },
-      // { title: 'Map Wilayah', icon: 'mdi mdi-map', link: 8 },
     ]
 	}),
 	mounted() {

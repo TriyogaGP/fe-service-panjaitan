@@ -2,7 +2,11 @@
   <div>
     <v-card class="mb-2 pa-1 rounded" variant="outlined" elevation="4">
       <v-row no-gutters>
-        <v-col cols="12" md="8" />
+        <v-col cols="12" md="8" class="d-flex align-center pl-2">
+          <span style="font-size: 12pt; font-weight: bold;">
+            {{ `Total Iuran Wilayah ${optionKomisaris.length ? optionKomisaris[0].namaWilayah : ''} : ${total === 0 ? 'Rp. 0' : `Rp. ${currencyDotFormatNumber(total)}`}` }}
+          </span>
+        </v-col>
         <v-col cols="12" md="4" class="pr-2">
           <TextField
             v-model="searchData"
@@ -108,6 +112,14 @@ export default {
       let namakomisaris = this.komisariswilayahOptions.filter(str => str.kodeWilayah === this.$route.params.kode)
       return namakomisaris
     },
+    total(){
+      let dataKomisarisWilayah = this.komisariswilayahOptions.filter(str => str.kodeWilayah === this.$route.params.kode)
+      const total = dataKomisarisWilayah.reduce((acc, curr) => {
+				return { totalIuran: acc.totalIuran + curr.totalIuran };
+			}, { totalIuran: 0 });
+      
+      return total.totalIuran
+    }
   },
   watch: {
   },

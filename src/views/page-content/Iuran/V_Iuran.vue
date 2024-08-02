@@ -6,6 +6,9 @@
           <span v-if="roleID === '1' || roleID === '2'" style="font-size: 12pt; font-weight: bold;">
             {{ `Total Iuran 12 Wilayah : ${WilayahPanjaitanTotalIuran === 0 ? 'Rp. 0' : `Rp. ${currencyDotFormatNumber(WilayahPanjaitanTotalIuran)}`}` }}
           </span>
+          <span v-else style="font-size: 12pt; font-weight: bold;">
+            {{ `Total Iuran Wilayah ${optionKomisaris.length ? optionKomisaris[0].namaWilayah : ''} : ${total === 0 ? 'Rp. 0' : `Rp. ${currencyDotFormatNumber(total)}`}` }}
+          </span>
         </v-col>
         <v-col cols="12" md="4" class="pr-2">
           <TextField
@@ -153,6 +156,15 @@ export default {
       }
       return this.komisariswilayahOptions
     },
+    total(){
+      let wilayah = localStorage.getItem('wilayah')
+      let namakomisaris = this.komisariswilayahOptions.filter(str => str.kodeWilayah === wilayah)
+      const total = namakomisaris.reduce((acc, curr) => {
+				return { totalIuran: acc.totalIuran + curr.totalIuran };
+			}, { totalIuran: 0 });
+      
+      return total.totalIuran
+    }
   },
   watch: {
     wilayahpanjaitanOptions: {

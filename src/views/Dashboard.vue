@@ -2,7 +2,7 @@
   <div>
     <h1 class="subheading grey--text text-decoration-underline">Dashboard</h1>
     <v-card class="mb-2 pa-1 rounded" variant="outlined" elevation="4">
-      <h2 v-if="roleID === '1' || roleID === '2'" class="subheading grey--text text-decoration-underline">Total KK dari 12 Wilayah</h2>
+      <h2 v-if="roleID === '1' || roleID === '2'" class="subheading grey--text text-decoration-underline">{{ `Total KK dari 12 Wilayah (${total} Orang)` }}</h2>
       <v-container fluid v-if="roleID === '1' || roleID === '2'">
         <v-row>
           <v-col
@@ -24,7 +24,7 @@
           </v-col>
         </v-row>
       </v-container>
-      <h2 v-if="roleID === '3'" class="subheading grey--text text-decoration-underline">{{ `Data Dari Wilayah ${namawilayah} (${dataDashboard.length ? `${dataDashboard[0].jml}` : '0'} Orang)` }}</h2>
+      <h2 v-if="roleID === '3'" class="subheading grey--text text-decoration-underline">{{ `Data Dari Wilayah ${dataDashboard.length ? `${dataDashboard[0].label}` : ''} (${dataDashboard.length ? `${dataDashboard[0].jml}` : '0'} Orang)` }}</h2>
       <v-container fluid v-if="roleID === '3'">
         <v-row>
           <v-col
@@ -86,7 +86,6 @@ export default {
     totalNotif: 0,
     cols: 4,
     roleID: '',
-    namawilayah: '',
     
     //notifikasi
     dialogNotifikasi: false,
@@ -108,8 +107,18 @@ export default {
     ...mapState({
 			dataDashboard: store => store.user.dataDashboard,
 			dataDashboardTwo: store => store.user.dataDashboardTwo,
-			wilayahpanjaitanOptions: store => store.setting.wilayahpanjaitanOptions,
+			// wilayahpanjaitanOptions: store => store.setting.wilayahpanjaitanOptions,
 		}),
+    total(){
+      const total = this.dataDashboard.reduce((acc, curr) => {
+				return { jml: acc.jml + curr.jml };
+			}, { jml: 0 });
+      return total.jml
+    },
+    // namaWilayah(){
+    //   let getWilayah = this.wilayahpanjaitanOptions.filter(val => val.kode === localStorage.getItem('wilayah'))
+    //   return getWilayah.length ? getWilayah[0].label : ''
+    // },
   },
   watch: {
   },
@@ -117,12 +126,8 @@ export default {
     if(!localStorage.getItem('user_token')) return this.$router.push({name: 'LogIn'});
     this.roleID = localStorage.getItem('roleID')
     this.getDashboard()
-    if(this.roleID === '3') {
-      this.getWilayahPanjaitan();
-      this.getDashboardTwo()
-      let getWilayah = this.wilayahpanjaitanOptions.filter(val => val.kode === localStorage.getItem('wilayah'))
-      this.namawilayah = getWilayah.length ? getWilayah[0].label : ''
-    }
+    // this.getWilayahPanjaitan();
+    if(this.roleID === '3') this.getDashboardTwo()
   },  
 	methods: {
     ...mapActions({
