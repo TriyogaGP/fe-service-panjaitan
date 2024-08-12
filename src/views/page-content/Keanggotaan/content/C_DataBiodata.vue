@@ -8,7 +8,7 @@
 					md="4"
 					class="pt-2 d-flex align-center font-weight-bold"
 				>
-					Nama Lengkap *
+					Nama Lengkap & Status Suami *
 				</v-col>
 				<v-col
 					cols="12"
@@ -50,7 +50,7 @@
 					md="4"
 					class="pt-2 d-flex align-center font-weight-bold"
 				>
-					Tempat, Tanggal Lahir Suami{{ `${inputDataBiodata.status_suami === 'Meninggal' ? '' : ' *'}` }}
+					Tempat, Tanggal Lahir Suami
 				</v-col>
 				<v-col
 					cols="12"
@@ -164,7 +164,7 @@
 					md="4"
 					class="pt-2 d-flex align-center font-weight-bold"
 				>
-					Alamat *
+					Alamat
 				</v-col>
 				<v-col
 					cols="12"
@@ -418,18 +418,10 @@ export default {
 				value.tempat_suami = value.status_suami === 'Meninggal' ? '' : value.tempat_suami
 				value.tanggal_lahir_suami = value.status_suami === 'Meninggal' ? '' : value.tanggal_lahir_suami
 				value.telp = value.status_suami === 'Meninggal' ? '' : value.telp
-				if(value.status_suami === 'Hidup'){
-					if(value.nama_lengkap != '' && value.status_suami != null && value.tempat_suami != '' && value.tanggal_lahir_suami != '' && value.alamat != ''){
-						this.kondisiTombol = false
-					}else{
-						this.kondisiTombol = true
-					}
+				if(value.nama_lengkap != '' && value.status_suami != null){
+					this.kondisiTombol = false
 				}else{
-					if(value.nama_lengkap != '' && value.alamat != ''){
-						this.kondisiTombol = false
-					}else{
-						this.kondisiTombol = true
-					}
+					this.kondisiTombol = true
 				}
 				localStorage.setItem('stepOne', JSON.stringify(value))
 			}

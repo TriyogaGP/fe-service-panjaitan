@@ -8,7 +8,7 @@
 					md="4"
 					class="pt-2 d-flex align-center font-weight-bold"
 				>
-					Nama Lengkap Istri *
+					Nama Lengkap Istri & Status Istri *
 				</v-col>
 				<v-col
 					cols="12"
@@ -50,7 +50,7 @@
 					md="4"
 					class="pt-2 d-flex align-center font-weight-bold"
 				>
-					Tempat, Tanggal Lahir Istri{{ `${inputDataIstri.status_istri === 'Meninggal' ? '' : ' *'}` }}
+					Tempat, Tanggal Lahir Istri
 				</v-col>
 				<v-col
 					cols="12"
@@ -347,19 +347,12 @@ export default {
 				value.tempat_istri = value.status_istri === 'Meninggal' ? '' : value.tempat_istri 
 				value.tanggal_lahir_istri = value.status_istri === 'Meninggal' ? '' : value.tanggal_lahir_istri 
 				value.telp_istri = value.status_istri === 'Meninggal' ? '' : value.telp_istri 
-				if(value.status_istri === 'Hidup'){
-					if(value.nama_istri != '' && value.status_istri != null && value.tempat_istri != '' && value.tanggal_lahir_istri != ''){
-						this.kondisiTombol = false
-					}else{
-						this.kondisiTombol = true
-					}
+				if(value.nama_istri != '' && value.status_istri != null){
+					this.kondisiTombol = false
 				}else{
-					if(value.nama_istri != ''){
-						this.kondisiTombol = false
-					}else{
-						this.kondisiTombol = true
-					}
+					this.kondisiTombol = true
 				}
+				console.log(value.status_istri);
 				localStorage.setItem('stepTwo', JSON.stringify(value))
 			}
 		},

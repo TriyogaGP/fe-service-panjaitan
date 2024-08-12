@@ -237,7 +237,7 @@
         </template>
         <template #top>
           <v-row no-gutters class="pa-2">
-            <v-col cols="12" md="3" class="d-flex align-center">
+            <v-col cols="12" md="4" class="d-flex align-center">
               <Button 
                 color-button="light-blue darken-3"
                 icon-prepend-button="mdi mdi-plus-thick"
@@ -245,8 +245,69 @@
                 size-button="x-small"
                 @proses="openDialog(null, 0)"
               />
+              <Button 
+                color-button="#0bd369"
+                icon-prepend-button="mdi mdi-import"
+                nama-button="Import"
+                size-button="x-small"
+                @proses="() => { dialogImport = true }"
+              />
+              <v-menu
+                open-on-click
+                rounded="t-xs b-lg"
+                offset-y
+                transition="slide-y-transition"
+                bottom
+              >
+                <template v-slot:activator="{ props }">
+                  <Button 
+                    v-bind="props"
+                    color-button="#0bd369"
+                    icon-prepend-button="mdi mdi-export"
+                    icon-append-button="mdi mdi-menu-down"
+                    nama-button="Export"
+                    size-button="x-small"
+                  />
+                </template>
+
+                <v-list
+                  :lines="false"
+                  density="comfortable"
+                  nav
+                  dense
+                  class="listData"
+                >
+                  <v-list-item
+                    @click="exportExcel('full', !tanggal.length ? 'full' : 'byfilter')"
+                    color="nav-back"
+                    class="SelectedMenu"
+                    title="Export Data Excel All"
+                  >
+                    <template v-slot:append>
+                      <v-icon size="middle" icon="mdi mdi-file-excel" color="icon-white" />
+                    </template>
+                    <template v-slot:title>
+                      <span class="menufont">Export Data Excel All</span>
+                    </template>
+                  </v-list-item>
+                  <v-list-item
+                    @click="exportExcel('by', null)"
+                    color="nav-back"
+                    class="SelectedMenu"
+                    title="Export Data Excel By Range Tanggal"
+                    :disabled="!tanggal.length"
+                  >
+                    <template v-slot:append>
+                      <v-icon size="middle" icon="mdi mdi-file-excel" color="icon-white" />
+                    </template>
+                    <template v-slot:title>
+                      <span class="menufont">Export Data Excel By Range Tanggal</span>
+                    </template>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
             </v-col>
-            <v-col cols="12" md="9">
+            <v-col cols="12" md="8">
               <v-row no-gutters>
                 <v-col cols="12" md="4" class="pr-2">
                   <TextField
@@ -330,6 +391,103 @@
         </template>
       </v-data-table>
     </v-card>
+    <v-dialog
+      v-model="dialogImport"
+      scrollable
+			persistent
+      transition="dialog-bottom-transition"
+      width="800px"
+    >
+      <v-card color="background-dialog-card">
+        <v-toolbar color="surface">
+          <v-toolbar-title>Import Data Rekap Meninggal</v-toolbar-title>
+          <v-spacer />
+          <v-toolbar-items>
+            <Button
+              variant="plain"
+              color-button="#ffffff"
+              icon-button="mdi mdi-close"
+              model-button="comfortable"
+              size-button="large"
+              @proses="() => { dialogImport = false; }"
+            />
+          </v-toolbar-items>
+        </v-toolbar>
+        <v-card-text class="pt-4">
+          <v-card class="pa-2 d-flex justify-center align-center" elevation="1" outlined>
+            <div class="kotak" @click="$refs.inputExcel.click()">
+              <v-icon size="large" icon="mdi mdi-file-excel" color="black" />
+              <div style="font-weight: bold;">Upload File</div>
+            </div>
+            <input 
+              ref="inputExcel"
+              :key="componentKey"
+              type="file"
+              accept=".xlsx,.xls"
+              style="display: none"
+              @change="importExcel($event)"
+            >
+          </v-card>
+        </v-card-text>
+        <v-divider />
+        <v-card-actions>
+          <v-row 
+            no-gutters
+            class="mr-3"
+          >
+            <v-col
+              class="text-start"
+              cols="12"
+            >
+              <Button
+                color-button="light-blue darken-3"
+                icon-prepend-button="mdi mdi-download"
+                nama-button="Download Template"
+                @proses="downloadTemplate()"
+              />
+            </v-col>
+          </v-row>         
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-overlay v-model="isLoadingDownload" persistent class="align-center justify-center">
+      <div style="width: 550px;">
+        <v-progress-linear
+          class="pa-3"
+          indeterminate
+          color="black darken-3"
+        />
+        <h4 style="color: #FFF; text-align: center; background-color: #272727;">Sedang proses download template, harap menunggu ...</h4>
+      </div>
+    </v-overlay>
+    <v-overlay v-model="isLoadingImport" persistent class="align-center justify-center">
+      <div style="width: 550px;">
+        <v-progress-linear
+          v-model="progress"
+          color="#c12626"
+          height="25"
+          striped
+          :active="show"
+          :indeterminate="query"
+          :query="true"
+        >
+          <template v-slot:default="{ value }">
+            <strong style="color: #FFF; text-align: center;">{{ Math.ceil(value) }}%</strong>
+          </template>
+        </v-progress-linear>
+        <h4 style="color: #FFF; text-align: center; background-color: #272727;">Sedang proses import data, harap menunggu ...</h4>
+      </div>
+    </v-overlay>
+    <v-overlay v-model="isLoadingExport" persistent class="align-center justify-center">
+      <div style="width: 550px;">
+        <v-progress-linear
+          class="pa-3"
+          indeterminate
+          color="black darken-3"
+        />
+        <h4 style="color: #FFF; text-align: center; background-color: #272727;">Sedang proses export data, harap menunggu ...</h4>
+      </div>
+    </v-overlay>
     <v-dialog
       v-model="DialogAdministrator"
       scrollable
@@ -666,6 +824,17 @@ export default {
     DialogAdministrator: false,
     editedIndex: 0,
 		kondisiTombol: true,
+    dialogImport: false,
+    isLoadingExport: false,
+    isLoadingDownload: false,
+    isLoadingImport: false,
+    progress: 0,
+    query: false,
+    show: true,
+    interval: 0,
+    componentKey: 0,
+    BASEURL: '',
+    dataJumlahImport: 0,
 
     //notifikasi
     dialogNotifikasi: false,
@@ -749,19 +918,22 @@ export default {
 			deep: true,
 			handler(value) {
         this.page = 1
-        if(value === null) value = []
-				this.getRekapMeninggal({page: 1, limit: this.limit, keyword: this.searchData, sorting: this.kumpulSort, tanggal: value})
+        if(value === null) this.tanggal = []
+				this.getRekapMeninggal({page: 1, limit: this.limit, keyword: this.searchData, sorting: this.kumpulSort, tanggal: this.tanggal})
 			}
 		},
   },
   mounted() {
     if(!localStorage.getItem('user_token')) return this.$router.push({name: 'LogIn'});
+    this.BASEURL = process.env.VUE_APP_BASE_URL
     this.roleID = localStorage.getItem('roleID')
 		this.getRekapMeninggal({page: this.page, limit: this.limit, keyword: this.searchData, sorting: this.kumpulSort, tanggal: this.tanggal});
+    this.getWilayahPanjaitan();
 	},
 	methods: {
     ...mapActions({
       fetchData: 'fetchData',
+      uploadFiles: 'upload/uploadFiles',
       getRekapMeninggal: 'user/getRekapMeninggal',
 			getWilayahPanjaitan: 'setting/getWilayahPanjaitan',
     }),
@@ -820,6 +992,146 @@ export default {
       }
       this.DialogAdministrator = true
     },
+    downloadTemplate() {
+      this.isLoadingDownload = true
+			fetch(`${this.BASEURL}user/template?kategori=rekapmeninggal`, {
+				method: 'GET',
+				dataType: "xml",
+			})
+			.then(response => response.arrayBuffer())
+			.then(async response => {
+        setTimeout(() => {
+          this.isLoadingDownload = false
+          let blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+          this.downloadBlob(blob,`Template Data Rekap Meninggal.xlsx`)
+          this.notifikasi("success", `Sukses Download Template Data Rekap Meninggal`, "1")
+        }, 3000)
+			})
+		},
+    async importExcel(e) {
+      let files = e.target.files[0];
+      if(files){
+				const bodyData = {
+					jenis: "excel",
+					kategori: "rekapmeninggal",
+				  createupdateBy: localStorage.getItem('idLogin'),
+					files: files,
+				};
+				try {
+          this.isLoadingImport = true
+          this.query = true
+          this.show = true
+					await this.uploadFiles(bodyData)
+          .then(async response => {
+            files = ''
+            this.$refs.inputExcel.value = null
+            let dataResp = response.data.result
+            this.dataJumlahImport = dataResp.jsonData;
+            this.queryAndIndeterminate(1)
+          })
+        } catch (err) {
+          this.isLoadingImport = false
+          this.query = false
+          this.show = false
+          this.componentKey++;
+          files = ''
+          this.$refs.inputExcel.value = null
+          this.notifikasi("error", "Gagal Import Data Rekap Meninggal", "1")
+				}
+			}else{
+        this.isLoadingImport = false
+        this.query = false
+        this.show = false
+        this.componentKey++;
+        files = ''
+        this.$refs.inputExcel.value = null
+        this.notifikasi("warning", "Ulangi lagi Import Data Rekap Meninggal", "1")
+      }  
+    },
+    exportExcel(kategori, bagian) {
+      let wilayah, nameFile, url;
+      if(!this.RekapMeninggal.length) return this.notifikasi("warning", 'Gagal Export Excel, Data belum tersedia !', "1")
+      if(kategori === 'full'){
+        if(bagian === 'full') {
+          wilayah = this.wilayahpanjaitanOptions.map(str => str.kode).join(', ');
+          nameFile = `Data Rekap Meninggal`;
+          url = `?bagian=rekapmeninggal&kategori=${kategori}&wilayah=${wilayah}`
+        }else if(bagian === 'byfilter') {
+          let limit = 100;
+          const totalPages = Math.ceil(this.pageSummary.total / limit)
+          wilayah = this.wilayahpanjaitanOptions.map(str => str.kode).join(', ');
+          nameFile = `Data Rekap Meninggal By Range Date`;
+          url = `?bagian=rekapmeninggal&kategori=byfilter&wilayah=${wilayah}${this.tanggal.length ? `&startdate=${this.convertDateToPicker2(this.tanggal[0])}&enddate=${this.convertDateToPicker2(this.tanggal[1])}` : ''}&totalPages=${totalPages}&limit=${limit}`
+        }
+      }else if(kategori === 'by'){
+        let limit = 100;
+        const totalPages = Math.ceil(this.pageSummary.total / limit)
+        wilayah = this.wilayahpanjaitanOptions.map(str => str.kode).join(', ');
+        nameFile = `Data Rekap Meninggal By Range Date`;
+        url = `?bagian=rekapmeninggal&kategori=byfilter&wilayah=${wilayah}${this.tanggal.length ? `&startdate=${this.convertDateToPicker2(this.tanggal[0])}&enddate=${this.convertDateToPicker2(this.tanggal[1])}` : ''}&totalPages=${totalPages}&limit=${limit}`
+      }
+      this.isLoadingExport = true
+      fetch(`${this.BASEURL}user/exportexcel${url}`, {
+        method: 'GET',
+        dataType: "xml",
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('user_token')}`
+        }
+      })
+      .then(response => response.arrayBuffer())
+      .then(async response => {
+        setTimeout(() => {
+          this.isLoadingExport = false
+          let blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+          this.downloadBlob(blob,`${nameFile}.xlsx`)
+          this.notifikasi("success", 'Sukses Export Excel', "1")
+        }, 3000)
+      })
+		},
+    queryAndIndeterminate(dataindex) {
+      this.query = true
+      this.show = true
+      this.progress = 0
+      let nilai = 0
+
+      setTimeout(() => {
+        this.query = false
+        this.interval = setInterval(() => {
+          if (this.progress === 100) {
+            this.tutupDialog()
+            this.getRekapMeninggal({page: this.page, limit: this.limit, keyword: this.searchData, sorting: this.kumpulSort, tanggal: this.tanggal})
+            return this.notifikasi("success", "Berhasil import Data Rekap Meninggal", "1")
+          }
+          nilai += dataindex
+          const data = (nilai / this.dataJumlahImport) * 100
+          this.progress = Math.ceil(data)
+        }, 2000)
+      }, 10000)
+    },
+    downloadBlob(blob, name = '') {
+			const blobUrl = URL.createObjectURL(blob);
+			const link = document.createElement("a");
+			link.href = blobUrl;
+			link.download = name;
+			document.body.appendChild(link);
+			link.dispatchEvent(
+				new MouseEvent('click', { 
+					bubbles: true, 
+					cancelable: true, 
+					view: window 
+				})
+			);
+			document.body.removeChild(link);
+		},
+    tutupDialog(){
+      clearInterval(this.interval)
+      this.query = false
+      this.show = false
+      this.progress = 0
+      this.dataJumlahImport = 0;
+      this.isLoadingImport = false
+      this.dialogImport = false
+    },
     clearData(){
       this.inputData = {
         idRekap: '',
@@ -859,7 +1171,24 @@ export default {
 </script>
 
 <style scoped>
+.kotak {
+	border: 2px solid #000;
+  display: inline-flex;
+  justify-content: center;
+  border-radius: 10px !important;
+  background: #FFF;
+  color: #000;
+  padding: 2px;
+  font-size: 10pt;
+  width: 90px;
+  height: 100px;
+  text-align: -webkit-center;
+  align-content: center;
+  flex-wrap: wrap;
+  flex-direction: row;
+  cursor: pointer;
+}
 .listData {
-	width: 200px !important;
+	width: 300px !important;
 }
 </style>

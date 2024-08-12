@@ -53,7 +53,7 @@
 					md="8"
 					class="pt-2"
 				>
-					{{ DataStepOne.alamat }}
+					{{ DataStepOne.alamat ? DataStepOne.alamat : '-' }}
 				</v-col>
 			</v-row>
 			<v-row no-gutters>
@@ -319,7 +319,7 @@
 							md="8"
 							class="pt-2"
 						>
-							{{ convertDateForMonth(DataStepTwoAnak.tanggalLahir[i-1]) }}
+							{{ DataStepTwoAnak.tanggalLahir[i-1] ? convertDateForMonth(DataStepTwoAnak.tanggalLahir[i-1]) : '-' }}
 						</v-col>
 					</v-row>
 				</div>
@@ -615,7 +615,7 @@ export default {
 				anak.push({
 					kategoriAnak: this.DataStepTwoAnak.kategoriAnak[index],
 					namaAnak: this.DataStepTwoAnak.namaAnak[index],
-					tanggalLahir: this.convertDateToPicker2(this.DataStepTwoAnak.tanggalLahir[index]),
+					tanggalLahir: this.DataStepTwoAnak.tanggalLahir[index] ? this.convertDateToPicker2(this.DataStepTwoAnak.tanggalLahir[index]) : null,
 					statusAnak: this.DataStepTwoAnak.statusAnak[index],
 				});
 			}

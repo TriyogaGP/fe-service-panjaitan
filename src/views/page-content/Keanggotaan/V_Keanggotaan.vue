@@ -228,7 +228,7 @@
                       md="8"
                       class="pt-2"
                     >
-                      : {{ `${item.raw.alamat}${item.raw.kelurahan !== null ? `, ${item.raw.kelurahan.jenisKelDes} ${item.raw.kelurahan.nama}` : '' }${item.raw.kecamatan !== null ? `, Kecamatan ${item.raw.kecamatan.nama}` : '' }${item.raw.kabKota !== null ? `, ${item.raw.kabKota.jenisKabKota} ${item.raw.kabKota.nama}` : ''}${item.raw.provinsi !== null ? `, ${item.raw.provinsi.nama}` : ''} ${item.raw.kodePos !== null ? `${item.raw.kodePos}` : ''}` }}
+                      : {{ `${item.raw.alamat ? item.raw.alamat : '-'}${item.raw.kelurahan !== null ? `, ${item.raw.kelurahan.jenisKelDes} ${item.raw.kelurahan.nama}` : '' }${item.raw.kecamatan !== null ? `, Kecamatan ${item.raw.kecamatan.nama}` : '' }${item.raw.kabKota !== null ? `, ${item.raw.kabKota.jenisKabKota} ${item.raw.kabKota.nama}` : ''}${item.raw.provinsi !== null ? `, ${item.raw.provinsi.nama}` : ''} ${item.raw.kodePos !== null ? `${item.raw.kodePos}` : ''}` }}
                     </v-col>
                   </v-row>
                   <v-row no-gutters>
@@ -422,7 +422,7 @@
                                 <span>Meninggal</span>
                               </v-tooltip>
                             </td>
-                            <td style="padding-left: 10px; text-align: center;">{{ convertDateForMonth(data.tanggalLahir) }}</td>
+                            <td style="padding-left: 10px; text-align: center;">{{ data.tanggalLahir ? convertDateForMonth(data.tanggalLahir) : '-' }}</td>
                             <td style="padding-left: 10px; text-align: center;">{{ data.tanggalWafatAnak ? convertDateForMonth(data.tanggalWafatAnak) : '-' }}</td>
                             <td style="padding-left: 10px; text-align: center;">
                               <Button 
@@ -777,16 +777,6 @@
         </v-card-actions>
       </v-card>
 		</v-dialog>
-    <v-overlay v-model="isLoadingImport" persistent class="align-center justify-center">
-      <div style="width: 550px;">
-        <v-progress-linear
-          class="pa-3"
-          indeterminate
-          color="black darken-3"
-        />
-        <h4 style="color: #FFF; text-align: center; background-color: #272727;">Sedang proses import data, harap menunggu ...</h4>
-      </div>
-    </v-overlay>
     <v-overlay v-model="isLoadingExport" persistent class="align-center justify-center">
       <div style="width: 550px;">
         <v-progress-linear
@@ -807,7 +797,7 @@
         <h4 style="color: #FFF; text-align: center; background-color: #272727;">Sedang proses download template, harap menunggu ...</h4>
       </div>
     </v-overlay>
-    <v-overlay v-model="isProcessing" persistent class="align-center justify-center">
+    <v-overlay v-model="isLoadingImport" persistent class="align-center justify-center">
       <div style="width: 550px;">
         <v-progress-linear
           v-model="progress"
@@ -1046,10 +1036,9 @@ export default {
       penColor: "#000",
     },
     dialogImport: false,
-    isLoadingImport: false,
     isLoadingExport: false,
     isLoadingDownload: false,
-    isProcessing: false,
+    isLoadingImport: false,
     progress: 0,
     query: false,
     show: true,
@@ -1057,7 +1046,6 @@ export default {
     dataJumlahImport: 0,
     dataJumlahImportAvailable: 0,
     urlSk: window.location.href,
-    BASE_URL: '',
     componentKey: 0,
     downloadFile: '',
     namawilayah: '',
@@ -1327,7 +1315,7 @@ export default {
 					files: files,
 				};
 				try {
-          this.isProcessing = true
+          this.isLoadingImport = true
           this.query = true
           this.show = true
 					await this.uploadFiles(bodyData)
@@ -1341,7 +1329,7 @@ export default {
             this.queryAndIndeterminate(1)
           })
         } catch (err) {
-          this.isProcessing = false
+          this.isLoadingImport = false
           this.query = false
           this.show = false
           this.componentKey++;
@@ -1350,7 +1338,7 @@ export default {
           this.notifikasi("error", "Gagal Import Data Keanggotaan", "1")
 				}
 			}else{
-        this.isProcessing = false
+        this.isLoadingImport = false
         this.query = false
         this.show = false
         this.componentKey++;
@@ -1380,7 +1368,7 @@ export default {
           const data = (nilai / this.dataJumlahImport) * 100
           this.progress = Math.ceil(data)
         }, 2000)
-      }, 5000)
+      }, 30000)
     },
     exportExcel(kategori) {
       let wilayah, namawilayah, nameFile, url;
@@ -1389,7 +1377,7 @@ export default {
         if(this.roleID === '1' || this.roleID === '2') {
           wilayah = this.wilayahpanjaitanOptions.map(str => str.kode).join(', ');
           nameFile = `Data Keanggotaan Seluruh Wilayah`;
-          url = `?kategori=${kategori}&wilayah=${wilayah}`
+          url = `?bagian=datakeanggotaan&kategori=${kategori}&wilayah=${wilayah}`
         }else if(this.roleID === '3') {
           let limit = 100;
           const totalPages = Math.ceil(this.pageSummary.total / limit)
@@ -1397,7 +1385,7 @@ export default {
           wilayah = getdata.length ? getdata[0].kode : '-'
           namawilayah = getdata.length ? getdata[0].label : ''
           nameFile = `Data Keanggotaan Wilayah ${namawilayah}`;
-          url = `?kategori=by&wilayah=${wilayah}&totalPages=${totalPages}&limit=${limit}`
+          url = `?bagian=datakeanggotaan&kategori=by&wilayah=${wilayah}&totalPages=${totalPages}&limit=${limit}`
         }
       }else if(kategori === 'by'){
         let limit = 100;
@@ -1405,20 +1393,20 @@ export default {
         let getdata = this.wilayahpanjaitanOptions.filter(val => val.label === this.filterforby)
         wilayah = getdata.length ? getdata[0].kode : '-'
         nameFile = `Data Keanggotaan Wilayah ${this.filterforby}`;
-        url = `?kategori=by&wilayah=${wilayah}&totalPages=${totalPages}&limit=${limit}`
+        url = `?bagian=datakeanggotaan&kategori=by&wilayah=${wilayah}&totalPages=${totalPages}&limit=${limit}`
       }else if(kategori === 'komisaris'){
         if(this.roleID === '1' || this.roleID === '2') {
           let getdata = this.wilayahpanjaitanOptions.filter(val => val.label === this.filterforby)
           wilayah = getdata.length ? getdata[0].kode : '-'
           namawilayah = getdata.length ? getdata[0].label : ''
           nameFile = `Data Keanggotaan By Komisaris Wilayah ${namawilayah}`;
-          url = `?kategori=komisaris&wilayah=${wilayah}`
+          url = `?bagian=datakeanggotaan&kategori=komisaris&wilayah=${wilayah}`
         }else if(this.roleID === '3') {
           wilayah = localStorage.getItem('wilayah');
           let getdata = this.wilayahpanjaitanOptions.filter(val => val.kode === wilayah)
           namawilayah = getdata.length ? getdata[0].label : ''
           nameFile = `Data Keanggotaan By Komisaris Wilayah ${namawilayah}`;
-          url = `?kategori=komisaris&wilayah=${wilayah}`
+          url = `?bagian=datakeanggotaan&kategori=komisaris&wilayah=${wilayah}`
         }
       }
       this.isLoadingExport = true
@@ -1441,7 +1429,7 @@ export default {
 		},
     downloadTemplate() {
       this.isLoadingDownload = true
-			fetch(`${this.BASEURL}user/template/${localStorage.getItem('wilayah')}`, {
+			fetch(`${this.BASEURL}user/template?wilayah=${localStorage.getItem('wilayah')}&kategori=datakeanggotaan`, {
 				method: 'GET',
 				dataType: "xml",
 			})
@@ -1568,7 +1556,7 @@ export default {
       this.dataJumlahImport = 0;
       this.dataJumlahImportAvailable = 0;
       this.downloadFile = ''
-      this.isProcessing = false
+      this.isLoadingImport = false
       this.dialogImport = false
     },
     updateSort(data) {
