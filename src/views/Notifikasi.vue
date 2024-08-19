@@ -411,7 +411,7 @@ export default {
       this.dataNotifikasi = []
       this.getKategoriNotifikasi()
       this.dataCountNotifikasi()
-      this.getNotifikasi({kategori: this.kodeKategori, page: this.page, limit: this.limit})
+      this.getNotifikasi({kategori: this.kodeKategori, page: 1, limit: this.limit})
     },
     tandai(){
       let bodyData = {

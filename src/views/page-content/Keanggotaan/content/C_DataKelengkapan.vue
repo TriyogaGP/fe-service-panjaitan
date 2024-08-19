@@ -133,6 +133,7 @@
 						v-model="inputDataKelengkapan.generasi"
 						label-tf="Generasi"
 						:clearable-tf="true"
+						@keypress="onlyNumber($event, 2, inputDataKelengkapan.generasi)"
 					/>
 				</v-col>
 			</v-row>
