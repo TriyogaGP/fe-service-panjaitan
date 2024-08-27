@@ -2,7 +2,7 @@
   <div>
     <h1 class="subheading grey--text text-decoration-underline">Dashboard</h1>
     <v-card class="mb-2 pa-1 rounded" variant="outlined" elevation="4">
-      <h2 v-if="roleID === '1' || roleID === '2'" class="subheading grey--text text-decoration-underline">{{ `Total KK dari 12 Wilayah (${total} Orang)` }}</h2>
+      <h2 v-if="roleID === '1' || roleID === '2'" class="subheading grey--text text-decoration-underline">{{ `Total KK dari 12 Wilayah (${total} KK / ${totalJiwa} Jiwa)` }}</h2>
       <v-container fluid v-if="roleID === '1' || roleID === '2'">
         <v-row>
           <v-col
@@ -18,13 +18,13 @@
                 <v-divider :thickness="2" class="border-opacity-75" color="white"/>
               </v-sheet>
               <v-card-text class="d-flex flex-column justify-center align-center">
-                <v-card-title class="text-black"><h6>{{ `${hasil.jml} orang` }}</h6></v-card-title>
+                <v-card-title class="text-black"><h6>{{ `${hasil.jml} KK / ${hasil.totalJiwa} Jiwa` }}</h6></v-card-title>
               </v-card-text>
             </v-card>
           </v-col>
         </v-row>
       </v-container>
-      <h2 v-if="roleID === '3'" class="subheading grey--text text-decoration-underline">{{ `Data Dari Wilayah ${dataDashboard.length ? `${dataDashboard[0].label}` : ''} (${dataDashboard.length ? `${dataDashboard[0].jml}` : '0'} Orang)` }}</h2>
+      <h2 v-if="roleID === '3'" class="subheading grey--text text-decoration-underline">{{ `Data Dari Wilayah ${dataDashboard.length ? `${dataDashboard[0].label}` : ''} (${dataDashboard.length ? `${dataDashboard[0].jml}` : '0'} KK / ${dataDashboard.length ? `${dataDashboard[0].totalJiwa}` : '0'} Jiwa)` }}</h2>
       <v-container fluid v-if="roleID === '3'">
         <v-row>
           <v-col
@@ -49,7 +49,7 @@
                     cols="12"
                     md="12"
                   >
-                    <h3 style="font-size: 9pt; font-weight: bold;">{{ `${hasil.jml} Orang` }}</h3>
+                    <h3 style="font-size: 9pt; font-weight: bold;">{{ `${hasil.jml} KK / ${hasil.totalJiwa} Jiwa` }}</h3>
                   </v-col>
                 </v-row>
               </v-card-actions>
@@ -110,10 +110,16 @@ export default {
 			// wilayahpanjaitanOptions: store => store.setting.wilayahpanjaitanOptions,
 		}),
     total(){
-      const total = this.dataDashboard.reduce((acc, curr) => {
+      const data = this.dataDashboard.reduce((acc, curr) => {
 				return { jml: acc.jml + curr.jml };
 			}, { jml: 0 });
-      return total.jml
+      return data.jml
+    },
+    totalJiwa(){
+      const data = this.dataDashboard.reduce((acc, curr) => {
+				return { totalJiwa: acc.totalJiwa + curr.totalJiwa };
+			}, { totalJiwa: 0 });
+      return data.totalJiwa
     },
     // namaWilayah(){
     //   let getWilayah = this.wilayahpanjaitanOptions.filter(val => val.kode === localStorage.getItem('wilayah'))
