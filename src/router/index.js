@@ -23,6 +23,11 @@ const routes = [
         component: () => import('@/views/Dashboard.vue')
       },
       {
+        path: '/dashboard-wilayah/:kategori',
+        name: 'DashboardWilayah',
+        component: () => import('@/views/DashboardWilayah.vue')
+      },
+      {
         path: '/profile',
         name: 'Profile',
         component: () => import('@/views/Profile.vue')

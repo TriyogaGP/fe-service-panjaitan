@@ -167,8 +167,10 @@ const actions = {
     });
   },
   [GET_DASHBOARDTWO](context, data) {
+    console.log(data);
+    
     return new Promise((resolve, reject) => {
-      ApiService.get(`user/dashboardTwo`, token)
+      ApiService.get(`user/dashboardTwo${typeof data !== 'undefined' ? `?kodeWilayah=${data.kodeWilayah}` : ''}`, token)
       .then((response) => {
         context.commit('SET_DASHBOARDTWO', response.data.result)
         resolve(response);

@@ -2,30 +2,8 @@
   <div>
     <h1 class="subheading grey--text text-decoration-underline">Dashboard</h1>
     <v-card class="mb-2 pa-1 rounded" variant="outlined" elevation="4">
-      <h2 v-if="roleID === '1' || roleID === '2'" class="subheading grey--text text-decoration-underline">{{ `Total KK dari 12 Wilayah (${total} KK / ${totalJiwa} Jiwa)` }}</h2>
-      <v-container fluid v-if="roleID === '1' || roleID === '2'">
-        <v-row>
-          <v-col
-            v-for="hasil in dataDashboard"
-            :key="hasil.kode"
-            cols="12"
-            lg="3"
-          >
-            <v-card color="white" style="border: 2px solid #000;" @click="LinkRoute(hasil.kode)">
-              <v-sheet color="#c12626" class="sheetData" elevation="2" style="padding: 5px;">
-                <v-divider :thickness="2" class="border-opacity-75" color="white"/>
-                <v-card-title class="text-white"><h6>{{ hasil.label }}</h6></v-card-title>
-                <v-divider :thickness="2" class="border-opacity-75" color="white"/>
-              </v-sheet>
-              <v-card-text class="d-flex flex-column justify-center align-center">
-                <v-card-title class="text-black"><h6>{{ `${hasil.jml} KK / ${hasil.totalJiwa} Jiwa` }}</h6></v-card-title>
-              </v-card-text>
-            </v-card>
-          </v-col>
-        </v-row>
-      </v-container>
-      <h2 v-if="roleID === '3'" class="subheading grey--text text-decoration-underline">{{ `Data Dari Wilayah ${dataDashboard.length ? `${dataDashboard[0].label}` : ''} (${dataDashboard.length ? `${dataDashboard[0].jml}` : '0'} KK / ${dataDashboard.length ? `${dataDashboard[0].totalJiwa}` : '0'} Jiwa)` }}</h2>
-      <v-container fluid v-if="roleID === '3'">
+      <h2 class="subheading grey--text text-decoration-underline">{{ `Data Dari Wilayah ${dataTotal.length ? `${dataTotal[0].label}` : ''} (${dataTotal.length ? `${dataTotal[0].jml}` : '0'} KK / ${dataTotal.length ? `${dataTotal[0].totalJiwa}` : '0'} Jiwa)` }}</h2>
+      <v-container fluid>
         <v-row>
           <v-col
             v-for="hasil in dataDashboardTwo"
@@ -39,7 +17,6 @@
                 <v-card-title class="text-white"><h6>{{ hasil.kodeKomisarisWilayah }}</h6></v-card-title>
                 <v-divider :thickness="2" class="border-opacity-75" color="white"/>
               </v-sheet>
-              <!-- style="display: flex; align-items: center; justify-content: center; padding: 5px; height: 30px;" -->
               <div class="d-flex flex-column justify-space-between align-center ma-2">
                 <v-row>
                   <v-col
@@ -56,7 +33,7 @@
                     cols="12"
                     md="12"
                     class="d-flex align-center justify-center"
-                    style="height: 40px;"
+                    style="height: 60px;"
                   >
                     <span v-html="hasil.daerah" style="font-size: 9pt; font-weight: bold;"/>
                   </v-col>
@@ -98,6 +75,7 @@
 <script>
 import { mapActions, mapGetters, mapState } from "vuex";
 import { useMeta } from 'vue-meta'
+import { useRoute } from "vue-router";
 import PopUpNotifikasi from "./Layout/PopUpNotifikasi.vue";
 
 export default {
@@ -122,19 +100,18 @@ export default {
         amp: true,
       }
     })
-
+    const route = useRoute()
+    let kategori = route.params.kategori
+    return { kategori }
   },
   computed: {
     ...mapState({
 			dataDashboard: store => store.user.dataDashboard,
 			dataDashboardTwo: store => store.user.dataDashboardTwo,
-			// wilayahpanjaitanOptions: store => store.setting.wilayahpanjaitanOptions,
 		}),
-    total(){
-      const data = this.dataDashboard.reduce((acc, curr) => {
-				return { jml: acc.jml + curr.jml };
-			}, { jml: 0 });
-      return data.jml
+    dataTotal(){
+      const data = this.dataDashboard.filter(val => val.kode === this.kategori)
+      return data
     },
     totalJiwa(){
       const data = this.dataDashboard.reduce((acc, curr) => {
@@ -142,10 +119,6 @@ export default {
 			}, { totalJiwa: 0 });
       return data.totalJiwa
     },
-    // namaWilayah(){
-    //   let getWilayah = this.wilayahpanjaitanOptions.filter(val => val.kode === localStorage.getItem('wilayah'))
-    //   return getWilayah.length ? getWilayah[0].label : ''
-    // },
   },
   watch: {
   },
@@ -153,8 +126,7 @@ export default {
     if(!localStorage.getItem('user_token')) return this.$router.push({name: 'LogIn'});
     this.roleID = localStorage.getItem('roleID')
     this.getDashboard()
-    // this.getWilayahPanjaitan();
-    if(this.roleID === '3') this.getDashboardTwo()
+    this.getDashboardTwo({ kodeWilayah: this.kategori })
   },  
 	methods: {
     ...mapActions({
@@ -164,8 +136,7 @@ export default {
 			getWilayahPanjaitan: 'setting/getWilayahPanjaitan',
     }),
     LinkRoute(kode){
-      // this.$router.push({name: "DataKeanggotaan", params: { kategori: this.roleID === '1' || this.roleID === '2' ? kode : 'all' }});
-      this.$router.push({name: "DashboardWilayah", params: { kategori: kode }});
+      this.$router.push({name: "DataKeanggotaan", params: { kategori: this.roleID === '1' || this.roleID === '2' ? kode : 'all' }});
     },
     LinkRouteKomisaris(kode){
       this.$router.push({name: "DataKeanggotaan", params: { kategori: kode }});

@@ -85,12 +85,14 @@
           <span v-else>{{ item.raw.namaLengkap }}</span>
         </template>
         <template #[`item.ompu`]="{ item }">
-          <span v-html="item.raw.ompu.label" />
+          <span v-html="item.raw.ompu ? item.raw.ompu.label : '-'" />
         </template>
         <template #[`item.wilayah`]="{ item }">
-          <span>{{ `Wilayah : ${item.raw.wilayah.label} (${item.raw.wilayah.kode})` }}</span><br>
-          <span>{{ `Nama Ketua Wilayah : ${item.raw.wilayah.namaKetuaWilayah}` }}</span><br>
-          <span>{{ `Nama Komisaris Wilayah : ${item.raw.komisarisWilayah.namaKomisaris}` }}</span>
+          <div>
+            <span>{{ `Wilayah : ${item.raw.wilayah.label} (${item.raw.wilayah.kode})` }}</span><br>
+            <span>{{ `Nama Ketua Wilayah : ${item.raw.wilayah.namaKetuaWilayah}` }}</span><br>
+            <span :style="item.raw.komisarisWilayah ? '' : 'color: red;'">{{ `Nama Komisaris Wilayah : ${item.raw.komisarisWilayah ? item.raw.komisarisWilayah.namaKomisaris : '-'}` }}</span>
+          </div>
         </template>
         <template #[`item.statusAktif`]="{ item }">
           <v-icon size="small" v-if="item.raw.statusBiodata" color="green" icon="mdi mdi-check" />
@@ -132,258 +134,278 @@
             <td :colspan="columns.length">
               <v-card color="background-dialog-card" class="mt-2 mb-2">
                 <v-card-text>
-                  <div class="mt-4 d-flex flex-column justify-space-between align-center">
-                    <div class="avatar" @click="$refs.fotoProfile.click()">
-                      <span class="tulisan">
-                        <v-icon color="white" icon="mdi mdi-camera-account" />&nbsp;Ubah Foto Profil
-                      </span>
-                      <v-img :src="item.raw.fotoProfil" />
-                    </div>
-                    <input 
-                      ref="fotoProfile"
-                      :key="componentKey"
-                      type="file"
-                      accept="image/*"
-                      style="display: none"
-                      @change="uploadFotoProfile($event, item.raw.idBiodata)"
-                    >
-                  </div>
-                  <span>
-                    <Button 
-                      @click="statusData('STATUSMENINGGAL', 'SUAMI', item.raw.idBiodata, `${item.raw.statusSuami === 'Meninggal' ? 'Hidup' : 'Meninggal'}`)"
-                      :color-button="`${item.raw.statusSuami === 'Meninggal' ? '#0bd369' : '#c12626'}`"
-                      icon-prepend-button="mdi mdi-cross"
-                      :nama-button="`${item.raw.statusSuami === 'Meninggal' ? 'Hidup' : 'Meninggal'}`"
-                      size-button="x-small"
-                    />
-  									<v-tooltip activator="parent" location="top">Suami</v-tooltip>
-                  </span>
-                  <span>
-                    <Button 
-                      @click="statusData('STATUSMENINGGAL', 'ISTRI', item.raw.idBiodata, `${item.raw.statusIstri === 'Meninggal' ? 'Hidup' : 'Meninggal'}`)"
-                      :color-button="`${item.raw.statusIstri === 'Meninggal' ? '#0bd369' : '#c12626'}`"
-                      icon-prepend-button="mdi mdi-cross"
-                      :nama-button="`${item.raw.statusIstri === 'Meninggal' ? 'Hidup' : 'Meninggal'}`"
-                      size-button="x-small"
-                    />
-  									<v-tooltip activator="parent" location="top">Istri</v-tooltip>
-                  </span>
                   <v-row no-gutters>
                     <v-col
                       cols="12"
-                      md="12"
-                      class="pa-3 d-flex align-center font-weight-bold text-h6"
+                      md="8"
                     >
-                      >> Data Pribadi
+                      <v-row no-gutters>
+                        <v-col
+                          cols="12"
+                          md="12"
+                          class="pa-3 d-flex align-center font-weight-bold text-h6"
+                        >
+                          >> Data Pribadi
+                        </v-col>
+                      </v-row>
+                      <v-row no-gutters>
+                        <v-col
+                          cols="12"
+                          md="4"
+                          class="pt-2 d-flex align-center font-weight-bold text-caption"
+                        >
+                        Nama Suami
+                        </v-col>
+                        <v-col
+                          cols="12"
+                          md="8"
+                          class="pt-2"
+                        >
+                          : {{ item.raw.namaLengkap }}
+                          <v-tooltip v-if="item.raw.statusSuami === 'Meninggal'" location="top">
+                            <template v-slot:activator="{ props }">
+                              <v-icon v-bind="props" size="middle" icon="mdi mdi-cross" color="icon-red" />
+                            </template>
+                            <span>Meninggal</span>
+                          </v-tooltip>
+                        </v-col>
+                      </v-row>
+                      <v-row no-gutters>
+                        <v-col
+                          cols="12"
+                          md="4"
+                          class="pt-2 d-flex align-center font-weight-bold text-caption"
+                        >
+                        Tempat Tanggal Lahir Suami
+                        </v-col>
+                        <v-col
+                          cols="12"
+                          md="8"
+                          class="pt-2"
+                        >
+                          : {{ `${item.raw.tempatSuami ? item.raw.tempatSuami : '-'}, ${item.raw.tanggalLahirSuami ? convertDateForMonth(item.raw.tanggalLahirSuami) : '-'}` }}
+                        </v-col>
+                      </v-row>
+                      <v-row no-gutters>
+                        <v-col
+                          cols="12"
+                          md="4"
+                          class="pt-2 d-flex align-center font-weight-bold text-caption"
+                        >
+                          Alamat
+                        </v-col>
+                        <v-col
+                          cols="12"
+                          md="8"
+                          class="pt-2"
+                        >
+                          : {{ `${item.raw.alamat ? item.raw.alamat : '-'}${item.raw.kelurahan !== null ? `, ${item.raw.kelurahan.jenisKelDes} ${item.raw.kelurahan.nama}` : '' }${item.raw.kecamatan !== null ? `, Kecamatan ${item.raw.kecamatan.nama}` : '' }${item.raw.kabKota !== null ? `, ${item.raw.kabKota.jenisKabKota} ${item.raw.kabKota.nama}` : ''}${item.raw.provinsi !== null ? `, ${item.raw.provinsi.nama}` : ''} ${item.raw.kodePos !== null ? `${item.raw.kodePos}` : ''}` }}
+                        </v-col>
+                      </v-row>
+                      <v-row no-gutters>
+                        <v-col
+                          cols="12"
+                          md="4"
+                          class="pt-2 d-flex align-center font-weight-bold text-caption"
+                        >
+                          Telepon Suami
+                        </v-col>
+                        <v-col
+                          cols="12"
+                          md="8"
+                          class="pt-2"
+                        >
+                          : {{ item.raw.telp ? item.raw.telp : '-' }}
+                        </v-col>
+                      </v-row>
+                      <v-row no-gutters>
+                        <v-col
+                          cols="12"
+                          md="4"
+                          class="pt-2 d-flex align-center font-weight-bold text-caption"
+                        >
+                        Pekerjaan Suami
+                        </v-col>
+                        <v-col
+                          cols="12"
+                          md="8"
+                          class="pt-2"
+                        >
+                          : {{ item.raw.pekerjaanSuami ? item.raw.pekerjaanSuami : '-' }}
+                        </v-col>
+                      </v-row>
+                      <v-row v-if="item.raw.statusSuami === 'Meninggal'" no-gutters>
+                        <v-col
+                          cols="12"
+                          md="4"
+                          class="pt-2 d-flex align-center font-weight-bold text-caption"
+                        >
+                        Tanggal Wafat Suami
+                        </v-col>
+                        <v-col
+                          cols="12"
+                          md="8"
+                          class="pt-2"
+                        >
+                          : {{ item.raw.tanggalWafatSuami ? convertDateForMonth(item.raw.tanggalWafatSuami) : '-' }}
+                          <Button 
+                            color-button="light-blue darken-3"
+                            icon-prepend-button="mdi mdi-eye"
+                            nama-button="Lihat Surat"
+                            size-button="x-small"
+                          />
+                        </v-col>
+                      </v-row>
+                      <v-row no-gutters>
+                        <v-col
+                          cols="12"
+                          md="12"
+                          class="pa-3 d-flex align-center font-weight-bold text-h6"
+                        >
+                          >> Data Istri
+                        </v-col>
+                      </v-row>
+                      <v-row no-gutters>
+                        <v-col
+                          cols="12"
+                          md="4"
+                          class="pt-2 d-flex align-center font-weight-bold text-caption"
+                        >
+                        Nama Istri
+                        </v-col>
+                        <v-col
+                          cols="12"
+                          md="8"
+                          class="pt-2"
+                        >
+                          : {{ item.raw.namaIstri }}
+                          <v-tooltip v-if="item.raw.statusIstri === 'Meninggal'" location="top">
+                            <template v-slot:activator="{ props }">
+                              <v-icon v-bind="props" size="middle" icon="mdi mdi-cross" color="icon-red" />
+                            </template>
+                            <span>Meninggal</span>
+                          </v-tooltip>
+                        </v-col>
+                      </v-row>
+                      <v-row no-gutters>
+                        <v-col
+                          cols="12"
+                          md="4"
+                          class="pt-2 d-flex align-center font-weight-bold text-caption"
+                        >
+                          Tempat, Tanggal Lahir Istri
+                        </v-col>
+                        <v-col
+                          cols="12"
+                          md="8"
+                          class="pt-2"
+                        >
+                          : {{ `${item.raw.tempatIstri ? item.raw.tempatIstri : '-'}, ${item.raw.tanggalLahirIstri ? convertDateForMonth(item.raw.tanggalLahirIstri) : '-'}` }}
+                        </v-col>
+                      </v-row>
+                      <v-row no-gutters>
+                        <v-col
+                          cols="12"
+                          md="4"
+                          class="pt-2 d-flex align-center font-weight-bold text-caption"
+                        >
+                          Telepon Istri
+                        </v-col>
+                        <v-col
+                          cols="12"
+                          md="8"
+                          class="pt-2"
+                        >
+                          : {{ item.raw.telpIstri ? item.raw.telpIstri : '-' }}
+                        </v-col>
+                      </v-row>
+                      <v-row no-gutters>
+                        <v-col
+                          cols="12"
+                          md="4"
+                          class="pt-2 d-flex align-center font-weight-bold text-caption"
+                        >
+                        Pekerjaan Istri
+                        </v-col>
+                        <v-col
+                          cols="12"
+                          md="8"
+                          class="pt-2"
+                        >
+                          : {{ item.raw.pekerjaanIstri ? item.raw.pekerjaanIstri : '-' }}
+                        </v-col>
+                      </v-row>
+                      <v-row v-if="item.raw.statusIstri === 'Meninggal'" no-gutters>
+                        <v-col
+                          cols="12"
+                          md="4"
+                          class="pt-2 d-flex align-center font-weight-bold text-caption"
+                        >
+                        Tanggal Wafat Istri
+                        </v-col>
+                        <v-col
+                          cols="12"
+                          md="8"
+                          class="pt-2"
+                        >
+                          : {{ item.raw.tanggalWafatIstri ? convertDateForMonth(item.raw.tanggalWafatIstri) : '-' }}
+                          <Button 
+                            color-button="light-blue darken-3"
+                            icon-prepend-button="mdi mdi-eye"
+                            nama-button="Lihat Surat"
+                            size-button="x-small"
+                          />
+                        </v-col>
+                      </v-row>
                     </v-col>
-                  </v-row>
-                  <v-row no-gutters>
                     <v-col
                       cols="12"
                       md="4"
-                      class="pt-2 d-flex align-center font-weight-bold text-caption"
                     >
-                    Nama Suami
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      md="8"
-                      class="pt-2"
-                    >
-                      : {{ item.raw.namaLengkap }}
-                      <v-tooltip v-if="item.raw.statusSuami === 'Meninggal'" location="top">
-                        <template v-slot:activator="{ props }">
-                          <v-icon v-bind="props" size="middle" icon="mdi mdi-cross" color="icon-red" />
-                        </template>
-                        <span>Meninggal</span>
-                      </v-tooltip>
-                    </v-col>
-                  </v-row>
-                  <v-row no-gutters>
-                    <v-col
-                      cols="12"
-                      md="4"
-                      class="pt-2 d-flex align-center font-weight-bold text-caption"
-                    >
-                    Tempat Tanggal Lahir Suami
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      md="8"
-                      class="pt-2"
-                    >
-                      : {{ `${item.raw.tempatSuami ? item.raw.tempatSuami : '-'}, ${item.raw.tanggalLahirSuami ? convertDateForMonth(item.raw.tanggalLahirSuami) : '-'}` }}
-                    </v-col>
-                  </v-row>
-                  <v-row no-gutters>
-                    <v-col
-                      cols="12"
-                      md="4"
-                      class="pt-2 d-flex align-center font-weight-bold text-caption"
-                    >
-                      Alamat
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      md="8"
-                      class="pt-2"
-                    >
-                      : {{ `${item.raw.alamat ? item.raw.alamat : '-'}${item.raw.kelurahan !== null ? `, ${item.raw.kelurahan.jenisKelDes} ${item.raw.kelurahan.nama}` : '' }${item.raw.kecamatan !== null ? `, Kecamatan ${item.raw.kecamatan.nama}` : '' }${item.raw.kabKota !== null ? `, ${item.raw.kabKota.jenisKabKota} ${item.raw.kabKota.nama}` : ''}${item.raw.provinsi !== null ? `, ${item.raw.provinsi.nama}` : ''} ${item.raw.kodePos !== null ? `${item.raw.kodePos}` : ''}` }}
-                    </v-col>
-                  </v-row>
-                  <v-row no-gutters>
-                    <v-col
-                      cols="12"
-                      md="4"
-                      class="pt-2 d-flex align-center font-weight-bold text-caption"
-                    >
-                      Telepon Suami
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      md="8"
-                      class="pt-2"
-                    >
-                      : {{ item.raw.telp ? item.raw.telp : '-' }}
-                    </v-col>
-                  </v-row>
-                  <v-row no-gutters>
-                    <v-col
-                      cols="12"
-                      md="4"
-                      class="pt-2 d-flex align-center font-weight-bold text-caption"
-                    >
-                    Pekerjaan Suami
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      md="8"
-                      class="pt-2"
-                    >
-                      : {{ item.raw.pekerjaanSuami ? item.raw.pekerjaanSuami : '-' }}
-                    </v-col>
-                  </v-row>
-                  <v-row v-if="item.raw.statusSuami === 'Meninggal'" no-gutters>
-                    <v-col
-                      cols="12"
-                      md="4"
-                      class="pt-2 d-flex align-center font-weight-bold text-caption"
-                    >
-                    Tanggal Wafat Suami
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      md="8"
-                      class="pt-2"
-                    >
-                      : {{ item.raw.tanggalWafatSuami ? convertDateForMonth(item.raw.tanggalWafatSuami) : '-' }}
-                      <Button 
-                        color-button="light-blue darken-3"
-                        icon-prepend-button="mdi mdi-eye"
-                        nama-button="Lihat Surat"
-                        size-button="x-small"
-                      />
-                    </v-col>
-                  </v-row>
-                  <v-row no-gutters>
-                    <v-col
-                      cols="12"
-                      md="12"
-                      class="pa-3 d-flex align-center font-weight-bold text-h6"
-                    >
-                      >> Data Istri
-                    </v-col>
-                  </v-row>
-                  <v-row no-gutters>
-                    <v-col
-                      cols="12"
-                      md="4"
-                      class="pt-2 d-flex align-center font-weight-bold text-caption"
-                    >
-                    Nama Istri
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      md="8"
-                      class="pt-2"
-                    >
-                      : {{ item.raw.namaIstri }}
-                      <v-tooltip v-if="item.raw.statusIstri === 'Meninggal'" location="top">
-                        <template v-slot:activator="{ props }">
-                          <v-icon v-bind="props" size="middle" icon="mdi mdi-cross" color="icon-red" />
-                        </template>
-                        <span>Meninggal</span>
-                      </v-tooltip>
-                    </v-col>
-                  </v-row>
-                  <v-row no-gutters>
-                    <v-col
-                      cols="12"
-                      md="4"
-                      class="pt-2 d-flex align-center font-weight-bold text-caption"
-                    >
-                      Tempat, Tanggal Lahir Istri
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      md="8"
-                      class="pt-2"
-                    >
-                      : {{ `${item.raw.tempatIstri ? item.raw.tempatIstri : '-'}, ${item.raw.tanggalLahirIstri ? convertDateForMonth(item.raw.tanggalLahirIstri) : '-'}` }}
-                    </v-col>
-                  </v-row>
-                  <v-row no-gutters>
-                    <v-col
-                      cols="12"
-                      md="4"
-                      class="pt-2 d-flex align-center font-weight-bold text-caption"
-                    >
-                      Telepon Istri
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      md="8"
-                      class="pt-2"
-                    >
-                      : {{ item.raw.telpIstri ? item.raw.telpIstri : '-' }}
-                    </v-col>
-                  </v-row>
-                  <v-row no-gutters>
-                    <v-col
-                      cols="12"
-                      md="4"
-                      class="pt-2 d-flex align-center font-weight-bold text-caption"
-                    >
-                    Pekerjaan Istri
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      md="8"
-                      class="pt-2"
-                    >
-                      : {{ item.raw.pekerjaanIstri ? item.raw.pekerjaanIstri : '-' }}
-                    </v-col>
-                  </v-row>
-                  <v-row v-if="item.raw.statusIstri === 'Meninggal'" no-gutters>
-                    <v-col
-                      cols="12"
-                      md="4"
-                      class="pt-2 d-flex align-center font-weight-bold text-caption"
-                    >
-                    Tanggal Wafat Istri
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      md="8"
-                      class="pt-2"
-                    >
-                      : {{ item.raw.tanggalWafatIstri ? convertDateForMonth(item.raw.tanggalWafatIstri) : '-' }}
-                      <Button 
-                        color-button="light-blue darken-3"
-                        icon-prepend-button="mdi mdi-eye"
-                        nama-button="Lihat Surat"
-                        size-button="x-small"
-                      />
+                      <div class="mt-4 d-flex flex-column justify-space-between align-center">
+                        <div class="avatar">
+                          <span class="wadahtulisan">
+                            <span class="tulisan">
+                              <v-icon color="white" size="x-large" icon="mdi mdi-camera-image" @click="$refs.fotoProfile.click()"/>&nbsp;Ubah Foto Profil
+                            </span>
+                            <v-divider vertical :thickness="2" color="white" />
+                            <span class="tulisan">
+                              <v-icon color="white" size="x-large" icon="mdi mdi-camera-account" @click="lihatFoto(item.raw.fotoProfil)"/>&nbsp;Lihat Foto Profil
+                            </span>
+                          </span>
+                          <v-img :src="item.raw.fotoProfil" />
+                        </div>
+                        <input 
+                          ref="fotoProfile"
+                          :key="componentKey"
+                          type="file"
+                          accept="image/*"
+                          style="display: none"
+                          @change="uploadFotoProfile($event, item.raw.idBiodata)"
+                        >
+                        <div>
+                          <span>
+                            <Button 
+                              @click="statusData('STATUSMENINGGAL', 'SUAMI', item.raw.idBiodata, `${item.raw.statusSuami === 'Meninggal' ? 'Hidup' : 'Meninggal'}`)"
+                              :color-button="`${item.raw.statusSuami === 'Meninggal' ? '#0bd369' : '#c12626'}`"
+                              icon-prepend-button="mdi mdi-cross"
+                              :nama-button="`${item.raw.statusSuami === 'Meninggal' ? 'Hidup' : 'Meninggal'}`"
+                              size-button="x-small"
+                            />
+                            <v-tooltip activator="parent" location="bottom">Suami</v-tooltip>
+                          </span>
+                          <span>
+                            <Button 
+                              @click="statusData('STATUSMENINGGAL', 'ISTRI', item.raw.idBiodata, `${item.raw.statusIstri === 'Meninggal' ? 'Hidup' : 'Meninggal'}`)"
+                              :color-button="`${item.raw.statusIstri === 'Meninggal' ? '#0bd369' : '#c12626'}`"
+                              icon-prepend-button="mdi mdi-cross"
+                              :nama-button="`${item.raw.statusIstri === 'Meninggal' ? 'Hidup' : 'Meninggal'}`"
+                              size-button="x-small"
+                            />
+                            <v-tooltip activator="parent" location="bottom">Istri</v-tooltip>
+                          </span>
+                        </div>
+                      </div>
                     </v-col>
                   </v-row>
                   <v-row no-gutters>
@@ -414,10 +436,10 @@
                             <td style="text-align: center;" width="5%">{{ index + 1 }}</td>
                             <td style="padding-left: 10px;">
                               {{ data.namaAnak }} 
-                              <v-icon size="middle" :icon="data.kategoriAnak === 'Anak' ? 'mdi mdi-human-male mdi' : 'mdi-human-female'" color="icon-white" />
+                              <v-icon size="large" :icon="data.kategoriAnak === 'Anak' ? 'mdi mdi-human-male mdi' : 'mdi-human-female'" color="icon-white" />
                               <v-tooltip v-if="data.statusAnak === 'Meninggal'" location="top">
                                 <template v-slot:activator="{ props }">
-                                  <v-icon v-bind="props" size="middle" icon="mdi mdi-cross" color="icon-red" />
+                                  <v-icon v-bind="props" size="large" icon="mdi mdi-cross" color="icon-red" />
                                 </template>
                                 <span>Meninggal</span>
                               </v-tooltip>
@@ -935,6 +957,41 @@
       </v-card>
     </v-dialog>
     <v-dialog
+      v-model="dialogFotoProfil"
+      transition="dialog-bottom-transition"
+      persistent
+      width="800px"
+    >
+      <v-card color="background-dialog-card">
+        <v-toolbar color="surface">
+          <v-toolbar-title>Foto Profil</v-toolbar-title>
+          <v-spacer />
+          <v-toolbar-items>
+            <Button
+              variant="plain"
+              color-button="#FFFFFF"
+              icon-button="mdi mdi-close"
+              model-button="comfortable"
+              size-button="large"
+              @proses="() => { dialogFotoProfil = false; fotoprofil = ''; }"
+            />
+          </v-toolbar-items>
+        </v-toolbar>
+        <v-card-text class="pt-4 v-dialog--custom">
+          <v-row no-gutters>
+            <v-col
+              cols="12"
+              class="pt-2 d-flex align-center justify-center"
+            >
+              <div class="avatarFotoProfil">
+                <v-img :src="fotoprofil" />
+              </div>
+            </v-col>
+          </v-row>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+    <v-dialog
       v-model="dialogNotifikasi"
       transition="dialog-bottom-transition"
       persistent
@@ -1066,8 +1123,10 @@ export default {
     reason: '',
     untuk: '',
     tanggal_wafat: '',
+    fotoprofil: '',
 
     //notifikasi
+    dialogFotoProfil: false,
     dialogTanggalWafat: false,
     dialogQuestion: false,
     dialogNotifikasi: false,
@@ -1548,6 +1607,10 @@ export default {
       this.dialogNotifikasi = false
       this.dialogImport = false
     },
+    lihatFoto(foto) {
+      this.fotoprofil = foto
+      this.dialogFotoProfil = true
+    },
     tutupDialog(){
       clearInterval(this.interval)
       this.query = false
@@ -1616,7 +1679,7 @@ export default {
   border: solid 2px #000;
   border-radius: 20px;
   background: #efeeec;
-  align-items: center;
+  align-items: flex-end;
   display: flex;
   justify-content: center;
   line-height: normal;
@@ -1624,8 +1687,8 @@ export default {
   text-align: center;
   vertical-align: middle;
   overflow: hidden;
-  width: 162px;
-  height: 102px;
+  width: 250px;
+  height: 170px;
   cursor: pointer;
 }
 .avatar:hover {
@@ -1637,24 +1700,48 @@ export default {
   position: absolute;
   z-index: 1;
 }
-.tulisan {
+.wadahtulisan {
   position: absolute;
   visibility: hidden;
 }
-.avatar:hover .tulisan {
+.avatar:hover .wadahtulisan {
   border-radius: 5px;
   align-items: center;
   display: flex;
   justify-content: center;
+  align-content: flex-end;
+  justify-content: space-between;
   position: absolute;
   background: #000000;
-  color: #FFF;
-  font-size: 8.5pt;
   visibility: visible;
-  font-weight: bold;
   z-index: 100;
-  width: 185px;
-  height: 30px;
+  width: 250px;
+  height: 40px;
+}
+.tulisan {
+  z-index: 101;
+  color: #FFF;
+  font-size: 7.5pt;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin: 0px 18.5px;
+}
+.avatarFotoProfil {
+  border: solid 2px #000;
+  border-radius: 20px;
+  background: #efeeec;
+  align-items: flex-end;
+  display: flex;
+  justify-content: center;
+  line-height: normal;
+  position: relative;
+  text-align: center;
+  vertical-align: middle;
+  overflow: hidden;
+  width: 420px;
+  height: 340px;
 }
 .cropper {
   border: double 3px transparent;
