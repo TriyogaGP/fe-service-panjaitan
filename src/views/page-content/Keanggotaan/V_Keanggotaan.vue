@@ -910,7 +910,7 @@
             />
           </v-toolbar-items>
         </v-toolbar>
-        <v-card-text class="pt-4 v-dialog--custom">
+        <v-card-text class="pt-4">
           <v-row no-gutters>
             <v-col
               cols="12"
@@ -960,7 +960,7 @@
       v-model="dialogFotoProfil"
       transition="dialog-bottom-transition"
       persistent
-      width="800px"
+      width="auto"
     >
       <v-card color="background-dialog-card">
         <v-toolbar color="surface">
